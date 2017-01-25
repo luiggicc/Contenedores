@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{cargarSellosBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm" enctype="multipart/form-data">
+                        <!-- BOTON SUBIDA-->
+                        <p:growl id="growl" showDetail="true"/>
+                        <p:remoteCommand update="@form" name="subir" oncomplete="PF('sellTable').clearFilters();"
+                                         actionListener="#{cargarSellosBean.uploadFileList()}" onstart="PF('dlg2').show();" />
+                        <p:fileUpload 
+                            sizeLimit="1000000"
+                            styleClass="customFileUpload customUploadGrid"
+                            fileUploadListener="#{cargarSellosBean.handleFileUpload}" mode="advanced"
+                            oncomplete="subir();"
+                            allowTypes="/(\.|\/)(xls|xlsx)$/" />
+
+                        <script type="text/javascript">
+                            function startProgressBar()
+                            {
+                                window['progress'] = setInterval(function () {
+                                    var pbClient = PF('pbClient'),
+                                            oldValue = pbClient.getValue(),
+                                            newValue = oldValue + 20;
+
+                                    pbClient.setValue(pbClient.getValue() + 20);
+
+                                    if (newValue > 100) {
+                                        clearInterval(window['progress']);
+                                        PF('dlg2').hide();
+                                        PF('pbClient').setValue(0);
+                                    }
+                                }, 1000);
+                            }
+                            function cancel()
+                            {
+                                clearInterval(window['progress']);
+                                PF('pbClient').setValue(0);
+                            }
+                        </script>
+                        <!-- FIN BOTON SUBIDA-->
+
+                        <!-- BOTON DESCARGA -->
+                        <p:dialog modal="true" 
+                                  widgetVar="statusDialog" 
+                                  header="Status" 
+                                  draggable="false" 
+                                  closable="false" 
+                                  resizable="false"
+                                  styleClass="customFileDownload"
+                                  >
+                            <!--  <p:graphicImage name="/demo/images/ajaxloadingbar.gif" />-->
+                        </p:dialog>
+                        <p:commandButton value="Descargar Matriz" 
+                                         ajax="false" 
+                                         onclick="PrimeFaces.monitorDownload(begin, stop);" 
+                                         icon="fa fa-download white Fs16"
+                                         styleClass="customButton"
+                                         style="width: 20%">
+                            <p:fileDownload value="#{cargarSellosBean.downloadableFile}" />
+                        </p:commandButton>
+                        <script type="text/javascript">
+                            function begin() {
+                                PF('statusDialog').show();
+                            }
+                            function stop() {
+                                PF('statusDialog').hide();
+                            }
+                        </script>
+                        <!-- FIN BOTON DESCARGA-->
+
+                        <p:dataTable id="sellosTable" value="#{cargarSellosBean.listadoSellos}" var="sellos" widgetVar="sellTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{cargarSellosBean.filteredSellos}" 
+                                     rowStyleClass="#{sellos.repeated.equals('repetido')?'rowbackgorundOnRepeated':''}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false" 
+                                     selection="#{cargarSellosBean.selectedSellos}" rowKey="#{sellos.secuencial}" style="margin-bottom:0">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Sellos Cargados" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('sellTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="text-align: center"/>
+
+                            <p:column headerText="Sellos" filterBy="#{sellos.inv_sello}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{sellos.inv_sello}"/>
+                            </p:column>
+                            <p:column headerText="N° Seguridad" filterBy="#{sellos.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{sellos.inv_seguridad}"/>
+                            </p:column>
+                            <p:column headerText="Indicador" filterBy="#{sellos.repeated}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{sellos.repeated}"/>
+                            </p:column>
+                            <f:facet name="footer" >
+                                <div style="text-align: left;">
+                                    <i class="icon-trash-2">
+                                        <p:commandLink update="@form" oncomplete="PF('sellTable').clearFilters();"
+                                                       value="Eliminar seleccionados" actionListener="#{cargarSellosBean.deleteRows()}"  />
+                                    </i>
+                                </div>
+                            </f:facet>
+                        </p:dataTable>
+                        
+                        <p:commandButton style="position: relative; left: 450px; top: 5px; width: 20%" value="Guardar" 
+                                         actionListener="#{cargarSellosBean.guardarListadoSellos()}"
+                                         oncomplete="PF('failBox').show();" update="failsDialog"
+                                         />
+
+                        <p:dialog id="basicDialog" resizable="false" header="Por favor espere...." widgetVar="dlg2" modal="true" closable="false" onShow="startProgressBar();">           
+                            <p:progressBar id="progressBarLoad" widgetVar="pbClient" style="width:300px" />   
+                        </p:dialog>
+
+
+                    </h:form>
+
+                    <p:dialog id="failsDialog" resizable="false" header="Informe de Registros Fallidos" widgetVar="failBox" modal="true"
+                              closable="true" closeOnEscape="true">   
+                        <h:form>
+                            <p:dataTable id="tblFailSellos" value="#{cargarSellosBean.failedSellosList}" var="failed" widgetVar="sellTable" paginator="true" rows="10"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         rowsPerPageTemplate="5,10,15" lazy="false" paginatorPosition="bottom" style="width:600px;height: 300px">
+                                <p:column headerText="Sello">
+                                    <h:outputText value="#{failed.inv_sello}"/>
+                                </p:column>
+                                <p:column headerText="N° Seguridad">
+                                    <h:outputText value="#{failed.inv_seguridad}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:commandButton ajax="true" style="position: relative; left: 450px; top: 5px; width: 20%" value="Ok!"
+                                             actionListener="#{cargarSellosBean.clearFailedList()}" 
+                                             oncomplete="PF('failBox').hide();" /> 
+                        </h:form>
+                    </p:dialog>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

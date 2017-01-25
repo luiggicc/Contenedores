@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{usuarioBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:growl id="growl" showDetail="true"/>
+                        <!-- <div class="FontBold Fs18 hardblue" style="margin: 15px 10px">Listado Usuarios</div>-->
+                        <div class="Separator">
+                            <p:commandLink  value="Agregar usuario" actionListener="#{usuarioBean.showCreateDialog()}" oncomplete="PF('wdlgCrearUsuario').show();" 
+                                            update="dlgCrearUsuario" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                        </div>
+                        <p:spacer height="10"/>
+                        <p:dataTable id="uTable" value="#{usuarioBean.listadoUsuarios}" var="us" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{usuarioBean.filteredUsers}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Administrador de Usuarios" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Cédula" style="width: 10%"
+                                      filterBy="#{us.cedula}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{us.cedula}"/>
+                            </p:column>
+                            <p:column headerText="Nombres" style="width: 15%"
+                                      filterBy="#{us.nombres}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{us.nombres}"/>
+                            </p:column>
+                            <p:column headerText="Apellidos" style="width: 20%"
+                                      filterBy="#{us.apellidos}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{us.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Login" style="width: 20%"
+                                      filterBy="#{us.login}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{us.login}"/>
+                            </p:column>
+                            <p:column headerText="Rol" style="width: 10%"
+                                      filterBy="#{us.descripcionRol}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{us.descripcionRol}"/>
+                            </p:column>
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="editar" actionListener="#{usuarioBean.showEditDialog(us)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>   
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="eliminar" actionListener="#{usuarioBean.eliminar(us)}"  update=":frm:uTable" >
+                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                                <i class="icon-wrench">
+                                    <p:commandLink partialSubmit="true" id="idProfiler" value="perfiles" ajax="true" actionListener="#{usuarioBean.showProfilesDialog(us)}"  
+                                                   oncomplete="PF('wdlgPermisos').show();" update="dlgPermisos">
+                                    </p:commandLink>
+                                </i>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <p:dialog id="dlgDatos" header="Editar Usuario" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Nombres"/>
+                                <p:inputText value="#{usuarioBean.usuario.nombres}"/>
+                                <p:outputLabel value="Apellidos"/>
+                                <p:inputText value="#{usuarioBean.usuario.apellidos}"/>
+                                <p:outputLabel value="Email"/>
+                                <p:inputText value="#{usuarioBean.usuario.login}"/>
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{usuarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{usuarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                    <p:dialog id="dlgCrearUsuario" header="Crear Usuario" widgetVar="wdlgCrearUsuario" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Cédula"/>
+                                <p:inputText value="#{usuarioBean.usuario.cedula}"/>
+                                <p:outputLabel value="Nombres"/>
+                                <p:inputText value="#{usuarioBean.usuario.nombres}"/>
+                                <p:outputLabel value="Apellidos"/>
+                                <p:inputText value="#{usuarioBean.usuario.apellidos}"/>
+                                <p:outputLabel value="Email"/>
+                                <p:inputText value="#{usuarioBean.usuario.login}"/>
+                                <p:commandButton ajax="true" actionListener="#{usuarioBean.commitCreate()}" value="Crear" oncomplete="PF('wdlgCrearUsuario').hide();" update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{usuarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearUsuario').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog> 
+                    <p:dialog  id="dlgPermisos" header="Roles de Usuario: #{usuarioBean.usuario.apellidos} #{usuarioBean.usuario.nombres}" widgetVar="wdlgPermisos" modal="true" 
+                               closable="false" style="width:600px;height: 300px">
+                        <h:form id="idDlg">
+                            <p:dataTable id="resourceTable" value="#{usuarioBean.listadoPermisos}" var="recurso" widgetVar="recursoTable" rows="10" paginator="true"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" filteredValue="#{usuarioBean.filteredAccess}" lazy="false">
+                                <p:column  headerText="Rol" filterBy="#{recurso.descripcionRol}" filterStyle="display:none" filterMatchMode="contains">
+                                    <p:outputLabel id="rol" value="#{recurso.descripcionRol}"/>
+                                </p:column>
+                                <p:column  headerText="Asignado">
+                                    <p:selectBooleanCheckbox id="asignado" value="#{recurso.estado}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:commandButton ajax="true" update=":idDlg:resourceTable" 
+                                             value="Guardar" actionListener="#{usuarioBean.commitProfiles()}"
+                                             oncomplete="PF('recursoTable').clearFilters();">
+                                <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton ajax="true" value="Cancelar" actionListener="#{usuarioBean.onCancelProfileDialog()}" 
+                                             oncomplete="PF('wdlgPermisos').hide();" update=":frm:uTable :frm:growl :idDlg:resourceTable"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+
+
+
+    </ui:define>
+
+</ui:composition>

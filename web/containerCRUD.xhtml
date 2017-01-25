@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{containerBean.listadoContainers}" var="conta" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{containerBean.filteredContainers}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Containers" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Código" filterBy="#{conta.con_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.con_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de Container" filterBy="#{conta.tcon_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.tcon_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Línea" filterBy="#{conta.lin_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.lin_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Tamaño" filterBy="#{conta.con_tamano}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.con_tamano}"/>
+                            </p:column>
+
+                            <p:column headerText="TAR" filterBy="#{conta.con_tar}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.con_tar}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado" filterBy="#{conta.con_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.con_estado}"/>
+                            </p:column>
+
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="Editar" actionListener="#{containerBean.showEditDialog(conta)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                                <br />
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="Activar/Desactivar" actionListener="#{containerBean.eliminar(conta)}"  update=":frm:uTable" >
+                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Container" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Tipo de Container "/>
+                                <p:selectOneMenu id="tipcont" value="#{containerBean.conta.con_tipcont}">
+                                    <f:selectItems value="#{containerBean.selectorTipCont}" var="tcon" itemLabel="#{tcon.tcon_nombre}" itemValue="#{tcon.cod_tipcont}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Línea "/>
+                                <p:selectOneMenu id="linea" value="#{containerBean.conta.lin_codigo}">
+                                    <f:selectItems value="#{containerBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tamaño: "/>
+                                <p:inputText value="#{containerBean.conta.con_tamano}"/>
+
+                                <p:outputLabel value="TAR: "/>
+                                <p:inputText value="#{containerBean.conta.con_tar}"/>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{containerBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{containerBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

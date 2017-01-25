@@ -1,0 +1,128 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23/12/2016, 14:25:28
+    Author     : Bottago SA
+*/
+
+.logout{
+    color: #ffffff !important;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.customfielddownload {
+    width: 20%;
+}
+
+.customFileUpload .ui-fileupload-buttonbar .ui-fileupload-choose input{
+    position: absolute;
+    top: 0;
+    right: 0px;
+    /*margin: 15;*/
+    opacity: 0;
+    filter: alpha(opacity=0);
+    font-size: 23px;
+    direction: ltr;
+    cursor: pointer;
+    width: 100%;
+}
+.customUploadGrid .ui-fileupload-buttonbar .ui-fileupload-choose, 
+.customUploadGrid .ui-fileupload-buttonbar .ui-fileupload-upload,
+.customUploadGrid .ui-fileupload-buttonbar .ui-fileupload-cancel{
+    width: 15% !important;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.rowbackgorundOnRepeated{
+    background:rgba(255, 85, 85, 0.39)!important;
+}
+
+.loginRoles{
+    display: inline-block;
+    position: relative;
+    width: 80%;
+    zoom: 1;
+    cursor: pointer;
+}
+
+.loginLabelRoles .ui-selectonemenu-label{
+    font-size: 18px;
+}
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.demo {
+    margin: 0 auto;
+    padding-top: 64px;
+    max-width: 640px;
+    width: 94%;
+}
+
+.demo h1 {
+    margin-top: 0;
+}
+
+/**
+ * Footer Styles
+ */
+#footer{
+    background-color: #004A97;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    /*height: 80px;*/
+    height: 8%;
+    width: 100%;
+    color: white;
+    font-size: 10px;
+    margin: 0;
+    z-index: 100;
+}
+.footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 8%;
+    width: 100%;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+    z-index: 100;
+}
+
+.center-block {
+    display: block;
+    margin: 30px;
+    width: 500px;
+    height: 350px;
+}
+
+.likePrimefaceCommandLink{
+    color: #27AAE1 !important;
+    text-decoration: underline;
+    margin-right: 5px;
+}

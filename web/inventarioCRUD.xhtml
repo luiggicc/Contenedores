@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{inventarioBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <!-- <div class="FontBold Fs18 hardblue" style="margin: 15px 10px">Listado Usuarios</div>-->
+                        <div class="Separator">
+                            <p:commandLink  value="Agregar Sello" oncomplete="PF('wdlgCrearSello').show();" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                        </div>
+                        <p:spacer height="10"/>
+                        <p:dataTable id="uTable" value="#{inventarioBean.listadoSellos}" var="inv" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{inventarioBean.filteredSellos}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Administrador Sellos" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            
+                            <p:column headerText="Sello" filterBy="#{inv.inv_sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{inv.inv_sello}"/>
+                            </p:column>
+
+                            <p:column headerText="N° Seguridad" filterBy="#{inv.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{inv.inv_seguridad}"/>
+                            </p:column>
+
+                            <p:column headerText="Localidad" filterBy="#{inv.loc_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{inv.loc_des}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado" filterBy="#{inv.inv_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{inv.inv_estado}"/>
+                            </p:column>
+
+                            <!--############################################################################################ -->
+
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="editar" actionListener="#{inventarioBean.showEditDialog(inv)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>   
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="desactivar" actionListener="#{inventarioBean.showDeleteDialog(inv)}" oncomplete="PF('wdlgEliminarDatos').show();"  update="dlgEliminarDatos" >
+                                        
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Sello" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Sello"/>
+                                <p:inputText value="#{inventarioBean.sel.inv_sello}"/>
+                                <p:outputLabel value="Canal"/>
+                                <p:inputText value="#{inventarioBean.sel.inv_seguridad}"/>
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{inventarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{inventarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgCrearSello" header="Crear Sello" resizable="false"  widgetVar="wdlgCrearSello" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Nuevo Sello"/>
+                                <p:inputText value="#{inventarioBean.sel.inv_sello}"/>
+                                <p:outputLabel value="Nuevo N° de Seguridad"/>
+                                <p:inputText value="#{inventarioBean.sel.inv_seguridad}"/>
+                                <p:commandButton ajax="true" actionListener="#{inventarioBean.commitCreate()}" value="Crear" oncomplete="PF('wdlgCrearSello').hide();" update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{canalBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearSello').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgEliminarDatos" header="Eliminar Sello" widgetVar="wdlgEliminarDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Razón: "/>
+                                <p:selectOneMenu id="razon" value="#{inventarioBean.sel.mot_codigo}">
+                                    <f:selectItems value="#{inventarioBean.selectorMotivoSello}" var="mot" itemLabel="#{mot.mot_des}" itemValue="#{mot.mot_codigo}" />
+                                </p:selectOneMenu>
+                                <p:commandButton ajax="true" value="Eliminar" actionListener="#{inventarioBean.eliminar()}"  oncomplete="PF('wdlgEliminarDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{inventarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgEliminarDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>  
+
+    </ui:define>
+
+</ui:composition>

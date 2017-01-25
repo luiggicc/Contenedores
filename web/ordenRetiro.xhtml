@@ -1,0 +1,276 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <div class="Separator">
+                            <p:link  value="Agregar Orden de Retiro" href="/faces/crearOrden.xhtml" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                        </div>
+                        <p:dataTable id="uTable" value="#{ordenRetiroBean.listadoOrdenes}" var="ord" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{ordenRetiroBean.filteredOrdenes}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false"
+                                     resizableColumns="true" 
+                                     tableStyle="width:auto"
+                                     reflow="true">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Ordenes de Retiro" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column  style="text-align: center">
+                                <p:commandLink value="PDF" class="icon-file-pdf" actionListener="#{ordenRetiroBean.exportPDF()}"/>
+                            </p:column>
+
+                            <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cod_ordenretiro}"/>
+                            </p:column>
+
+                            <p:column headerText="Cliente" filterBy="#{ord.cia_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cia_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario" filterBy="#{ord.dsp_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.dsp_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Línea" filterBy="#{ord.lin_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.lin_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Booking" filterBy="#{ord.booking}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.booking}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto" filterBy="#{ord.pto_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.pto_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Mov. por cuenta" filterBy="#{ord.mov_xcuenta}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.mov_xcuenta}"/>
+                            </p:column>
+
+                            <p:column headerText="Cantidad y tipo de cntr" filterBy="#{ord.cant_tipocont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cant_tipocont}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de carga dice/contener" filterBy="#{ord.tipo_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.tipo_carga}"/>
+                            </p:column>
+
+                            <p:column headerText="Req. Especial" filterBy="#{ord.req_especial}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.req_especial}"/>
+                            </p:column>
+
+                            <p:column headerText="Sello de seguridad" filterBy="#{ord.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.inv_seguridad}"/>
+                            </p:column>
+
+                            <p:column headerText="Es Temperado?" filterBy="#{ord.es_temperado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.es_temperado}"/>
+                            </p:column>
+
+                            <p:column headerText="Temperatura" filterBy="#{ord.temperatura}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.temperatura}"/>
+                            </p:column>
+
+                            <p:column headerText="Ventilación" filterBy="#{ord.ventilacion}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.ventilacion}"/>
+                            </p:column>
+
+                            <p:column headerText="Observaciones" filterBy="#{ord.observaciones}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.observaciones}"/>
+                            </p:column>
+
+                            <p:column headerText="Patio de Salida" filterBy="#{ord.loc_salidades}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.loc_salidades}"/>
+                            </p:column>
+
+                            <p:column headerText="Terminal Portuario" filterBy="#{ord.loc_entradades}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.loc_entradades}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Itinerario" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="6">
+                                <p:outputLabel value="Cliente: "/>
+                                <p:selectOneMenu id="cliente" value="#{itinerarioBean.iti.cia_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Línea: "/>
+                                <p:selectOneMenu id="linea" value="#{itinerarioBean.iti.lin_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_codigo}" itemValue="#{lin.lin_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Buque: "/>
+                                <p:selectOneMenu id="buque" value="#{itinerarioBean.iti.buq_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorBuque}" var="buq" itemLabel="#{buq.buq_codigo}" itemValue="#{buq.buq_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Arribo: "/>
+                                <p:selectOneMenu id="ptoarribo" value="#{itinerarioBean.iti.cod_ptoarribo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Inicio: "/>
+                                <p:selectOneMenu id="ptoinicio" value="#{itinerarioBean.iti.cod_ptoinicio}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Eta: "/>
+                                <p:selectOneMenu id="ptoeta" value="#{itinerarioBean.iti.cod_ptoeta}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Físico: "/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_ptofisico}"/>
+
+                                <p:outputLabel value="Tráfico: "/>
+                                <p:selectOneMenu id="trafico" value="#{itinerarioBean.iti.tra_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_codigo}" itemValue="#{tra.tra_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Aduana: "/>
+                                <p:selectOneMenu id="aduana" value="#{itinerarioBean.iti.adu_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorAduana}" var="adu" itemLabel="#{adu.adu_codigo}" itemValue="#{adu.adu_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tip. Manifiesto Imp.: "/>
+                                <p:selectOneMenu id="tipmanifiestoimp" value="#{itinerarioBean.iti.cod_tipmanifiesto}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tip. Manifiesto Exp.: "/>
+                                <p:selectOneMenu id="tipmanifiestoexp" value="#{itinerarioBean.iti.cod_tipmanifiesto_exp}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Número Viaje: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje}"/>
+
+                                <p:outputLabel value="Nombre Capitán: "/>
+                                <p:inputText value="#{itinerarioBean.iti.nom_capitan}"/>
+
+                                <p:outputLabel value="Manifiesto Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto}"/>
+
+                                <p:outputLabel value="Manifiesto Exp.:"/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto_exp}"/>
+
+                                <p:outputLabel value="Num. Año: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
+
+                                <p:outputLabel value="Observación: "/>
+                                <p:inputText value="#{itinerarioBean.iti.obs_itinerario}"/>
+
+                                <p:outputLabel value="Nombre Muelle: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
+
+                                <p:outputLabel for="fecarribo" value="Fecha Arribo: " />
+                                <p:calendar id="fecarribo" value="#{itinerarioBean.iti.fec_arribo}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horarribo" value="Hora Arribo: " />
+                                <p:inputMask id="horarribo" value="#{itinerarioBean.iti.hor_arribo}" mask="99:99"/>
+
+                                <p:outputLabel for="fecplatica" value="Fecha Platica: " />
+                                <p:calendar id="fecplatica" value="#{itinerarioBean.iti.fec_platica}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horplatica" value="Hora Platica: " />
+                                <p:inputMask id="horplatica" value="#{itinerarioBean.iti.hor_platica}" mask="99:99"/>
+
+                                <p:outputLabel for="fecmuelle" value="Fecha Muelle: " />
+                                <p:calendar id="fecmuelle" value="#{itinerarioBean.iti.fec_muelle}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="hormuelle" value="Hora Muelle: " />
+                                <p:inputMask id="hormuelle" value="#{itinerarioBean.iti.hor_muelle}" mask="99:99"/>
+
+                                <p:outputLabel for="feciniope" value="Fecha Inicio Ope.: " />
+                                <p:calendar id="feciniope" value="#{itinerarioBean.iti.fec_iniope}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horiniope" value="Hora Inicio Ope.: " />
+                                <p:inputMask id="horiniope" value="#{itinerarioBean.iti.hor_iniope}" mask="99:99"/>
+
+                                <p:outputLabel for="fecfionpe" value="Fecha Fin Ope.: " />
+                                <p:calendar id="fecfionpe" value="#{itinerarioBean.iti.fec_finope}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horfinope" value="Hora Fin Ope.: " />
+                                <p:inputMask id="horfinope" value="#{itinerarioBean.iti.hor_finope}" mask="99:99"/>
+
+                                <p:outputLabel for="feccutdry" value="Fecha Cutdry: " />
+                                <p:calendar id="feccutdry" value="#{itinerarioBean.iti.fec_cutdry}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horcutdry" value="Hora Cutdry: " />
+                                <p:inputMask id="horcutdry" value="#{itinerarioBean.iti.hor_cutdry}" mask="99:99"/>
+
+                                <p:outputLabel for="feccutssr" value="Fecha Cutssr: " />
+                                <p:calendar id="feccutssr" value="#{itinerarioBean.iti.fec_cutssr}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horcutssr" value="Hora Cutssr: " />
+                                <p:inputMask id="horcutssr" value="#{itinerarioBean.iti.hor_cutssr}" mask="99:99"/>
+
+                                <p:outputLabel for="feczarpe" value="Fecha Zarpe: " />
+                                <p:calendar id="feczarpe" value="#{itinerarioBean.iti.fec_zarpe}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horzarpe" value="Hora Zarpe: " />
+                                <p:inputMask id="horzarpe" value="#{itinerarioBean.iti.hor_zarpe}" mask="99:99"/>
+
+                                <p:outputLabel value="Descripción Itineario: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario}"/>
+
+                                <p:outputLabel value="Itinerario Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_imp}"/>
+
+                                <p:outputLabel value="Num. Viaje Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje_imp}"/>
+
+                                <p:outputLabel value="Itinerario Exp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_exp}"/>
+
+                                <p:outputLabel value="Num. Viaje Exp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje_exp}"/>
+
+                                <p:outputLabel value="MRN: "/>
+                                <p:inputText value="#{itinerarioBean.iti.MRN}"/>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{itinerarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{itinearrioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

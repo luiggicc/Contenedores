@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{transferBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="Localidad Destino"/>
+                            <p:selectOneMenu id="localidadMenu" value="#{transferBean.localidadIdSelected}" style="width: 200px">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
+                                <f:selectItems value="#{transferBean.listaLocalidades}" var="loc" 
+                                               itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}"/>
+                                <p:ajax event="itemSelect"  listener="#{transferBean.obtenerSellosLocalidad()}" update="@form" oncomplete="PF('asignacionTable').clearFilters();"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                        <p:dataTable id="asignacionTbl" value="#{transferBean.listadoSellos}" var="asignacion" paginator="true" widgetVar="asignacionTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{transferBean.filteredSellos}" lazy="false" 
+                                     rowsPerPageTemplate="10,25,50" rowKey="#{asignacion.inv_codigo}" selectionMode="#{transferBean.listadoSellos}">                            
+                            
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Transferir de Localidad" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('asignacionTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Sello" filterBy="#{asignacion.inv_sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{asignacion.inv_sello}"/>
+                            </p:column>
+
+                            <p:column headerText="N° Seguridad" filterBy="#{asignacion.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{asignacion.inv_seguridad}"/>
+                            </p:column>
+
+                            <p:column headerText="Localidad" filterBy="#{asignacion.loc_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{asignacion.loc_des}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Asignado" style="text-align: center"> 
+                                <p:selectBooleanCheckbox value="#{asignacion.estado}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:commandButton ajax="true" update="@form" 
+                                         style="position: relative; left: 450px; top: 5px; width: 20%" 
+                                         value="Guardar" actionListener="#{transferBean.guardarPermisos()}"
+                                         oncomplete="PF('asignacionTable').clearFilters();">
+                            <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </h:form>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

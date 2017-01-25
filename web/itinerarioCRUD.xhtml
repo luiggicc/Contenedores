@@ -1,0 +1,387 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{itinerarioBean.listadoItinerarios}" var="iti" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{itinerarioBean.filteredItinerarios}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false"
+                                     resizableColumns="true" 
+                                     tableStyle="width:auto"
+                                     reflow="true">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Itinerario" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="Editar" actionListener="#{itinerarioBean.showEditDialog(iti)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                                <br />
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="Activar/Desactivar" actionListener="#{itinerarioBean.eliminar(iti)}"  update=":frm:uTable" >
+                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                            </p:column>
+
+                            <p:column headerText="Código" filterBy="#{iti.ids_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.ids_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Cliente" filterBy="#{iti.cia_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cia_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Linea" filterBy="#{iti.lin_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.lin_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Buque" filterBy="#{iti.buq_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.buq_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Pto. Arribo" filterBy="#{iti.cod_ptoarribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_ptoarribo}"/>
+                            </p:column>
+
+                            <p:column headerText="Pto. Inicio" filterBy="#{iti.cod_ptoinicio}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_ptoinicio}"/>
+                            </p:column>
+
+                            <p:column headerText="Pto. Eta" filterBy="#{iti.cod_ptoeta}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_ptoeta}"/>
+                            </p:column>
+
+                            <p:column headerText="Pto. Físico" filterBy="#{iti.cod_ptofisico}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_ptofisico}"/>
+                            </p:column>
+
+                            <p:column headerText="Tráfico" filterBy="#{iti.tra_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.tra_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Aduana" filterBy="#{iti.adu_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.adu_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo Man. Imp." filterBy="#{iti.cod_tipmanifiesto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_tipmanifiesto}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo Man. Exp." filterBy="#{iti.cod_tipmanifiesto_exp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_tipmanifiesto_exp}"/>
+                            </p:column>
+
+                            <p:column headerText="Número Viaje" filterBy="#{iti.num_viaje}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.num_viaje}"/>
+                            </p:column>
+
+                            <p:column headerText="Capitán" filterBy="#{iti.nom_capitan}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.nom_capitan}"/>
+                            </p:column>
+
+                            <p:column headerText="Cod. Manifiesto Imp." filterBy="#{iti.cod_manifiesto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_manifiesto}"/>
+                            </p:column>
+
+                            <p:column headerText="Cod. Manifiesto Exp." filterBy="#{iti.cod_manifiesto_exp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.cod_manifiesto_exp}"/>
+                            </p:column>
+
+                            <p:column headerText="Año" filterBy="#{iti.num_anio}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.num_anio}"/>
+                            </p:column>
+
+                            <p:column headerText="Observación" filterBy="#{iti.obs_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.obs_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Muelle" filterBy="#{iti.nom_muelle}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.nom_muelle}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Arribo" filterBy="#{iti.fec_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_arribo}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Arribo" filterBy="#{iti.hor_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_arribo}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Platica" filterBy="#{iti.fec_platica}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_platica}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Platica" filterBy="#{iti.hor_platica}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_platica}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Muelle" filterBy="#{iti.fec_muelle}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_muelle}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Muelle" filterBy="#{iti.hor_muelle}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_muelle}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Inicio Operación" filterBy="#{iti.fec_iniope}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_iniope}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Inicio Operación" filterBy="#{iti.hor_iniope}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_iniope}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Fin Operación" filterBy="#{iti.fec_finope}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_finope}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Fin Operación" filterBy="#{iti.hor_finope}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_finope}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Cutdry" filterBy="#{iti.fec_cutdry}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_cutdry}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Cutdry" filterBy="#{iti.hor_cutdry}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_cutdry}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Cutssr" filterBy="#{iti.fec_cutssr}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_cutssr}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Cutssr" filterBy="#{iti.hor_cutssr}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_cutssr}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Zarpe" filterBy="#{iti.fec_zarpe}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.fec_zarpe}"/>
+                            </p:column>
+
+                            <p:column headerText="Hora Zarpe" filterBy="#{iti.hor_zarpe}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.hor_zarpe}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario" filterBy="#{iti.dsp_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.dsp_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario Imp." filterBy="#{iti.dsp_itinerario_imp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.dsp_itinerario_imp}"/>
+                            </p:column>
+
+                            <p:column headerText="Num. Viaje Imp." filterBy="#{iti.num_viaje_imp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.num_viaje_imp}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario Exp." filterBy="#{iti.dsp_itinerario_exp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.dsp_itinerario_exp}"/>
+                            </p:column>
+
+                            <p:column headerText="Num. Viaje Exp." filterBy="#{iti.num_viaje_exp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.num_viaje_exp}"/>
+                            </p:column>
+
+                            <p:column headerText="MRN" filterBy="#{iti.MRN}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.MRN}"/>
+                            </p:column>
+
+                            <p:column headerText="Sec. Itinerario" filterBy="#{iti.sec_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.sec_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado" filterBy="#{iti.est_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.est_itinerario}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Itinerario" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="6">
+                                <p:outputLabel value="Cliente: "/>
+                                <p:selectOneMenu id="cliente" value="#{itinerarioBean.iti.cia_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Línea: "/>
+                                <p:selectOneMenu id="linea" value="#{itinerarioBean.iti.lin_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_codigo}" itemValue="#{lin.lin_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Buque: "/>
+                                <p:selectOneMenu id="buque" value="#{itinerarioBean.iti.buq_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorBuque}" var="buq" itemLabel="#{buq.buq_codigo}" itemValue="#{buq.buq_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Arribo: "/>
+                                <p:selectOneMenu id="ptoarribo" value="#{itinerarioBean.iti.cod_ptoarribo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Inicio: "/>
+                                <p:selectOneMenu id="ptoinicio" value="#{itinerarioBean.iti.cod_ptoinicio}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Eta: "/>
+                                <p:selectOneMenu id="ptoeta" value="#{itinerarioBean.iti.cod_ptoeta}">
+                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto Físico: "/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_ptofisico}"/>
+
+                                <p:outputLabel value="Tráfico: "/>
+                                <p:selectOneMenu id="trafico" value="#{itinerarioBean.iti.tra_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_codigo}" itemValue="#{tra.tra_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Aduana: "/>
+                                <p:selectOneMenu id="aduana" value="#{itinerarioBean.iti.adu_codigo}">
+                                    <f:selectItems value="#{itinerarioBean.selectorAduana}" var="adu" itemLabel="#{adu.adu_codigo}" itemValue="#{adu.adu_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tip. Manifiesto Imp.: "/>
+                                <p:selectOneMenu id="tipmanifiestoimp" value="#{itinerarioBean.iti.cod_tipmanifiesto}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tip. Manifiesto Exp.: "/>
+                                <p:selectOneMenu id="tipmanifiestoexp" value="#{itinerarioBean.iti.cod_tipmanifiesto_exp}">
+                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Número Viaje: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje}"/>
+
+                                <p:outputLabel value="Nombre Capitán: "/>
+                                <p:inputText value="#{itinerarioBean.iti.nom_capitan}"/>
+
+                                <p:outputLabel value="Manifiesto Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto}"/>
+
+                                <p:outputLabel value="Manifiesto Exp.:"/>
+                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto_exp}"/>
+
+                                <p:outputLabel value="Num. Año: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
+
+                                <p:outputLabel value="Observación: "/>
+                                <p:inputText value="#{itinerarioBean.iti.obs_itinerario}"/>
+
+                                <p:outputLabel value="Nombre Muelle: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
+
+                                <p:outputLabel for="fecarribo" value="Fecha Arribo: " />
+                                <p:calendar id="fecarribo" value="#{itinerarioBean.iti.fec_arribo}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horarribo" value="Hora Arribo: " />
+                                <p:inputMask id="horarribo" value="#{itinerarioBean.iti.hor_arribo}" mask="99:99"/>
+
+                                <p:outputLabel for="fecplatica" value="Fecha Platica: " />
+                                <p:calendar id="fecplatica" value="#{itinerarioBean.iti.fec_platica}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horplatica" value="Hora Platica: " />
+                                <p:inputMask id="horplatica" value="#{itinerarioBean.iti.hor_platica}" mask="99:99"/>
+
+                                <p:outputLabel for="fecmuelle" value="Fecha Muelle: " />
+                                <p:calendar id="fecmuelle" value="#{itinerarioBean.iti.fec_muelle}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="hormuelle" value="Hora Muelle: " />
+                                <p:inputMask id="hormuelle" value="#{itinerarioBean.iti.hor_muelle}" mask="99:99"/>
+
+                                <p:outputLabel for="feciniope" value="Fecha Inicio Ope.: " />
+                                <p:calendar id="feciniope" value="#{itinerarioBean.iti.fec_iniope}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horiniope" value="Hora Inicio Ope.: " />
+                                <p:inputMask id="horiniope" value="#{itinerarioBean.iti.hor_iniope}" mask="99:99"/>
+
+                                <p:outputLabel for="fecfionpe" value="Fecha Fin Ope.: " />
+                                <p:calendar id="fecfionpe" value="#{itinerarioBean.iti.fec_finope}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horfinope" value="Hora Fin Ope.: " />
+                                <p:inputMask id="horfinope" value="#{itinerarioBean.iti.hor_finope}" mask="99:99"/>
+
+                                <p:outputLabel for="feccutdry" value="Fecha Cutdry: " />
+                                <p:calendar id="feccutdry" value="#{itinerarioBean.iti.fec_cutdry}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horcutdry" value="Hora Cutdry: " />
+                                <p:inputMask id="horcutdry" value="#{itinerarioBean.iti.hor_cutdry}" mask="99:99"/>
+
+                                <p:outputLabel for="feccutssr" value="Fecha Cutssr: " />
+                                <p:calendar id="feccutssr" value="#{itinerarioBean.iti.fec_cutssr}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horcutssr" value="Hora Cutssr: " />
+                                <p:inputMask id="horcutssr" value="#{itinerarioBean.iti.hor_cutssr}" mask="99:99"/>
+
+                                <p:outputLabel for="feczarpe" value="Fecha Zarpe: " />
+                                <p:calendar id="feczarpe" value="#{itinerarioBean.iti.fec_zarpe}" pattern="yyyy-MM-dd" mask="true" />
+
+                                <p:outputLabel for="horzarpe" value="Hora Zarpe: " />
+                                <p:inputMask id="horzarpe" value="#{itinerarioBean.iti.hor_zarpe}" mask="99:99"/>
+
+                                <p:outputLabel value="Descripción Itineario: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario}"/>
+
+                                <p:outputLabel value="Itinerario Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_imp}"/>
+
+                                <p:outputLabel value="Num. Viaje Imp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje_imp}"/>
+
+                                <p:outputLabel value="Itinerario Exp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_exp}"/>
+
+                                <p:outputLabel value="Num. Viaje Exp.: "/>
+                                <p:inputText value="#{itinerarioBean.iti.num_viaje_exp}"/>
+
+                                <p:outputLabel value="MRN: "/>
+                                <p:inputText value="#{itinerarioBean.iti.MRN}"/>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{itinerarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{itinearrioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

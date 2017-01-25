@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{cambiarBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <div class="ui-panel ui-widget ui-widget-content ui-corner-all">
+                    <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                        <span class="ui-panel-title">Cambiar Contraseña</span>
+                    </div>
+                    <p:panel>
+                        <h:form id="frm">
+                            <p:growl id="growl" showDetail="true"/>
+                            <p:spacer height="10"/>
+                            <f:facet name="header" >
+                                <p:outputPanel>
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Cambiar Contraseña" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <h:panelGrid id="matchGrid" columns="3"  columnClasses="alinder_new,alinizq" >                    
+
+                                <h:outputLabel value="Contraseña actual" />
+                                <p:password id="contrasenaActual" value="#{cambiarBean.cambiar.actualPassword}"/>  
+                                <h:inputHidden/>
+                                <h:outputLabel value="Nueva Contraseña" for="contrasenaNueva" />
+                                <p:password id="contrasenaNueva" value="#{cambiarBean.cambiar.newPassword}" feedback="true"
+                                            promptLabel="Ingrese Contraseña" weakLabel="Nivel:Baja"  
+                                            goodLabel="Nivel:Media" strongLabel="Nivel:Alta"  />
+                                <p:message for="contrasenaNueva"/>                
+                                <h:outputLabel value="Confirmación de Contraseña" for="contrasenaConfirmacion" />
+                                <p:password id="contrasenaConfirmacion" value="#{cambiarBean.cambiar.confirmpassword}" feedback="true"
+                                            promptLabel="Ingrese Contraseña" weakLabel="Nivel:Baja"  
+                                            goodLabel="Nivel:Media" strongLabel="Nivel:Alta"/>  
+                                <p:message for="contrasenaConfirmacion" display="icon"/>
+                                <p:commandButton ajax="true" value="Editar" update="@form " action="#{cambiarBean.cambioClave()}" >
+                                    <p:confirm header="Confirmación" message="Está seguro de cambiar su contraseña" />
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </h:form>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                        </p:confirmDialog>
+                    </p:panel>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+        
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{buqueBean.listadoBuques}" var="buq" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{buqueBean.filteredBuques}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false"
+                                     resizableColumns="true" 
+                                     tableStyle="width:auto"
+                                     reflow="true">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Buques" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="Editar" actionListener="#{buqueBean.showEditDialog(buq)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                                <br />
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="Activar/Desactivar" actionListener="#{buqueBean.eliminar(buq)}"  update=":frm:uTable" >
+                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                            </p:column>
+                            
+                            <p:column headerText="Código" filterBy="#{buq.buq_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.buq_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo" filterBy="#{buq.tbu_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.tbu_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Pais" filterBy="#{buq.pai_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.pai_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto" filterBy="#{buq.pto_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.pto_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Linea" filterBy="#{buq.lin_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.lin_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Tráfico" filterBy="#{buq.tra_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.tra_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Buque" filterBy="#{buq.buq_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.buq_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Descripción" filterBy="#{buq.buq_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.buq_des}"/>
+                            </p:column>
+
+                            <p:column headerText="TRB" filterBy="#{buq.num_trb}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.num_trb}"/>
+                            </p:column>
+
+                            <p:column headerText="Eslora" filterBy="#{buq.num_eslora}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.num_eslora}"/>
+                            </p:column>
+
+                            <p:column headerText="Max. Tons" filterBy="#{buq.max_tons}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.max_tons}"/>
+                            </p:column>
+
+                            <p:column headerText="Reg. Lloyd" filterBy="#{buq.reg_lloyd}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.reg_lloyd}"/>
+                            </p:column>
+
+                            <p:column headerText="Código 1" filterBy="#{buq.buq_codigo1}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.buq_codigo1}"/>
+                            </p:column>
+
+                            <p:column headerText="Código Omi" filterBy="#{buq.codigo_omi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.codigo_omi}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado" filterBy="#{buq.buq_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{buq.buq_estado}"/>
+                            </p:column>
+
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Buque" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="4">
+                                <p:outputLabel value="Tipo de Buque "/>
+                                <p:selectOneMenu id="tbu" value="#{buqueBean.buq.tbu_codigo}">
+                                    <f:selectItems value="#{buqueBean.selectorTipBuque}" var="tbu" itemLabel="#{tbu.tbu_nombre}" itemValue="#{tbu.tbu_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="País "/>
+                                <p:selectOneMenu id="pais" value="#{buqueBean.buq.pai_codigo}">
+                                    <f:selectItems value="#{buqueBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Puerto "/>
+                                <p:selectOneMenu id="pto" value="#{buqueBean.buq.pto_codigo}">
+                                    <f:selectItems value="#{buqueBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Línea "/>
+                                <p:selectOneMenu id="linea" value="#{buqueBean.buq.lin_codigo}">
+                                    <f:selectItems value="#{buqueBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Tráfico "/>
+                                <p:selectOneMenu id="trafico" value="#{buqueBean.buq.tra_codigo}">
+                                    <f:selectItems value="#{buqueBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_nombre}" itemValue="#{tra.tra_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Buque: "/>
+                                <p:inputText value="#{buqueBean.buq.buq_nombre}"/>
+
+                                <p:outputLabel value="Descripción: "/>
+                                <p:inputText value="#{buqueBean.buq.buq_des}"/>
+
+                                <p:outputLabel value="TRB: "/>
+                                <p:inputText value="#{buqueBean.buq.num_trb}"/>
+
+                                <p:outputLabel value="Eslora: "/>
+                                <p:inputText value="#{buqueBean.buq.num_eslora}"/>
+
+                                <p:outputLabel value="Max. Tons: "/>
+                                <p:inputText value="#{buqueBean.buq.max_tons}"/>
+
+                                <p:outputLabel value="Reg. Lloyd: "/>
+                                <p:inputText value="#{buqueBean.buq.reg_lloyd}"/>
+
+                                <p:outputLabel value="Código 1: "/>
+                                <p:inputText value="#{buqueBean.buq.buq_codigo1}"/>
+
+                                <p:outputLabel value="Código 1: "/>
+                                <p:inputText value="#{buqueBean.buq.codigo_omi}"/>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{buqueBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{buqueBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{tipcontainerBean.listadoTipcontainers}" var="tcon" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{tipcontainerBean.filteredTipcontainers}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Tipo de Contenedores" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Código" filterBy="#{tcon.cod_tipcont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.cod_tipcont}"/>
+                            </p:column>
+
+                            <p:column headerText="Nombre" filterBy="#{tcon.tcon_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Descripción" filterBy="#{tcon.tcon_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_des}"/>
+                            </p:column>
+
+                            <p:column headerText="Valor Tara" filterBy="#{tcon.val_tara}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.val_tara}"/>
+                            </p:column>
+
+                            <p:column headerText="Código 1" filterBy="#{tcon.tcon_codigo1}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_codigo1}"/>
+                            </p:column>
+
+                            <p:column headerText="Código 2" filterBy="#{tcon.tcon_codigo2}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_codigo2}"/>
+                            </p:column>
+
+                            <p:column headerText="Código 3" filterBy="#{tcon.tcon_codigo3}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_codigo3}"/>
+                            </p:column>
+
+                            <p:column headerText="Código 4" filterBy="#{tcon.tcon_codigo4}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_codigo4}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado" filterBy="#{tcon.tcon_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{tcon.tcon_estado}"/>
+                            </p:column>
+
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="Editar" actionListener="#{tipcontainerBean.showEditDialog(tcon)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                                <br />
+                                <i class="icon-trash-2">
+                                    <p:commandLink value="Activar/Desactivar" actionListener="#{tipcontainerBean.eliminar(tcon)}"  update=":frm:uTable" >
+                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                </i>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Editar Tipo de Contenedor" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Nombre: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_nombre}"/>
+
+                                <p:outputLabel value="Descripcion: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_des}"/>
+
+                                <p:outputLabel value="Valor Tara:  "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.val_tara}"/>
+
+                                <p:outputLabel value="Código 1: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_codigo1}"/>
+
+                                <p:outputLabel value="Código 2: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_codigo2}"/>
+
+                                <p:outputLabel value="Código 3: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_codigo3}"/>
+
+                                <p:outputLabel value="Código 4: "/>
+                                <p:inputText value="#{tipcontainerBean.tcon.tcon_codigo4}"/>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{tipcontainerBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{tipcontainerBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
