@@ -21,21 +21,29 @@ import com.delpac.dao.LocalidadDAO;
 import com.delpac.entity.Localidad;
 
 import com.delpac.entity.Usuario;
+import conexion.conexion;
 import java.io.IOException;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-//import net.sf.jasperreports.engine.JRException;
-//import net.sf.jasperreports.engine.JasperExportManager;
-//import net.sf.jasperreports.engine.JasperFillManager;
-//import net.sf.jasperreports.engine.JasperPrint;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+
 /**
  *
  * @author Bottago SA
@@ -122,9 +130,25 @@ public class OrdenRetiroBean implements Serializable {
         //ord.getCod_ordenretiro()
     }
     
-//    public void exportpdf() throws JRException, IOException {
-//        
-//    }
+    public void exportpdf(OrdenRetiro or) throws JRException, IOException {
+        conexion con = new conexion();
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+        parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+        parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
+        
+        String temperatura = or.getEs_temperado()==1?"ReporteFreezer.jasper":"ReporteNoFreezer.jasper";
+        
+        String dirReporte = servleContext.getRealPath("/reportes/"+temperatura);
+        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+        response.addHeader("Content-disposition", "attachment;filename=Orden de Retiro"+or.getCod_ordenretiro()+".pdf");
+        response.setContentType("application/pdf");
+
+        JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
+        JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
+        context.responseComplete();            
+    }
 //    
 //    public void commitEdit() throws SQLException {
 //        daoSellos.editSellos(sel);

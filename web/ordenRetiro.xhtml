@@ -35,7 +35,7 @@
                             </f:facet>
 
                             <p:column  style="text-align: center">
-                                <p:commandLink value="PDF" class="icon-file-pdf" actionListener="#{ordenRetiroBean.exportPDF()}"/>
+                                <p:commandLink value="PDF" class="icon-file-pdf" actionListener="#{ordenRetiroBean.exportpdf(ord)}"/>
                             </p:column>
 
                             <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">

@@ -2,28 +2,15 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteFreezer" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69dcbcdc-ef05-4f51-810c-5e78c459e766">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="192"/>
 	<parameter name="cod_ordenretiro" class="java.lang.Integer" isForPrompting="false"/>
-	<parameter name="fecha_crea" class="java.sql.Timestamp"/>
-	<parameter name="cia_nombre" class="java.lang.String"/>
-	<parameter name="dsp_itinerario" class="java.lang.String"/>
-	<parameter name="lin_nombre" class="java.lang.String"/>
-	<parameter name="booking" class="java.lang.String"/>
-	<parameter name="pto_nombre" class="java.lang.String"/>
-	<parameter name="mov_xcuenta" class="java.lang.String"/>
-	<parameter name="cant_tipocont" class="java.lang.String"/>
-	<parameter name="tipo_carga" class="java.lang.String"/>
-	<parameter name="req_especial" class="java.lang.String"/>
-	<parameter name="inv_seguridad" class="java.lang.String"/>
-	<parameter name="temperatura" class="java.lang.String"/>
-	<parameter name="ventilacion" class="java.lang.String"/>
-	<parameter name="observacion" class="java.lang.String"/>
-	<parameter name="loc_salida" class="java.lang.String"/>
-	<parameter name="loc_entrada" class="java.lang.String"/>
+	<parameter name="RutaImagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, iti.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
-       ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.observaciones, loc.loc_des,
-       loca.loc_des, ord.fecha_crea
+       ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.observaciones, loc.loc_des as loc_salida,
+       loca.loc_des as loc_entrada, ord.fecha_crea
 from publico.ordenretiro ord
 inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo
 inner join publico.mae_itinerario iti on ord.ids_itinerario = iti.ids_itinerario
@@ -31,21 +18,7 @@ inner join publico.mae_linea lin on ord.lin_codigo = lin.lin_codigo
 inner join publico.mae_puerto pto on ord.pto_codigo = pto.pto_codigo
 inner join publico.mae_localidad loc on ord.loc_salida = loc.loc_codigo
 inner join publico.mae_localidad loca on ord.loc_entrada = loca.loc_codigo
-where ord.cod_ordenretiro = $P{cod_ordenretiro}
-and cli.cia_nombre = $P{cia_nombre}
-and iti.dsp_itinerario = $P{dsp_itinerario}
-and lin.lin_nombre = $P{lin_nombre}
-and ord.booking = $P{booking}
-and pto.pto_nombre = $P{pto_nombre}
-and ord.mov_xcuenta = $P{mov_xcuenta}
-and ord.cant_tipocont = $P{cant_tipocont}
-and ord.tipo_carga = $P{tipo_carga}
-and ord.req_especial = $P{req_especial}
-and ord.inv_seguridad = $P{inv_seguridad}
-and ord.observaciones = $P{observacion}
-and loc.loc_des = $P{loc_salida}
-and loca.loc_des = $P{loc_entrada}
-and ord.fecha_crea = $P{fecha_crea}]]>
+where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 	</queryString>
 	<field name="cod_ordenretiro" class="java.math.BigDecimal"/>
 	<field name="cia_nombre" class="java.lang.String"/>
@@ -59,7 +32,8 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 	<field name="req_especial" class="java.lang.String"/>
 	<field name="inv_seguridad" class="java.lang.String"/>
 	<field name="observaciones" class="java.lang.String"/>
-	<field name="loc_des" class="java.lang.String"/>
+	<field name="loc_salida" class="java.lang.String"/>
+	<field name="loc_entrada" class="java.lang.String"/>
 	<field name="fecha_crea" class="java.sql.Timestamp"/>
 	<filterExpression><![CDATA[new Boolean(true)]]></filterExpression>
 	<background>
@@ -84,7 +58,7 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 			</rectangle>
 			<image>
 				<reportElement x="41" y="5" width="107" height="74" uuid="3a854a70-214c-412b-a6f5-8e9ae753092f"/>
-				<imageExpression><![CDATA["C:\\Users\\Bottago SA\\Desktop\\Bottago\\PROYECTO contenedores\\sellos\\Formato reportes\\delpac.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{RutaImagen}+"delpac.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="175" y="0" width="218" height="39" forecolor="#FFFFFF" uuid="ce236989-1d47-47f3-b337-7e9607e4b2dd"/>
@@ -124,7 +98,7 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 			<textField pattern="MMMMM dd, yyyy">
 				<reportElement x="415" y="48" width="129" height="20" uuid="607b7bd2-3c0c-4a8d-8a8f-79e2537259ac"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{fecha_crea}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_crea}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -158,7 +132,7 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 			</staticText>
 			<image>
 				<reportElement x="71" y="553" width="141" height="61" uuid="8838ce70-f417-4374-bf48-de68bd488d73"/>
-				<imageExpression><![CDATA["C:\\Users\\Bottago SA\\Desktop\\Bottago\\PROYECTO contenedores\\sellos\\Formato reportes\\firma.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{RutaImagen}+"firma.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="41" y="12" width="483" height="20" uuid="84e9ff5c-87fa-4e00-b8d1-a81345c57ce1"/>
@@ -329,27 +303,27 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 			<textField>
 				<reportElement x="176" y="52" width="259" height="20" uuid="44fcf1a9-b87f-44e0-8143-bc3797e82b52"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{cia_nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cia_nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="175" y="72" width="260" height="20" uuid="da4d8edb-188e-44fa-bb70-8df150b473cb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{dsp_itinerario}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dsp_itinerario}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="176" y="92" width="259" height="20" uuid="79c73613-a993-4b7e-85b7-5788147ada40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{lin_nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{lin_nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="174" y="112" width="261" height="20" uuid="154974fa-6715-40f0-a63b-ab3245afeb46"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{booking}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{booking}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="306" y="146" width="130" height="20" uuid="c4038b95-3913-4969-874e-250a71314df5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{pto_nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pto_nombre}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="176" y="146" width="129" height="20" uuid="e7605370-d935-4ae6-a8f9-a04c27dc5f2a"/>
@@ -359,39 +333,39 @@ and ord.fecha_crea = $P{fecha_crea}]]>
 			<textField>
 				<reportElement x="176" y="178" width="259" height="20" uuid="f41ff360-cfbc-41e6-8dc8-b4480a6fea21"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{mov_xcuenta}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mov_xcuenta}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="174" y="198" width="261" height="20" uuid="82c619ab-9678-4d46-9b64-36538777ad53"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{cant_tipocont}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cant_tipocont}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="176" y="218" width="259" height="20" uuid="5c059432-5c64-453c-9dd6-97a6b5666ff7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{tipo_carga}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_carga}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="176" y="238" width="259" height="20" uuid="3f813c13-6eaf-4272-a428-a5b20d1d64d6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{req_especial}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{req_especial}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="176" y="258" width="259" height="20" uuid="7116c56e-38ae-49d8-8b23-5a8c51228ff3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{inv_seguridad}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inv_seguridad}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="177" y="278" width="259" height="57" uuid="05479217-c63a-458b-83bb-34f9b1babff5"/>
-				<textFieldExpression><![CDATA[$P{observacion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="274" y="346" width="100" height="20" uuid="70784e0d-165c-4cd7-b14d-80da1ce7ae5c"/>
-				<textFieldExpression><![CDATA[$P{loc_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{loc_salida}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="304" y="374" width="100" height="20" uuid="95426d28-fbc6-49de-ba1f-e2546339b563"/>
-				<textFieldExpression><![CDATA[$P{loc_entrada}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{loc_entrada}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
