@@ -93,70 +93,153 @@ public class OrdenRetiroDAO implements Serializable {
                         + "cod_ordenretiro, cia_codigo, ids_itinerario, lin_codigo, booking, "
                         + "pto_codigo, mov_xcuenta, cant_tipocont, tipo_carga, req_especial, "
                         + "inv_seguridad, es_temperado, temperatura, ventilacion, observaciones, "
-                        + "loc_salida, loc_entrada, fecha_crea, fecha_mod, usu_cre, usu_mod, est_orden) "
+                        + "loc_salida, loc_entrada, fecha_crea, fecha_mod, usu_cre, usu_mod, est_orden, estadopdf) "
                         + "VALUES (cast(extract(year from current_timestamp)||cast(nextval('publico.sec_orden') as text) as numeric),?, ?, ?, ?, "
                         + "?, ?, ?, ?, ?, "
                         + "?, ?, ?, ?, ?, ?, "
-                        + "?, current_timestamp, null, ?, null, 1); ";
+                        + "?, current_timestamp, null, ?, null, 1, 0); ";
             } else {
                 query = " INSERT INTO publico.ordenretiro( "
                         + "cod_ordenretiro, cia_codigo, ids_itinerario, lin_codigo, booking, "
                         + "pto_codigo, mov_xcuenta, cant_tipocont, tipo_carga, req_especial, "
                         + "inv_seguridad, es_temperado, temperatura, ventilacion, observaciones, "
-                        + "loc_salida, loc_entrada, fecha_crea, fecha_mod, usu_cre, usu_mod, est_orden) "
+                        + "loc_salida, loc_entrada, fecha_crea, fecha_mod, usu_cre, usu_mod, est_orden, estadopdf) "
                         + "VALUES (cast(extract(year from current_timestamp)||cast(nextval('publico.sec_orden') as text) as numeric),?, ?, ?, ?, "
                         + "?, ?, ?, ?, ?, "
                         + "?, 0, null, null, ?, ?, "
-                        + "?, current_timestamp, null, ?, null, 1);";
+                        + "?, current_timestamp, null, ?, null, 1, 0);";
             }
             pst = con.getConnection().prepareStatement(query);
 
             if (temperado == true) {
 //                for (OrdenRetiro or : listadoOR) {
-                    pst.setString(1, or.getCia_codigo());
-                    pst.setInt(2, or.getIds_itinerario());
-                    pst.setString(3, or.getLin_codigo());
-                    pst.setString(4, or.getBooking());
-                    pst.setString(5, or.getPto_codigo());
-                    pst.setString(6, or.getMov_xcuenta());
-                    pst.setString(7, or.getCant_tipocont());
-                    pst.setString(8, or.getTipo_carga());
-                    pst.setString(9, or.getReq_especial());
-                    pst.setString(10, or.getInv_seguridad());
-                    pst.setInt(11, 1);
-                    pst.setString(12, or.getTemperatura());
-                    pst.setString(13, or.getVentilacion());
-                    pst.setString(14, or.getObservaciones());
-                    pst.setInt(15, or.getLoc_salida());
-                    pst.setInt(16, or.getLoc_entrada());
-                    pst.setString(17, u.getLogin());
-
-                    pst.executeUpdate();
-//                }
+                pst.setString(1, or.getCia_codigo());
+                pst.setInt(2, or.getIds_itinerario());
+                pst.setString(3, or.getLin_codigo());
+                pst.setString(4, or.getBooking());
+                pst.setString(5, or.getPto_codigo());
+                pst.setString(6, or.getMov_xcuenta());
+                pst.setString(7, or.getCant_tipocont());
+                pst.setString(8, or.getTipo_carga());
+                pst.setString(9, or.getReq_especial());
+                pst.setString(10, or.getInv_seguridad());
+                pst.setInt(11, 1);
+                pst.setString(12, or.getTemperatura());
+                pst.setString(13, or.getVentilacion());
+                pst.setString(14, or.getObservaciones());
+                pst.setInt(15, or.getLoc_salida());
+                pst.setInt(16, or.getLoc_entrada());
+                pst.setString(17, u.getLogin());
+                pst.executeUpdate();
             }
             if (temperado == false) {
-//                for (OrdenRetiro or : listadoOR) {
-                    pst.setString(1, or.getCia_codigo());
-                    pst.setInt(2, or.getIds_itinerario());
-                    pst.setString(3, or.getLin_codigo());
-                    pst.setString(4, or.getBooking());
-                    pst.setString(5, or.getPto_codigo());
-                    pst.setString(6, or.getMov_xcuenta());
-                    pst.setString(7, or.getCant_tipocont());
-                    pst.setString(8, or.getTipo_carga());
-                    pst.setString(9, or.getReq_especial());
-                    pst.setString(10, or.getInv_seguridad());
-                    pst.setString(11, or.getObservaciones());
-                    pst.setInt(12, or.getLoc_salida());
-                    pst.setInt(13, or.getLoc_entrada());
-                    pst.setString(14, u.getLogin());
-                    pst.executeUpdate();
-//                }
+                pst.setString(1, or.getCia_codigo());
+                pst.setInt(2, or.getIds_itinerario());
+                pst.setString(3, or.getLin_codigo());
+                pst.setString(4, or.getBooking());
+                pst.setString(5, or.getPto_codigo());
+                pst.setString(6, or.getMov_xcuenta());
+                pst.setString(7, or.getCant_tipocont());
+                pst.setString(8, or.getTipo_carga());
+                pst.setString(9, or.getReq_especial());
+                pst.setString(10, or.getInv_seguridad());
+                pst.setString(11, or.getObservaciones());
+                pst.setInt(12, or.getLoc_salida());
+                pst.setInt(13, or.getLoc_entrada());
+                pst.setString(14, u.getLogin());
+                pst.executeUpdate();
             }
 
             con.getConnection().commit();
         } catch (Exception e) {
             System.out.println("DAO CREAR ORDEN RETIRO: " + e.getMessage());
+            con.getConnection().rollback();
+        } finally {
+            con.desconectar();
+        }
+    }
+    
+    public void updateVerificaPDF(OrdenRetiro ord, int cod_ordenretiro) throws SQLException {        
+        conexion con = new conexion();
+        PreparedStatement pst;
+        String query = "update publico.ordenretiro"
+                + " set estadopdf=?"
+                + " where cod_ordenretiro=? ";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            pst.setInt(1, 1);
+            pst.setInt(2, cod_ordenretiro);
+            pst.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println("DAO UPDATE VERIFICA PDF: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+    }
+
+    public void editOrdenRetiro(OrdenRetiro or, boolean temperado, Usuario u) throws SQLException {
+        conexion con = new conexion();
+        PreparedStatement pst;
+        con.getConnection().setAutoCommit(false);
+        ResultSet rs = null;
+        String query = "";
+        try {
+            if (temperado) {
+                query = "update publico.ordenretiro"
+                        + "set cia_codigo=?, ids_itinerario=?, lin_codigo=?, booking=?, pto_codigo=?, mov_xcuenta=?, cant_tipocont=?, "
+                        + "tipo_carga=?, req_especial=?,"
+                        + "inv_seguridad=?, temperatura=?, ventilacion=?, observaciones=?, loc_salida=?, loc_entrada=?, "
+                        + "fecha_mod=current_timestamp, usu_mod=?"
+                        + "where cod_ordenretiro=?";
+            } else {
+                query = "update publico.ordenretiro"
+                        + "set cia_codigo=?, ids_itinerario=?, lin_codigo=?, booking=?, pto_codigo=?, mov_xcuenta=?, cant_tipocont=?, "
+                        + "tipo_carga=?, req_especial=?, "
+                        + "inv_seguridad=?, observaciones=?, loc_salida=?, loc_entrada=?, fecha_mod=current_timestamp, usu_mod=?"
+                        + "where cod_ordenretiro=?";
+            }
+            pst = con.getConnection().prepareStatement(query);
+            if (temperado == true) {
+                pst.setString(1, or.getCia_codigo());
+                pst.setInt(2, or.getIds_itinerario());
+                pst.setString(3, or.getLin_codigo());
+                pst.setString(4, or.getBooking());
+                pst.setString(5, or.getPto_codigo());
+                pst.setString(6, or.getMov_xcuenta());
+                pst.setString(7, or.getCant_tipocont());
+                pst.setString(8, or.getTipo_carga());
+                pst.setString(9, or.getReq_especial());
+                pst.setString(10, or.getInv_seguridad());
+                pst.setString(12, or.getTemperatura());
+                pst.setString(13, or.getVentilacion());
+                pst.setString(14, or.getObservaciones());
+                pst.setInt(15, or.getLoc_salida());
+                pst.setInt(16, or.getLoc_entrada());
+                pst.setString(17, u.getLogin());
+                pst.executeUpdate();
+            }
+            if (temperado == false) {
+                pst.setString(1, or.getCia_codigo());
+                pst.setInt(2, or.getIds_itinerario());
+                pst.setString(3, or.getLin_codigo());
+                pst.setString(4, or.getBooking());
+                pst.setString(5, or.getPto_codigo());
+                pst.setString(6, or.getMov_xcuenta());
+                pst.setString(7, or.getCant_tipocont());
+                pst.setString(8, or.getTipo_carga());
+                pst.setString(9, or.getReq_especial());
+                pst.setString(10, or.getInv_seguridad());
+                pst.setString(11, or.getObservaciones());
+                pst.setInt(12, or.getLoc_salida());
+                pst.setInt(13, or.getLoc_entrada());
+                pst.setString(14, u.getLogin());
+                pst.executeUpdate();
+            }
+
+            con.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println("DAO EDITAR ORDEN RETIRO: " + e.getMessage());
             con.getConnection().rollback();
         } finally {
             con.desconectar();

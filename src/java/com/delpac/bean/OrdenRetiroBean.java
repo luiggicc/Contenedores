@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -59,7 +60,8 @@ public class OrdenRetiroBean implements Serializable {
     private OrdenRetiroDAO daoOrdenRetiro = new OrdenRetiroDAO();
     boolean temperado;
     int es_temperado;
-
+    boolean temperado1;
+    
     private int idClienteSelected;
     private List<Cliente> selectorCliente = new ArrayList<>();
 
@@ -111,54 +113,59 @@ public class OrdenRetiroBean implements Serializable {
                 selectorLocalidad = daoLocalidad.findAll();
 
                 listadoOrdenes = daoOrdenRetiro.findAll();
+                
+                
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
         }
     }
 
-//    public void showEditDialog(Sellos sell) {
-//        sel = sell;
-//    }
-//
-//    public void onCancelDialog() {
-//        setSel(new Sellos());
-//    }
-//    
-    public void commitCreate() throws SQLException {
-        daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
-        //ord.getCod_ordenretiro()
+    public void showEditDialog(OrdenRetiro orde) {
+        ord = orde;
+    }
+
+    public void onCancelDialog() {
+        setOrd(new OrdenRetiro());
+    }
+
+    public boolean verificaCheck(){
+        boolean est_habilitado = ord.getEstadopdf();
+        System.out.println(est_habilitado);
+        return est_habilitado;
+        
     }
     
-    public void exportpdf(OrdenRetiro or) throws JRException, IOException {
+    public void commitCreate() throws SQLException {
+        daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
+    }
+
+    public void commitEdit() throws SQLException {
+        daoOrdenRetiro.editOrdenRetiro(ord, temperado, sessionUsuario);
+        listadoOrdenes = daoOrdenRetiro.findAll();
+    }
+    
+    public void exportpdf(OrdenRetiro or) throws JRException, IOException, SQLException {
+        daoOrdenRetiro.updateVerificaPDF(ord, or.getCod_ordenretiro());
         conexion con = new conexion();
         Map<String, Object> parametros = new HashMap<String, Object>();
         FacesContext context = FacesContext.getCurrentInstance();
         ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
         parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
         parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
-        
-        String temperatura = or.getEs_temperado()==1?"ReporteFreezer.jasper":"ReporteNoFreezer.jasper";
-        
-        String dirReporte = servleContext.getRealPath("/reportes/"+temperatura);
+
+        String temperatura = or.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
+
+        String dirReporte = servleContext.getRealPath("/reportes/" + temperatura);
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        response.addHeader("Content-disposition", "attachment;filename=Orden de Retiro"+or.getCod_ordenretiro()+".pdf");
+        response.addHeader("Content-disposition", "attachment;filename=Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf");
         response.setContentType("application/pdf");
 
         JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
         JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
-        context.responseComplete();            
+        context.responseComplete();
+        
     }
-//    
-//    public void commitEdit() throws SQLException {
-//        daoSellos.editSellos(sel);
-//        listadoSellos = daoSellos.findAll();
-//    }
-//
-//    public void eliminar() throws SQLException {
-//        daoSellos.deleteSellos(sel);
-//        listadoSellos = daoSellos.findAll();
-//    }
 
     public List<OrdenRetiro> getListadoOrdenes() {
         return listadoOrdenes;
@@ -312,5 +319,21 @@ public class OrdenRetiroBean implements Serializable {
         this.es_temperado = es_temperado;
     }
 
+    public boolean isTemperado1() {
+        return temperado1;
+    }
+
+    public void setTemperado1(boolean temperado1) {
+        this.temperado1 = temperado1;
+    }
+
+//    public boolean isEst_habilitado() {
+//        return est_habilitado;
+//    }
+//
+//    public void setEst_habilitado(boolean est_habilitado) {
+//        this.est_habilitado = est_habilitado;
+//    }
+    
     
 }

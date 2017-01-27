@@ -35,7 +35,15 @@
                             </f:facet>
 
                             <p:column  style="text-align: center">
-                                <p:commandLink value="PDF" class="icon-file-pdf" actionListener="#{ordenRetiroBean.exportpdf(ord)}"/>
+                                <p:commandLink ajax="false" value="PDF" class="icon-file-pdf" actionListener="#{ordenRetiroBean.exportpdf(ord)}"
+                                               disabled="#{ordenRetiroBean.verificaCheck()}">
+                                </p:commandLink>
+                            </p:column>
+
+                            <p:column  style="text-align: center">
+                                <i class="icon-edit">
+                                    <p:commandLink value="Editar" actionListener="#{ordenRetiroBean.showEditDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                </i>
                             </p:column>
 
                             <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -110,157 +118,86 @@
 
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
-                    <p:dialog id="dlgDatos" header="Editar Itinerario" widgetVar="wdlgDatos" modal="true" responsive="true">
+                    <p:dialog id="dlgDatos" header="Editar Orden de Retiro" widgetVar="wdlgDatos" modal="true" responsive="true">
                         <h:form>
-                            <h:panelGrid columns="6">
+                            <h:panelGrid columns="4">
                                 <p:outputLabel value="Cliente: "/>
-                                <p:selectOneMenu id="cliente" value="#{itinerarioBean.iti.cia_codigo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
+                                <p:selectOneMenu id="cliente" value="#{ordenRetiroBean.ord.cia_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Línea: "/>
-                                <p:selectOneMenu id="linea" value="#{itinerarioBean.iti.lin_codigo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_codigo}" itemValue="#{lin.lin_codigo}" />
+                                <p:outputLabel value="Nave/Viaje: "/>
+                                <p:selectOneMenu id="itinerario" value="#{ordenRetiroBean.ord.ids_itinerario}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorItinerario}" var="iti" itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.ids_itinerario}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Buque: "/>
-                                <p:selectOneMenu id="buque" value="#{itinerarioBean.iti.buq_codigo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorBuque}" var="buq" itemLabel="#{buq.buq_codigo}" itemValue="#{buq.buq_codigo}" />
+                                <p:outputLabel value="Linea Naviera: "/>
+                                <p:selectOneMenu id="linea" value="#{ordenRetiroBean.ord.lin_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Puerto Arribo: "/>
-                                <p:selectOneMenu id="ptoarribo" value="#{itinerarioBean.iti.cod_ptoarribo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
+                                <p:outputLabel value="Booking: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.booking}" style="width: 200px"/>
+
+                                <p:outputLabel value="Puerto de embarque: "/>
+                                <p:selectOneMenu id="puerto" value="#{ordenRetiroBean.ord.pto_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Puerto Inicio: "/>
-                                <p:selectOneMenu id="ptoinicio" value="#{itinerarioBean.iti.cod_ptoinicio}">
-                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
-                                </p:selectOneMenu>
+                                <p:outputLabel value="Movilización por cuenta: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.mov_xcuenta}" style="width: 200px"/>
 
-                                <p:outputLabel value="Puerto Eta: "/>
-                                <p:selectOneMenu id="ptoeta" value="#{itinerarioBean.iti.cod_ptoeta}">
-                                    <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
-                                </p:selectOneMenu>
+                                <p:outputLabel value="Cantidad y tipo de cntr: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.cant_tipocont}" style="width: 200px"/>
 
-                                <p:outputLabel value="Puerto Físico: "/>
-                                <p:inputText value="#{itinerarioBean.iti.cod_ptofisico}"/>
+                                <p:outputLabel value="Tipo de carga dice/contener: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.tipo_carga}" style="width: 200px"/>
 
-                                <p:outputLabel value="Tráfico: "/>
-                                <p:selectOneMenu id="trafico" value="#{itinerarioBean.iti.tra_codigo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_codigo}" itemValue="#{tra.tra_codigo}" />
-                                </p:selectOneMenu>
+                                <p:outputLabel value="Requerimiento Especial: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.req_especial}" style="width: 200px"/>
 
-                                <p:outputLabel value="Aduana: "/>
-                                <p:selectOneMenu id="aduana" value="#{itinerarioBean.iti.adu_codigo}">
-                                    <f:selectItems value="#{itinerarioBean.selectorAduana}" var="adu" itemLabel="#{adu.adu_codigo}" itemValue="#{adu.adu_codigo}" />
-                                </p:selectOneMenu>
+                                <p:outputLabel value="Sello de seguridad N: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.inv_seguridad}" style="width: 200px"/>
 
-                                <p:outputLabel value="Tip. Manifiesto Imp.: "/>
-                                <p:selectOneMenu id="tipmanifiestoimp" value="#{itinerarioBean.iti.cod_tipmanifiesto}">
-                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
-                                </p:selectOneMenu>
 
-                                <p:outputLabel value="Tip. Manifiesto Exp.: "/>
-                                <p:selectOneMenu id="tipmanifiestoexp" value="#{itinerarioBean.iti.cod_tipmanifiesto_exp}">
-                                    <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
-                                </p:selectOneMenu>
+                                <p:outputLabel value="Contenedor Temperado?" />
+                                <h:selectBooleanCheckbox id="tempcheckbox" value="#{ordenRetiroBean.temperado}"> 
+                                </h:selectBooleanCheckbox>
+                                <p:outputLabel value="" />
+                                <p:outputLabel value="" />
+                                <p:outputLabel value="Temperatura: "/>
+                                <p:inputText id="temp" value="#{ordenRetiroBean.ord.temperatura}" required="#{checkbox == 'true'}" style="width: 200px"/>
 
-                                <p:outputLabel value="Número Viaje: "/>
-                                <p:inputText value="#{itinerarioBean.iti.num_viaje}"/>
+                                <p:outputLabel value="Ventilación: "/>
+                                <p:inputText id="vent" value="#{ordenRetiroBean.ord.ventilacion}" required="#{checkbox == 'true'}" style="width: 200px"/>
 
-                                <p:outputLabel value="Nombre Capitán: "/>
-                                <p:inputText value="#{itinerarioBean.iti.nom_capitan}"/>
-
-                                <p:outputLabel value="Manifiesto Imp.: "/>
-                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto}"/>
-
-                                <p:outputLabel value="Manifiesto Exp.:"/>
-                                <p:inputText value="#{itinerarioBean.iti.cod_manifiesto_exp}"/>
-
-                                <p:outputLabel value="Num. Año: "/>
-                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
 
                                 <p:outputLabel value="Observación: "/>
-                                <p:inputText value="#{itinerarioBean.iti.obs_itinerario}"/>
+                                <p:inputText value="#{ordenRetiroBean.ord.observaciones}" style="width: 200px"/>
 
-                                <p:outputLabel value="Nombre Muelle: "/>
-                                <p:inputText value="#{itinerarioBean.iti.num_anio}"/>
+                                <p:outputLabel value="" />    
+                                <p:outputLabel value="" />
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:outputLabel value="Patio de salida: "/>
+                                <p:selectOneMenu id="locsalida" value="#{ordenRetiroBean.ord.loc_salida}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
+                                </p:selectOneMenu>
 
-                                <p:outputLabel for="fecarribo" value="Fecha Arribo: " />
-                                <p:calendar id="fecarribo" value="#{itinerarioBean.iti.fec_arribo}" pattern="yyyy-MM-dd" mask="true" />
+                                <p:outputLabel value="Terminal Portuario: "/>
+                                <p:selectOneMenu id="locentrada" value="#{ordenRetiroBean.ord.loc_entrada}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{ordenRetiroBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
+                                </p:selectOneMenu>
 
-                                <p:outputLabel for="horarribo" value="Hora Arribo: " />
-                                <p:inputMask id="horarribo" value="#{itinerarioBean.iti.hor_arribo}" mask="99:99"/>
-
-                                <p:outputLabel for="fecplatica" value="Fecha Platica: " />
-                                <p:calendar id="fecplatica" value="#{itinerarioBean.iti.fec_platica}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horplatica" value="Hora Platica: " />
-                                <p:inputMask id="horplatica" value="#{itinerarioBean.iti.hor_platica}" mask="99:99"/>
-
-                                <p:outputLabel for="fecmuelle" value="Fecha Muelle: " />
-                                <p:calendar id="fecmuelle" value="#{itinerarioBean.iti.fec_muelle}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="hormuelle" value="Hora Muelle: " />
-                                <p:inputMask id="hormuelle" value="#{itinerarioBean.iti.hor_muelle}" mask="99:99"/>
-
-                                <p:outputLabel for="feciniope" value="Fecha Inicio Ope.: " />
-                                <p:calendar id="feciniope" value="#{itinerarioBean.iti.fec_iniope}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horiniope" value="Hora Inicio Ope.: " />
-                                <p:inputMask id="horiniope" value="#{itinerarioBean.iti.hor_iniope}" mask="99:99"/>
-
-                                <p:outputLabel for="fecfionpe" value="Fecha Fin Ope.: " />
-                                <p:calendar id="fecfionpe" value="#{itinerarioBean.iti.fec_finope}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horfinope" value="Hora Fin Ope.: " />
-                                <p:inputMask id="horfinope" value="#{itinerarioBean.iti.hor_finope}" mask="99:99"/>
-
-                                <p:outputLabel for="feccutdry" value="Fecha Cutdry: " />
-                                <p:calendar id="feccutdry" value="#{itinerarioBean.iti.fec_cutdry}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horcutdry" value="Hora Cutdry: " />
-                                <p:inputMask id="horcutdry" value="#{itinerarioBean.iti.hor_cutdry}" mask="99:99"/>
-
-                                <p:outputLabel for="feccutssr" value="Fecha Cutssr: " />
-                                <p:calendar id="feccutssr" value="#{itinerarioBean.iti.fec_cutssr}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horcutssr" value="Hora Cutssr: " />
-                                <p:inputMask id="horcutssr" value="#{itinerarioBean.iti.hor_cutssr}" mask="99:99"/>
-
-                                <p:outputLabel for="feczarpe" value="Fecha Zarpe: " />
-                                <p:calendar id="feczarpe" value="#{itinerarioBean.iti.fec_zarpe}" pattern="yyyy-MM-dd" mask="true" />
-
-                                <p:outputLabel for="horzarpe" value="Hora Zarpe: " />
-                                <p:inputMask id="horzarpe" value="#{itinerarioBean.iti.hor_zarpe}" mask="99:99"/>
-
-                                <p:outputLabel value="Descripción Itineario: "/>
-                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario}"/>
-
-                                <p:outputLabel value="Itinerario Imp.: "/>
-                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_imp}"/>
-
-                                <p:outputLabel value="Num. Viaje Imp.: "/>
-                                <p:inputText value="#{itinerarioBean.iti.num_viaje_imp}"/>
-
-                                <p:outputLabel value="Itinerario Exp.: "/>
-                                <p:inputText value="#{itinerarioBean.iti.dsp_itinerario_exp}"/>
-
-                                <p:outputLabel value="Num. Viaje Exp.: "/>
-                                <p:inputText value="#{itinerarioBean.iti.num_viaje_exp}"/>
-
-                                <p:outputLabel value="MRN: "/>
-                                <p:inputText value="#{itinerarioBean.iti.MRN}"/>
-
-                                <p:commandButton ajax="true" value="Editar" actionListener="#{itinerarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{ordenRetiroBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>
-                                <p:commandButton value="Cancelar" actionListener="#{itinearrioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                                <p:commandButton value="Cancelar" actionListener="#{ordenRetiroBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
-
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >

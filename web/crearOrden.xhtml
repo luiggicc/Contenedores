@@ -84,10 +84,12 @@
                             <f:selectItems value="#{ordenRetiroBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
                         </p:selectOneMenu>
 
-                        <p:commandButton ajax="true" value="Crear Orden" actionListener="#{ordenRetiroBean.commitCreate()}">
+                        <p:commandButton ajax="true" action="/ordenRetiro?faces-redirect=true" value="Crear Orden" 
+                                         actionListener="#{ordenRetiroBean.commitCreate()}">
 
                         </p:commandButton>
-                        <p:commandButton value="Cancelar" actionListener="#{canalBean.onCancelDialog()}" immediate="true" />
+                        <p:commandButton value="Cancelar" action="/ordenRetiro?faces-redirect=true" immediate="true" />
+                        
                     </h:panelGrid>
                 </p:panel>
             </div>

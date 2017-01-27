@@ -41,7 +41,7 @@ public class OrdenRetiro implements Serializable {
     String loc_entradades;
     String usu_cre;
     String usu_mod;
-
+    boolean estadopdf;
     
     public int getCod_ordenretiro() {
         return cod_ordenretiro;
@@ -275,5 +275,14 @@ public class OrdenRetiro implements Serializable {
         this.loc_entrada = loc_entrada;
     }
 
+    public boolean getEstadopdf() {
+        return estadopdf;
+    }
+
+    public void setEstadopdf(boolean estadopdf) {
+        this.estadopdf = estadopdf;
+    }
+
+    
     
 }
