@@ -36,7 +36,8 @@ public class BuqueDAO implements Serializable {
                 + "left outer join publico.mae_pais as pai on buq.pai_codigo = pai.pai_codigo "
                 + "left outer join publico.mae_puerto as pue on buq.pto_codigo = pue.pto_codigo "
                 + "left outer join publico.mae_linea as lin on buq.lin_codigo = lin.lin_codigo "
-                + "left outer join publico.mae_trafico as tra on buq.tra_codigo = tra.tra_codigo";
+                + "left outer join publico.mae_trafico as tra on buq.tra_codigo = tra.tra_codigo "
+                + "order by buq.buq_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

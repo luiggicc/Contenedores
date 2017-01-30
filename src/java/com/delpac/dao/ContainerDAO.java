@@ -31,7 +31,8 @@ public class ContainerDAO implements Serializable {
                 + "case conta.con_estado when 'A' then 'Activo' else 'Inactivo' end as con_estado "
                 + "from publico.mae_container as conta "
                 + "inner join publico.mae_tipcontainer as tcon on conta.con_tipcont = tcon.cod_tipcont "
-                + "inner join publico.mae_linea as lin on conta.lin_codigo = lin.lin_codigo";
+                + "inner join publico.mae_linea as lin on conta.lin_codigo = lin.lin_codigo "
+                + "order by conta.con_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

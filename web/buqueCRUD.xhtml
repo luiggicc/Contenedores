@@ -8,7 +8,7 @@
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
 
-        
+
 
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
@@ -27,25 +27,21 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Buques" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{buqueBean.showEditDialog(buq)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{buqueBean.eliminar(buq)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+
+                                <p:commandLink class="icon-edit" value="" actionListener="#{buqueBean.showEditDialog(buq)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{buqueBean.eliminar(buq)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+
                             </p:column>
-                            
+
                             <p:column headerText="Código" filterBy="#{buq.buq_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{buq.buq_codigo}"/>
                             </p:column>
@@ -108,7 +104,7 @@
 
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
-                            
+
                         </p:dataTable>
                     </h:form>
 
@@ -118,27 +114,27 @@
                         <h:form>
                             <h:panelGrid columns="4">
                                 <p:outputLabel value="Tipo de Buque "/>
-                                <p:selectOneMenu id="tbu" value="#{buqueBean.buq.tbu_codigo}">
+                                <p:selectOneMenu id="tbu" value="#{buqueBean.buq.tbu_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorTipBuque}" var="tbu" itemLabel="#{tbu.tbu_nombre}" itemValue="#{tbu.tbu_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="País "/>
-                                <p:selectOneMenu id="pais" value="#{buqueBean.buq.pai_codigo}">
+                                <p:selectOneMenu id="pais" value="#{buqueBean.buq.pai_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Puerto "/>
-                                <p:selectOneMenu id="pto" value="#{buqueBean.buq.pto_codigo}">
+                                <p:selectOneMenu id="pto" value="#{buqueBean.buq.pto_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Línea "/>
-                                <p:selectOneMenu id="linea" value="#{buqueBean.buq.lin_codigo}">
+                                <p:selectOneMenu id="linea" value="#{buqueBean.buq.lin_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Tráfico "/>
-                                <p:selectOneMenu id="trafico" value="#{buqueBean.buq.tra_codigo}">
+                                <p:selectOneMenu id="trafico" value="#{buqueBean.buq.tra_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_nombre}" itemValue="#{tra.tra_codigo}" />
                                 </p:selectOneMenu>
 
@@ -163,8 +159,11 @@
                                 <p:outputLabel value="Código 1: "/>
                                 <p:inputText value="#{buqueBean.buq.buq_codigo1}"/>
 
-                                <p:outputLabel value="Código 1: "/>
+                                <p:outputLabel value="Código Omi: "/>
                                 <p:inputText value="#{buqueBean.buq.codigo_omi}"/>
+                                
+                                <p:outputLabel />
+                                <p:outputLabel />
 
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{buqueBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />

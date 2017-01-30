@@ -29,7 +29,8 @@ public class TipbuqueDAO implements Serializable {
 
         String query = "select tbu_codigo, tbu_nombre, tbu_des, tbu_codigo1, tbu_codigo2, tbu_codigo3, "
                 + "case tbu_estado when 'A' then 'Activo' else 'Inactivo' end as tbu_estado "
-                + "from publico.mae_tipbuque";
+                + "from publico.mae_tipbuque "
+                + "order by tbu_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

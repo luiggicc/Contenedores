@@ -22,7 +22,7 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Condiciones" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
@@ -35,9 +35,11 @@
                                 <h:outputText value="#{cond.cond_nombre}"/>
                             </p:column>
 
+                            <!--
                             <p:column headerText="Descripción" filterBy="#{cond.cond_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cond.cond_des}"/>
                             </p:column>
+                            -->
 
                             <p:column headerText="Estado" filterBy="#{cond.cond_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cond.cond_estado}"/>
@@ -46,17 +48,14 @@
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{condicionBean.showEditDialog(cond)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+
+                                <p:commandLink class="icon-edit" value="Editar" actionListener="#{condicionBean.showEditDialog(cond)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+
                                 <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{condicionBean.eliminar(cond)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+                                <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{condicionBean.eliminar(cond)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+
                             </p:column>
                         </p:dataTable>
                     </h:form>
@@ -69,9 +68,13 @@
                                 <p:outputLabel value="Nombre: "/>
                                 <p:inputText value="#{condicionBean.cond.cond_nombre}"/>
 
+                                <!--
                                 <p:outputLabel value="Descripcion: "/>
                                 <p:inputText value="#{condicionBean.cond.cond_des}"/>
-
+                                -->
+                                
+                                <p:outputLabel />
+                                
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{condicionBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>

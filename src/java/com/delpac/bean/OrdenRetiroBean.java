@@ -21,14 +21,15 @@ import com.delpac.dao.LocalidadDAO;
 import com.delpac.entity.Localidad;
 
 import com.delpac.entity.Usuario;
+
 import conexion.conexion;
 import java.io.IOException;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +38,15 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
 
 /**
  *
@@ -61,7 +64,7 @@ public class OrdenRetiroBean implements Serializable {
     boolean temperado;
     int es_temperado;
     boolean temperado1;
-    
+
     private int idClienteSelected;
     private List<Cliente> selectorCliente = new ArrayList<>();
 
@@ -113,8 +116,7 @@ public class OrdenRetiroBean implements Serializable {
                 selectorLocalidad = daoLocalidad.findAll();
 
                 listadoOrdenes = daoOrdenRetiro.findAll();
-                
-                
+
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
@@ -129,13 +131,12 @@ public class OrdenRetiroBean implements Serializable {
         setOrd(new OrdenRetiro());
     }
 
-    public boolean verificaCheck(){
-        boolean est_habilitado = ord.getEstadopdf();
-        System.out.println(est_habilitado);
-        return est_habilitado;
-        
-    }
-    
+//    public boolean verificaCheck(){
+//        boolean est_habilitado = ord.getEstadopdf();
+//        System.out.println(est_habilitado);
+//        return est_habilitado;
+//        
+//    }
     public void commitCreate() throws SQLException {
         daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
     }
@@ -144,7 +145,7 @@ public class OrdenRetiroBean implements Serializable {
         daoOrdenRetiro.editOrdenRetiro(ord, temperado, sessionUsuario);
         listadoOrdenes = daoOrdenRetiro.findAll();
     }
-    
+
     public void exportpdf(OrdenRetiro or) throws JRException, IOException, SQLException {
         daoOrdenRetiro.updateVerificaPDF(ord, or.getCod_ordenretiro());
         conexion con = new conexion();
@@ -158,13 +159,53 @@ public class OrdenRetiroBean implements Serializable {
 
         String dirReporte = servleContext.getRealPath("/reportes/" + temperatura);
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        response.addHeader("Content-disposition", "attachment;filename=Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf");
-        response.setContentType("application/pdf");
+        String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
+        response.addHeader("Content-disposition", "attachment;filename=" + nom_archivo);
 
+        response.setContentType("application/pdf");
         JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
         JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
         context.responseComplete();
-        
+
+    }
+
+    public void exportpdf2(OrdenRetiro or) throws JRException, IOException, SQLException {
+        conexion con = new conexion();
+        try {
+            // DB connection...
+            HashMap<String, Object> parametros = new HashMap<String, Object>();
+            FacesContext context = FacesContext.getCurrentInstance();
+            ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+            parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+            parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
+
+            //    .jrxml file path (location)
+            String temperatura = or.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
+
+            //String path = "/reportes/" + temperatura;
+            // folder creation path configured in web.xml
+            String exportDir = System.getProperty("catalina.base") + "/export";
+            //String basePath = (String) request.getSession().getServletContext().getInitParameter("/export");
+            // name for pdf file and saves in a created folder
+            //String exportPath = exportDir + "/Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
+            String exportPath = servleContext.getRealPath("/export/");
+            String direccionReporte = servleContext.getRealPath("/reportes/")+temperatura;
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+            response.addHeader("Content-disposition", "attachment;filename=ReporteCitas.pdf");
+            response.setContentType("application/pdf");
+
+//            String jasperReport = JasperCompileManager.compileReportToFile(path);
+            JasperPrint impres = JasperFillManager.fillReport(direccionReporte, parametros, con.getConnection());
+            System.out.println(exportPath);
+            JasperExportManager.exportReportToPdfFile(impres,exportPath);
+            context.responseComplete();
+            //JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
+
+        } catch (Exception e) {
+
+            System.err.println(e);
+        }
+
     }
 
     public List<OrdenRetiro> getListadoOrdenes() {
@@ -334,6 +375,4 @@ public class OrdenRetiroBean implements Serializable {
 //    public void setEst_habilitado(boolean est_habilitado) {
 //        this.est_habilitado = est_habilitado;
 //    }
-    
-    
 }

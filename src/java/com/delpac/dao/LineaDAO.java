@@ -32,7 +32,8 @@ public class LineaDAO implements Serializable {
                 + "imp_emision, imp_europa, imp_thc, imp_garantia, ofi_puerto, ofi_propia, ofi_transporte, num_diasdemor1, num_diasdemor2, "
                 + "num_diasdemor3, num_diasdemor4, sec_personalizada, cae_biccode, ekc_operada, est_operada, "
                 + "case lin_estado when 'A' then 'Activo' else 'Inactivo' end as lin_estado "
-                + "from publico.mae_linea";
+                + "from publico.mae_linea "
+                + "order by lin_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

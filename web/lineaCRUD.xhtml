@@ -34,17 +34,13 @@
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{lineaBean.showEditDialog(lin)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{lineaBean.eliminar(lin)}"  update=":frm:uTable" >
+                                
+                                    <p:commandLink class="icon-edit" value="" actionListener="#{lineaBean.showEditDialog(lin)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                    
+                                    <p:commandLink class="icon-trash-2" value="" actionListener="#{lineaBean.eliminar(lin)}"  update=":frm:uTable" >
                                         <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
                                     </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+                                
                             </p:column>
 
                             <!--############################################################################################ -->
@@ -58,10 +54,12 @@
                                 <h:outputText value="#{lin.lin_nombre}"/>
                             </p:column>
 
+                            <!--
                             <p:column headerText="Descripción" filterBy="#{lin.lin_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{lin.lin_des}"/>
                             </p:column>
-
+                            -->
+                            
                             <p:column headerText="Usuario" filterBy="#{lin.cae_usuario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{lin.cae_usuario}"/>
                             </p:column>
@@ -185,9 +183,8 @@
                                 <p:outputLabel value="Nombre: "/>
                                 <p:inputText value="#{lineaBean.lin.lin_nombre}"/>
 
-                                <p:outputLabel value="Descripcion: "/>
-                                <p:inputText value="#{lineaBean.lin.lin_des}"/>
-
+                                
+                                
                                 <p:outputLabel value="Cae Usuario: "/>
                                 <p:inputText value="#{lineaBean.lin.cae_usuario}"/>
 
@@ -268,7 +265,9 @@
 
                                 <p:outputLabel value="Estado Operada: "/>
                                 <p:inputText value="#{lineaBean.lin.est_operada}"/>
-
+                                
+                                <p:outputLabel />
+                                <p:outputLabel />
                                 <p:column> </p:column>
                                 <p:column> </p:column>
                                 

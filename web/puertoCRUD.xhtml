@@ -15,6 +15,7 @@
                         <p:dataTable id="uTable" value="#{puertoBean.listadoPuertos}" var="pue" widgetVar="userTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{puertoBean.filteredPuertos}"
+                                     rowStyleClass="#{pue.pto_estado.equals('Inactivo')?'rowbackgorundOnInactive':''}"
                                      rowsPerPageTemplate="5,10,15"  lazy="false">
                             <f:facet name="header">
                                 <p:outputPanel style="text-align: right;">
@@ -22,7 +23,7 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Puertos" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
@@ -50,17 +51,12 @@
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{puertoBean.showEditDialog(pue)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+                                    <p:commandLink class="icon-edit" value="Editar" actionListener="#{puertoBean.showEditDialog(pue)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
                                 <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{puertoBean.eliminar(pue)}"  update=":frm:uTable" >
+                                
+                                    <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{puertoBean.eliminar(pue)}"  update=":frm:uTable" >
                                         <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
                                     </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
                             </p:column>
                         </p:dataTable>
                     </h:form>
@@ -71,7 +67,7 @@
                         <h:form>
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="País "/>
-                                <p:selectOneMenu id="paises" value="#{puertoBean.pue.pai_codigo}">
+                                <p:selectOneMenu id="paises" value="#{puertoBean.pue.pai_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{puertoBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
                                 </p:selectOneMenu>
 

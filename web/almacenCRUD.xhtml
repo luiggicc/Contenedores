@@ -23,7 +23,7 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Almacen" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
@@ -36,9 +36,11 @@
                                 <h:outputText value="#{alm.alm_nombre}"/>
                             </p:column>
 
+                            <!--
                             <p:column headerText="Descripción" filterBy="#{alm.alm_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{alm.alm_des}"/>
                             </p:column>
+                            -->
                             
                             <p:column headerText="Estado" filterBy="#{alm.alm_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{alm.alm_estado}"/>
@@ -70,9 +72,11 @@
                                 <p:outputLabel value="Nombre: "/>
                                 <p:inputText value="#{almacenBean.alm.alm_nombre}"/>
 
+                                <!--
                                 <p:outputLabel value="Descripcion: "/>
                                 <p:inputText value="#{almacenBean.alm.alm_des}"/>
-                                
+                                -->
+                                <p:outputLabel value="" />
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{almacenBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>

@@ -23,11 +23,24 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Containers" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:column  style="text-align: center">
+
+                                <p:commandLink class="icon-edit" value="" actionListener="#{containerBean.showEditDialog(conta)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{containerBean.eliminar(conta)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+
                             <p:column headerText="Código" filterBy="#{conta.con_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{conta.con_codigo}"/>
                             </p:column>
@@ -52,21 +65,6 @@
                                 <h:outputText value="#{conta.con_estado}"/>
                             </p:column>
 
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{containerBean.showEditDialog(conta)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{containerBean.eliminar(conta)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                            </p:column>
                         </p:dataTable>
                     </h:form>
 
@@ -76,12 +74,12 @@
                         <h:form>
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Tipo de Container "/>
-                                <p:selectOneMenu id="tipcont" value="#{containerBean.conta.con_tipcont}">
+                                <p:selectOneMenu id="tipcont" value="#{containerBean.conta.con_tipcont}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{containerBean.selectorTipCont}" var="tcon" itemLabel="#{tcon.tcon_nombre}" itemValue="#{tcon.cod_tipcont}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Línea "/>
-                                <p:selectOneMenu id="linea" value="#{containerBean.conta.lin_codigo}">
+                                <p:selectOneMenu id="linea" value="#{containerBean.conta.lin_codigo}" filter="true" filterMatchMode="startsWidth">
                                     <f:selectItems value="#{containerBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
                                 </p:selectOneMenu>
 

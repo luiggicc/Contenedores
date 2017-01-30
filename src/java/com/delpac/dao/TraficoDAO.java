@@ -29,7 +29,8 @@ public class TraficoDAO implements Serializable {
 
         String query = "select tra_codigo, tra_nombre, tra_des, tra_codigo1, tra_codigo2, tra_codigo3, "
                 + "case tra_estado when 'A' then 'Activo' else 'Inactivo' end as tra_estado "
-                + "from publico.mae_trafico";
+                + "from publico.mae_trafico "
+                + "order by tra_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

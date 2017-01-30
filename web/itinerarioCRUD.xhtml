@@ -25,23 +25,17 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Itinerario" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{itinerarioBean.showEditDialog(iti)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{itinerarioBean.eliminar(iti)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+                                <p:commandLink class="icon-edit" value="" actionListener="#{itinerarioBean.showEditDialog(iti)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{itinerarioBean.eliminar(iti)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
                             </p:column>
 
                             <p:column headerText="Código" filterBy="#{iti.ids_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -204,14 +198,6 @@
                                 <h:outputText value="#{iti.num_viaje_exp}"/>
                             </p:column>
 
-                            <p:column headerText="MRN" filterBy="#{iti.MRN}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{iti.MRN}"/>
-                            </p:column>
-
-                            <p:column headerText="Sec. Itinerario" filterBy="#{iti.sec_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{iti.sec_itinerario}"/>
-                            </p:column>
-
                             <p:column headerText="Estado" filterBy="#{iti.est_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{iti.est_itinerario}"/>
                             </p:column>
@@ -221,36 +207,36 @@
 
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
-                    <p:dialog id="dlgDatos" header="Editar Itinerario" widgetVar="wdlgDatos" modal="true" responsive="true">
+                    <p:dialog id="dlgDatos" header="Editar Itinerario" widgetVar="wdlgDatos" responsive="true" height="400">
                         <h:form>
-                            <h:panelGrid columns="6">
+                            <h:panelGrid columns="6" >
                                 <p:outputLabel value="Cliente: "/>
-                                <p:selectOneMenu id="cliente" value="#{itinerarioBean.iti.cia_codigo}">
+                                <p:selectOneMenu id="cliente" value="#{itinerarioBean.iti.cia_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Línea: "/>
-                                <p:selectOneMenu id="linea" value="#{itinerarioBean.iti.lin_codigo}">
+                                <p:selectOneMenu id="linea" value="#{itinerarioBean.iti.lin_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_codigo}" itemValue="#{lin.lin_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Buque: "/>
-                                <p:selectOneMenu id="buque" value="#{itinerarioBean.iti.buq_codigo}">
+                                <p:selectOneMenu id="buque" value="#{itinerarioBean.iti.buq_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorBuque}" var="buq" itemLabel="#{buq.buq_codigo}" itemValue="#{buq.buq_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Puerto Arribo: "/>
-                                <p:selectOneMenu id="ptoarribo" value="#{itinerarioBean.iti.cod_ptoarribo}">
+                                <p:selectOneMenu id="ptoarribo" value="#{itinerarioBean.iti.cod_ptoarribo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Puerto Inicio: "/>
-                                <p:selectOneMenu id="ptoinicio" value="#{itinerarioBean.iti.cod_ptoinicio}">
+                                <p:selectOneMenu id="ptoinicio" value="#{itinerarioBean.iti.cod_ptoinicio}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Puerto Eta: "/>
-                                <p:selectOneMenu id="ptoeta" value="#{itinerarioBean.iti.cod_ptoeta}">
+                                <p:selectOneMenu id="ptoeta" value="#{itinerarioBean.iti.cod_ptoeta}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_codigo}" itemValue="#{pto.pto_codigo}" />
                                 </p:selectOneMenu>
 
@@ -258,22 +244,22 @@
                                 <p:inputText value="#{itinerarioBean.iti.cod_ptofisico}"/>
 
                                 <p:outputLabel value="Tráfico: "/>
-                                <p:selectOneMenu id="trafico" value="#{itinerarioBean.iti.tra_codigo}">
+                                <p:selectOneMenu id="trafico" value="#{itinerarioBean.iti.tra_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_codigo}" itemValue="#{tra.tra_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Aduana: "/>
-                                <p:selectOneMenu id="aduana" value="#{itinerarioBean.iti.adu_codigo}">
+                                <p:selectOneMenu id="aduana" value="#{itinerarioBean.iti.adu_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorAduana}" var="adu" itemLabel="#{adu.adu_codigo}" itemValue="#{adu.adu_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Tip. Manifiesto Imp.: "/>
-                                <p:selectOneMenu id="tipmanifiestoimp" value="#{itinerarioBean.iti.cod_tipmanifiesto}">
+                                <p:selectOneMenu id="tipmanifiestoimp" value="#{itinerarioBean.iti.cod_tipmanifiesto}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Tip. Manifiesto Exp.: "/>
-                                <p:selectOneMenu id="tipmanifiestoexp" value="#{itinerarioBean.iti.cod_tipmanifiesto_exp}">
+                                <p:selectOneMenu id="tipmanifiestoexp" value="#{itinerarioBean.iti.cod_tipmanifiesto_exp}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{itinerarioBean.selectorTipMani}" var="tman" itemLabel="#{tman.tman_codigo}" itemValue="#{tman.tman_codigo}" />
                                 </p:selectOneMenu>
 
@@ -360,9 +346,6 @@
 
                                 <p:outputLabel value="Num. Viaje Exp.: "/>
                                 <p:inputText value="#{itinerarioBean.iti.num_viaje_exp}"/>
-
-                                <p:outputLabel value="MRN: "/>
-                                <p:inputText value="#{itinerarioBean.iti.MRN}"/>
 
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{itinerarioBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />

@@ -39,7 +39,7 @@ and open the template in the editor.
     -moz-box-sizing: border-box;
 }
 
-.rowbackgorundOnRepeated{
+.rowbackgorundOnInactive{
     background:rgba(255, 85, 85, 0.39)!important;
 }
 

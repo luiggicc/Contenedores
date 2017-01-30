@@ -25,23 +25,19 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Clientes" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{clienteBean.showEditDialog(cli)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{clienteBean.eliminar(cli)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+
+                                <p:commandLink class="icon-edit" value="" actionListener="#{clienteBean.showEditDialog(cli)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{clienteBean.eliminar(cli)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+
                             </p:column>
 
                             <p:column headerText="Código" filterBy="#{cli.cia_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -128,7 +124,7 @@
                         <h:form>
                             <h:panelGrid columns="4">
                                 <p:outputLabel value="Identificación: "/>
-                                <p:selectOneMenu id="identificacion" value="#{clienteBean.cli.cod_tipidentifica}">
+                                <p:selectOneMenu id="identificacion" value="#{clienteBean.cli.cod_tipidentifica}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{clienteBean.selectorTipIdent}" var="tpi" itemLabel="#{tpi.tpi_nombre}" itemValue="#{tpi.tpi_codigo}" />
                                 </p:selectOneMenu>
 
@@ -139,7 +135,7 @@
                                 <p:inputText value="#{clienteBean.cli.cia_nombre}"/>
 
                                 <p:outputLabel value="País: "/>
-                                <p:selectOneMenu id="pais" value="#{clienteBean.cli.pai_codigo}">
+                                <p:selectOneMenu id="pais" value="#{clienteBean.cli.pai_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{clienteBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
                                 </p:selectOneMenu>
 

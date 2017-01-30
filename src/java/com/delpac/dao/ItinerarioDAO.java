@@ -41,7 +41,7 @@ public class ItinerarioDAO implements Serializable {
                 + "iti.fec_muelle, iti.hor_muelle, iti.fec_iniope, iti.hor_iniope, iti.fec_finope, iti.hor_finope, "
                 + "iti.fec_cutdry, iti.hor_cutdry, iti.fec_cutssr, iti.hor_cutssr, iti.fec_zarpe, iti.hor_zarpe, "
                 + "iti.fec_ing, iti.usr_ing, iti.fec_mod, iti.usr_mod, iti.dsp_itinerario, iti.dsp_itinerario_imp, "
-                + "iti.num_viaje_imp, iti.dsp_itinerario_exp, iti.num_viaje_exp, iti.MRN, iti.Sec_itinerario, "
+                + "iti.num_viaje_imp, iti.dsp_itinerario_exp, iti.num_viaje_exp, "
                 + "case iti.est_itinerario when 'A' then 'Activo' else 'Inactivo' end as est_itinerario "
                 + "from publico.mae_itinerario as iti "
                 + "left outer join publico.mae_clientes as cli on iti.cod_cia = cli.cia_codigo "
@@ -53,7 +53,8 @@ public class ItinerarioDAO implements Serializable {
                 + "left outer join publico.mae_trafico as tra on iti.cod_trafico = tra.tra_codigo "
                 + "left outer join publico.mae_aduana as adu on iti.cod_aduana = adu.adu_codigo "
                 + "left outer join publico.mae_tipmanifiesto as tman on iti.cod_tipmanifiesto = tman.tman_codigo "
-                + "left outer join publico.mae_tipmanifiesto as tmani on iti.cod_tipmanifiesto_exp = tmani.tman_codigo";
+                + "left outer join publico.mae_tipmanifiesto as tmani on iti.cod_tipmanifiesto_exp = tmani.tman_codigo "
+                + "order by iti.ids_itinerario";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();
@@ -113,9 +114,7 @@ public class ItinerarioDAO implements Serializable {
                 iti.setNum_viaje_imp(rs.getString(52));
                 iti.setDsp_itinerario_exp(rs.getString(53));
                 iti.setNum_viaje_exp(rs.getString(54));
-                iti.setMRN(rs.getString(55));
-                iti.setSec_itinerario(rs.getInt(56));
-                iti.setEst_itinerario(rs.getString(57));
+                iti.setEst_itinerario(rs.getString(55));
                 listadoItinerarios.add(iti);
             }
         } catch (Exception e) {
@@ -139,7 +138,7 @@ public class ItinerarioDAO implements Serializable {
                 + "hor_platica=?, fec_muelle=?, hor_muelle=?, fec_iniope=?, hor_iniope=?, fec_finope=?, hor_finope=?, fec_cutdry=?, hor_cutdry=?, "
                 + "fec_cutssr=?, "
                 + "hor_cutssr=?, fec_zarpe=?, hor_zarpe=?, fec_mod=(to_char(current_timestamp,'YYYY-MM-DD HH24:MI:SS'))::timestamp, usr_mod=?, dsp_itinerario=?, "
-                + "dsp_itinerario_imp=?, num_viaje_imp=?, dsp_itinerario_exp=?, num_viaje_exp=?, mrn=?, sec_itinerario=? "
+                + "dsp_itinerario_imp=?, num_viaje_imp=?, dsp_itinerario_exp=?, num_viaje_exp=? "
                 + "where ids_itinerario=?";
         pst = con.getConnection().prepareStatement(query);
         try {
@@ -201,8 +200,7 @@ public class ItinerarioDAO implements Serializable {
             pst.setString(38, iti.getNum_viaje_imp());
             pst.setString(39, iti.getDsp_itinerario_exp());
             pst.setString(40, iti.getNum_viaje_exp());
-            pst.setString(41, iti.getMRN());
-            pst.setInt(42, iti.getSec_itinerario());
+            
             pst.setInt(43, iti.getIds_itinerario());
             pst.executeUpdate();
         } catch (Exception e) {

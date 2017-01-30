@@ -29,7 +29,8 @@ public class TipmanifiestoDAO implements Serializable {
 
         String query = "select tman_codigo, tman_nombre, tman_des, tman_codigo1, tman_codigo2, tman_codigo3, "
                 + "case tman_estado when 'A' then 'Activo' else 'Inactivo' end as tman_estado "
-                + "from publico.mae_tipmanifiesto";
+                + "from publico.mae_tipmanifiesto "
+                + "order by tman_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

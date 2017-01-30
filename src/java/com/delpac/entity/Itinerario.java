@@ -67,8 +67,7 @@ public class Itinerario implements Serializable{
     String num_viaje_imp;
     String dsp_itinerario_exp;
     String num_viaje_exp;
-    String MRN;
-    Integer sec_itinerario;
+    
     String est_itinerario;
 
     public Integer getIds_itinerario() {
@@ -501,22 +500,6 @@ public class Itinerario implements Serializable{
 
     public void setNum_viaje_exp(String num_viaje_exp) {
         this.num_viaje_exp = num_viaje_exp;
-    }
-
-    public String getMRN() {
-        return MRN;
-    }
-
-    public void setMRN(String MRN) {
-        this.MRN = MRN;
-    }
-
-    public Integer getSec_itinerario() {
-        return sec_itinerario;
-    }
-
-    public void setSec_itinerario(Integer sec_itinerario) {
-        this.sec_itinerario = sec_itinerario;
     }
 
     public String getEst_itinerario() {

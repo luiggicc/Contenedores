@@ -29,7 +29,8 @@ public class AlmacenDAO implements Serializable {
 
         String query = "Select alm_codigo, alm_nombre, alm_des, alm_tip, alm_tipcom, alm_tipind, alm_codigo1, alm_codigo2, "
                 + "alm_codigo3, case alm_estado when 'A' then 'Activo' else 'Inactivo' end as alm_estado "
-                + "from publico.mae_almacen ";
+                + "from publico.mae_almacen "
+                + "order by alm_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();
@@ -59,13 +60,13 @@ public class AlmacenDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.mae_almacen "
-                + "set alm_nombre=?, alm_des=? "
+                + "set alm_nombre=?"
                 + "where alm_codigo=? ";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, alm.getAlm_nombre());
-            pst.setString(2, alm.getAlm_des());
-            pst.setString(3, alm.getAlm_codigo());
+//            pst.setString(2, alm.getAlm_des());
+            pst.setString(2, alm.getAlm_codigo());
             pst.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO EDIT ALMACEN: " + e.getMessage());

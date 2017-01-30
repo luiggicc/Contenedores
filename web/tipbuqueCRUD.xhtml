@@ -22,7 +22,7 @@
                                         <tr>
                                             <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Tipo de Buques" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
                                         </tr>
                                     </table>
                                 </p:outputPanel>
@@ -35,10 +35,6 @@
                                 <h:outputText value="#{tbu.tbu_nombre}"/>
                             </p:column>
 
-                            <p:column headerText="Descripción" filterBy="#{tbu.tbu_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{tbu.tbu_des}"/>
-                            </p:column>
-
                             <p:column headerText="Estado" filterBy="#{tbu.tbu_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{tbu.tbu_estado}"/>
                             </p:column>
@@ -46,17 +42,13 @@
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
                             <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{tipbuqueBean.showEditDialog(tbu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+
+                                    <p:commandLink class="icon-edit" value="Editar" actionListener="#{tipbuqueBean.showEditDialog(tbu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+
                                 <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{tipbuqueBean.eliminar(tbu)}"  update=":frm:uTable" >
+                                    <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{tipbuqueBean.eliminar(tbu)}"  update=":frm:uTable" >
                                         <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
                                     </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
                             </p:column>
                         </p:dataTable>
                     </h:form>
@@ -68,9 +60,6 @@
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Nombre: "/>
                                 <p:inputText value="#{tipbuqueBean.tbu.tbu_nombre}"/>
-
-                                <p:outputLabel value="Descripcion: "/>
-                                <p:inputText value="#{tipbuqueBean.tbu.tbu_des}"/>
 
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{tipbuqueBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />

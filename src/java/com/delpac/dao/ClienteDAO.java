@@ -33,7 +33,8 @@ public class ClienteDAO implements Serializable {
                 + "case cli.cia_estado when 'A' then 'Activo' else 'Inactivo' end as cia_estado "
                 + "from publico.mae_clientes as cli "
                 + "inner join publico.mae_tipidentifica as tpi on cli.cod_tipidentifica = tpi.tpi_codigo "
-                + "inner join publico.mae_pais as pai on cli.pai_codigo = pai.pai_codigo";
+                + "inner join publico.mae_pais as pai on cli.pai_codigo = pai.pai_codigo "
+                + "order by cli.cia_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

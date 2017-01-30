@@ -29,7 +29,8 @@ public class CondicionDAO implements Serializable {
 
         String query = "select cond_codigo, cond_nombre, cond_des, cond_codigo1, cond_codigo2, cond_codigo3, "
                 + "case cond_estado when 'A' then 'Activo' else 'Inactivo' end as cond_estado "
-                + "from publico.mae_condicion";
+                + "from publico.mae_condicion "
+                + "order by cond_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

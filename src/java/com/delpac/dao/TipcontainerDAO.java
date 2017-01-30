@@ -29,7 +29,8 @@ public class TipcontainerDAO implements Serializable {
 
         String query = "select cod_tipcont, tcon_nombre, tcon_des, val_tara, tcon_codigo1, tcon_codigo2, tcon_codigo3, tcon_codigo4,  "
                 + "case tcon_estado when 'A' then 'Activo' else 'Inactivo' end as tcon_estado "
-                + "from publico.mae_tipcontainer";
+                + "from publico.mae_tipcontainer "
+                + "order by cod_tipcont";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

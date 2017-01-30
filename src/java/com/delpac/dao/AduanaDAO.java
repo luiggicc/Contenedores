@@ -15,21 +15,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  *
  * @author Bottago SA
  */
-public class AduanaDAO implements Serializable{
+public class AduanaDAO implements Serializable {
+
     public List<Aduana> findAll() throws SQLException {
         conexion con = new conexion();
         List<Aduana> listadoAduanas = new ArrayList<>();
         PreparedStatement pst;
         ResultSet rs = null;
         //String query = "select * from producto";
-        String query = "select adu_codigo, adu_nombre, adu_des, adu_codigo1, adu_codigo2, adu_codigo3, " +
-                       "case adu_estado when 'A' then 'Activo' else 'Inactivo' end as adu_estado " +
-                       "from publico.mae_aduana";
+        String query = "select adu_codigo, adu_nombre, adu_des, adu_codigo1, adu_codigo2, adu_codigo3, "
+                + "case adu_estado when 'A' then 'Activo' else 'Inactivo' end as adu_estado "
+                + "from publico.mae_aduana "
+                + "order by adu_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();
@@ -51,13 +52,13 @@ public class AduanaDAO implements Serializable{
         }
         return listadoAduanas;
     }
-    
+
     public void editAduana(Aduana adu) throws SQLException {
         conexion con = new conexion();
         PreparedStatement pst;
-        String query = "update publico.mae_aduana " +
-                       "set adu_nombre=?, adu_des=?, adu_codigo1=?, adu_codigo2=?, adu_codigo3=? " +
-                       "where adu_codigo=?";
+        String query = "update publico.mae_aduana "
+                + "set adu_nombre=?, adu_des=?, adu_codigo1=?, adu_codigo2=?, adu_codigo3=? "
+                + "where adu_codigo=?";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, adu.getAdu_nombre());
@@ -73,7 +74,7 @@ public class AduanaDAO implements Serializable{
             con.desconectar();
         }
     }
-    
+
     public void deleteAduana(Aduana adu) throws SQLException {
         conexion con = new conexion();
         PreparedStatement pst;

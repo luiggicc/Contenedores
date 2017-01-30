@@ -30,7 +30,8 @@ public class PuertoDAO implements Serializable {
         String query = "Select pue.pto_codigo, pai.pai_codigo, pai.pai_nombre, pue.pto_nombre, pue.pto_des, pue.pto_codigo1, pue.pto_codigo2, pue.pto_codigo3, "
                 + "pue.cod_serv, case pue.pto_estado when 'A' then 'Activo' else 'Inactivo' end as pto_estado "
                 + "from publico.mae_puerto as pue "
-                + "inner join publico.mae_pais as pai on pue.pai_codigo = pai.pai_codigo ";
+                + "inner join publico.mae_pais as pai on pue.pai_codigo = pai.pai_codigo "
+                + "order by pue.pto_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();

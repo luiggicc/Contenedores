@@ -30,7 +30,8 @@ public class PaisDAO implements Serializable {
 
         String query = "select pai_codigo, pai_nombre, pai_des, pai_codigo1, pai_codigo2, pai_codigo3, "
                 + "case pai_estado when 'A' then 'Activo' else 'Inactivo' end as pai_estado "
-                + "from publico.mae_pais";
+                + "from publico.mae_pais "
+                + "order by pai_codigo";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();
