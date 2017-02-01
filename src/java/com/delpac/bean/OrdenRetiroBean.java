@@ -24,6 +24,8 @@ import com.delpac.entity.Usuario;
 
 import conexion.conexion;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -48,6 +50,15 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail.*;
+
 /**
  *
  * @author Bottago SA
@@ -62,8 +73,7 @@ public class OrdenRetiroBean implements Serializable {
     private OrdenRetiro ord = new OrdenRetiro();
     private OrdenRetiroDAO daoOrdenRetiro = new OrdenRetiroDAO();
     boolean temperado;
-    int es_temperado;
-    boolean temperado1;
+    boolean temperado2;
 
     private int idClienteSelected;
     private List<Cliente> selectorCliente = new ArrayList<>();
@@ -125,25 +135,34 @@ public class OrdenRetiroBean implements Serializable {
 
     public void showEditDialog(OrdenRetiro orde) {
         ord = orde;
+        temperado2 = (ord.getEs_temperado() != 0);
     }
 
     public void onCancelDialog() {
         setOrd(new OrdenRetiro());
     }
 
-//    public boolean verificaCheck(){
-//        boolean est_habilitado = ord.getEstadopdf();
-//        System.out.println(est_habilitado);
-//        return est_habilitado;
-//        
-//    }
+    public void showSendDialog(OrdenRetiro orde) {
+        ord = orde;
+    }
+
     public void commitCreate() throws SQLException {
         daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
     }
 
     public void commitEdit() throws SQLException {
-        daoOrdenRetiro.editOrdenRetiro(ord, temperado, sessionUsuario);
+        daoOrdenRetiro.editOrdenRetiro(ord, temperado2, sessionUsuario);
         listadoOrdenes = daoOrdenRetiro.findAll();
+    }
+
+    public boolean temperaturaEdit() {
+        boolean check;
+        if (ord.getEs_temperado() == 1) {
+            check = true;
+        } else {
+            check = false;
+        }
+        return check;
     }
 
     public void exportpdf(OrdenRetiro or) throws JRException, IOException, SQLException {
@@ -172,40 +191,89 @@ public class OrdenRetiroBean implements Serializable {
     public void exportpdf2(OrdenRetiro or) throws JRException, IOException, SQLException {
         conexion con = new conexion();
         try {
-            // DB connection...
             HashMap<String, Object> parametros = new HashMap<String, Object>();
             FacesContext context = FacesContext.getCurrentInstance();
             ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
             parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
             parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
-
-            //    .jrxml file path (location)
             String temperatura = or.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
-
-            //String path = "/reportes/" + temperatura;
-            // folder creation path configured in web.xml
-            String exportDir = System.getProperty("catalina.base") + "/export";
-            //String basePath = (String) request.getSession().getServletContext().getInitParameter("/export");
-            // name for pdf file and saves in a created folder
-            //String exportPath = exportDir + "/Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
-            String exportPath = servleContext.getRealPath("/export/");
-            String direccionReporte = servleContext.getRealPath("/reportes/")+temperatura;
-            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-            response.addHeader("Content-disposition", "attachment;filename=ReporteCitas.pdf");
-            response.setContentType("application/pdf");
-
-//            String jasperReport = JasperCompileManager.compileReportToFile(path);
-            JasperPrint impres = JasperFillManager.fillReport(direccionReporte, parametros, con.getConnection());
-            System.out.println(exportPath);
-            JasperExportManager.exportReportToPdfFile(impres,exportPath);
-            context.responseComplete();
-            //JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
-
+            String jrxmlPath = temperatura.equals("ReporteFreezer.jasper") ? "ReporteFreezer.jrxml" : "ReporteNoFreezer.jrxml";
+            InputStream is = new FileInputStream(servleContext.getRealPath("/reportes/") + jrxmlPath);
+            String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
+            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
+            String exportPath = exportDir + nom_archivo;
+            JasperDesign design = JRXmlLoader.load(is);
+            JasperReport jasperReport = JasperCompileManager.compileReport(design);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con.getConnection());
+            JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
         } catch (Exception e) {
-
             System.err.println(e);
         }
+    }
 
+    public void enviarMail(OrdenRetiro or) throws EmailException, SQLException {
+        daoOrdenRetiro.updateVerificaPDF(ord, or.getCod_ordenretiro());
+        MultiPartEmail email = new HtmlEmail();
+        try {
+            //Attach
+            EmailAttachment attachment = new EmailAttachment();
+            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
+            String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
+            attachment.setPath(exportDir + nom_archivo);
+            attachment.setDisposition(EmailAttachment.ATTACHMENT);
+            attachment.setDescription("Orden de retiro");
+            attachment.setName(nom_archivo);
+
+            //Mail
+            String authuser = "jorgito14@gmail.com";
+            String authpwd = "p4s4j3r0";
+            email.setSmtpPort(587);
+            email.setAuthenticator(new DefaultAuthenticator(authuser, authpwd));
+            email.setSSLOnConnect(true);
+            email.setDebug(true);
+            email.setHostName("smtp.gmail.com");
+            email.getMailSession().getProperties().put("mail.smtps.auth", "true");
+            email.getMailSession().getProperties().put("mail.debug", "true");
+            email.getMailSession().getProperties().put("mail.smtps.port", "587");
+            email.getMailSession().getProperties().put("mail.smtps.socketFactory.port", "587");
+            email.getMailSession().getProperties().put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            email.getMailSession().getProperties().put("mail.smtps.socketFactory.fallback", "false");
+            email.getMailSession().getProperties().put("mail.smtp.starttls.enable", "true");
+            email.setFrom("jorgito14@gmail.com", "Jorge");
+            email.setSubject(or.getCia_nombre() + " / " + or.getPto_nombre() + "/ BOOKING " + or.getBooking() + or.getDsp_itinerario());
+            email.setMsg("<strong>Estimados:</strong><br />"
+                    + "Buenas tardes, adjunto la orden de retiro para la nave <strong>" + or.getDsp_itinerario() + "</strong><br />"
+                    + "<br />"
+                    + "<ul><li>Favor retirar el sello en uestras oficinas.</li>"
+                    + "<li><strong>Traer la orden de retiro</strong> para poder formalizar la entrega del sello.</li>"
+                    + "<li><strong>Copia de cedula</strong> de la persona que retirará el sello.</li>"
+                    + "<li><strong>Traer carta de autorización</strong> por parte del exportador nombrando al delegado que retirará el sello.</li>"
+                    + "<li><strong>MUY IMPORTANTE: Se recuerda que a partir del 1 de Julio, 2016 todo contenedor deberá contar con certificado de"
+                    + "VGM (Masa Bruta Verificada) antes del embarque, caso contrario el contenedor no podrá ser considerado para embarque. CUT OFF VGM, "
+                    + "24 horas antes del atraque de la nave.</strong></li> "
+                    + "<br /><br />"
+                    + "Señores de <strong>" + or.getLoc_salidades() + "</strong> favor designar la unidad.<br /><br />"
+                    + "<strong>Requerimiento Especial:</strong> Contenedores <strong>"+or.getReq_especial2()+"</strong><br /><br />"
+                    + "<strong>Remark:</strong> el contenedor deberá ingresar al terminal Portuario <strong>" + or.getLoc_entradades() + "</strong> a la zona "
+                    + "que ellos le"
+                    + "asignen al momento de ingresar por Gate."
+                    + "<br /><br />"
+                    + "Gracias.<br /><br />"
+                    + "<strong>Saludos Cordiales / Best Regards</strong><br />"
+                    + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
+                    + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
+
+            email.addTo(or.getDestinario(), "Jorge C.");
+            email.addCc(or.getCc(), "Jorge Casta.");
+            
+            //Add attach
+            email.attach(attachment);
+
+            //Send mail
+            email.send();
+        } catch (EmailException ee) {
+            ee.printStackTrace();
+        }
     }
 
     public List<OrdenRetiro> getListadoOrdenes() {
@@ -352,27 +420,12 @@ public class OrdenRetiroBean implements Serializable {
         this.temperado = temperado;
     }
 
-    public int getEs_temperado() {
-        return es_temperado;
+    public boolean isTemperado2() {
+        return temperado2;
     }
 
-    public void setEs_temperado(int es_temperado) {
-        this.es_temperado = es_temperado;
+    public void setTemperado2(boolean temperado2) {
+        this.temperado2 = temperado2;
     }
 
-    public boolean isTemperado1() {
-        return temperado1;
-    }
-
-    public void setTemperado1(boolean temperado1) {
-        this.temperado1 = temperado1;
-    }
-
-//    public boolean isEst_habilitado() {
-//        return est_habilitado;
-//    }
-//
-//    public void setEst_habilitado(boolean est_habilitado) {
-//        this.est_habilitado = est_habilitado;
-//    }
 }

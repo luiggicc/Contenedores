@@ -7,96 +7,96 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+                <div class="Container100 ui-fluid">
+                    <div class="ContainerIndent">
+                        <p:panel>
+                            <h:form id="frm">
+                                <p:dataTable id="uTable" value="#{puertoBean.listadoPuertos}" var="pue" widgetVar="userTable" paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             paginatorPosition="bottom" filteredValue="#{puertoBean.filteredPuertos}"
+                                             rowStyleClass="#{(pue.pto_estado.equals('Activo') ? '':'rowbackgorundOnInactive')}"
+                                             rowsPerPageTemplate="5,10,15"  lazy="false">
+                                    <f:facet name="header">
+                                        <p:outputPanel style="text-align: right;">
+                                            <table>
+                                                <tr>
+                                                    <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Puertos" style="color: #ffffff" /></td>
+                                                    <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                        <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
+                                                </tr>
+                                            </table>
+                                        </p:outputPanel>
+                                    </f:facet>
+                                    <p:column headerText="Código" filterBy="#{pue.pto_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{pue.pto_codigo}"/>
+                                    </p:column>
+        
+                                    <p:column headerText="País" filterBy="#{pue.pai_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{pue.pai_nombre}"/>
+                                    </p:column>
+        
+                                    <p:column headerText="Nombre" filterBy="#{pue.pto_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{pue.pto_nombre}"/>
+                                    </p:column>
+        
+                                    <p:column headerText="Código Servicio" filterBy="#{pue.cod_serv}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{pue.cod_serv}"/>
+                                    </p:column>
+        
+                                    <p:column headerText="Estado" filterBy="#{pue.pto_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{pue.pto_estado}"/>
+                                    </p:column>
+        
+        <!--############################################################################################ -->
+        <!--############################################################################################ -->
+        <p:column  style="text-align: center">
+            <p:commandLink class="icon-edit" value="Editar" actionListener="#{puertoBean.showEditDialog(pue)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+            <br />
 
-        <div class="Container100 ui-fluid">
-            <div class="ContainerIndent">
-                <p:panel>
-                    <h:form id="frm">
-                        <p:dataTable id="uTable" value="#{puertoBean.listadoPuertos}" var="pue" widgetVar="userTable" paginator="true" rows="10"
-                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     paginatorPosition="bottom" filteredValue="#{puertoBean.filteredPuertos}"
-                                     rowStyleClass="#{pue.pto_estado.equals('Inactivo')?'rowbackgorundOnInactive':''}"
-                                     rowsPerPageTemplate="5,10,15"  lazy="false">
-                            <f:facet name="header">
-                                <p:outputPanel style="text-align: right;">
-                                    <table>
-                                        <tr>
-                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Maestro de Puertos" style="color: #ffffff" /></td>
-                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
-                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
-                                        </tr>
-                                    </table>
-                                </p:outputPanel>
-                            </f:facet>
-                            <p:column headerText="Código" filterBy="#{pue.pto_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{pue.pto_codigo}"/>
-                            </p:column>
+            <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{puertoBean.eliminar(pue)}"  update=":frm:uTable" >
+                <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+            </p:commandLink>
+        </p:column>
+        </p:dataTable>
+        </h:form>
 
-                            <p:column headerText="País" filterBy="#{pue.pai_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{pue.pai_nombre}"/>
-                            </p:column>
+        <!--############################################################################################ -->
+        <!--############################################################################################ -->
+        <p:dialog id="dlgDatos" header="Editar Puerto" widgetVar="wdlgDatos" modal="true" responsive="true">
+            <h:form>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="País "/>
+                    <p:selectOneMenu id="paises" value="#{puertoBean.pue.pai_codigo}" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{puertoBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
+                    </p:selectOneMenu>
 
-                            <p:column headerText="Nombre" filterBy="#{pue.pto_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{pue.pto_nombre}"/>
-                            </p:column>
+                    <p:outputLabel value="Nombre: "/>
+                    <p:inputText value="#{puertoBean.pue.pto_nombre}"/>
 
-                            <p:column headerText="Código Servicio" filterBy="#{pue.cod_serv}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{pue.cod_serv}"/>
-                            </p:column>
+                    <p:outputLabel value="Descripción: "/>
+                    <p:inputText value="#{puertoBean.pue.pto_des}"/>
 
-                            <p:column headerText="Estado" filterBy="#{pue.pto_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{pue.pto_estado}"/>
-                            </p:column>
+                    <p:outputLabel value="Código Servicio: "/>
+                    <p:inputText value="#{puertoBean.pue.cod_serv}"/>
 
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                    <p:commandLink class="icon-edit" value="Editar" actionListener="#{puertoBean.showEditDialog(pue)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                <br />
-                                
-                                    <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{puertoBean.eliminar(pue)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
+                    <p:commandButton ajax="true" value="Editar" actionListener="#{puertoBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                        <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar" actionListener="#{puertoBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
 
-                    <!--############################################################################################ -->
-                    <!--############################################################################################ -->
-                    <p:dialog id="dlgDatos" header="Editar Puerto" widgetVar="wdlgDatos" modal="true" responsive="true">
-                        <h:form>
-                            <h:panelGrid columns="2">
-                                <p:outputLabel value="País "/>
-                                <p:selectOneMenu id="paises" value="#{puertoBean.pue.pai_codigo}" filter="true" filterMatchMode="startsWith">
-                                    <f:selectItems value="#{puertoBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
-                                </p:selectOneMenu>
+        <!--############################################################################################ -->
+        <!--############################################################################################ -->
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+        </p:confirmDialog>
 
-                                <p:outputLabel value="Nombre: "/>
-                                <p:inputText value="#{puertoBean.pue.pto_nombre}"/>
-
-                                <p:outputLabel value="Descripción: "/>
-                                <p:inputText value="#{puertoBean.pue.pto_des}"/>
-
-                                <p:outputLabel value="Código Servicio: "/>
-                                <p:inputText value="#{puertoBean.pue.cod_serv}"/>
-
-                                <p:commandButton ajax="true" value="Editar" actionListener="#{puertoBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
-                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
-                                </p:commandButton>
-                                <p:commandButton value="Cancelar" actionListener="#{puertoBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <!--############################################################################################ -->
-                    <!--############################################################################################ -->
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
-                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
-                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
-                    </p:confirmDialog>
-
-                </p:panel>
-            </div>
+        </p:panel>
+        </div>
         </div>
     </ui:define>
 

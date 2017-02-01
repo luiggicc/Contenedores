@@ -7,9 +7,7 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
-
-
-
+        <h:outputStylesheet name="style.css" />
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
                 <p:panel>
@@ -17,6 +15,7 @@
                         <p:dataTable id="uTable" value="#{buqueBean.listadoBuques}" var="buq" widgetVar="userTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{buqueBean.filteredBuques}"
+                                     rowStyleClass="#{(buq.buq_estado.equals('Activo') ? '':'rowbackgorundOnInactive')}"
                                      rowsPerPageTemplate="5,10,15"  lazy="false"
                                      resizableColumns="true" 
                                      tableStyle="width:auto"
@@ -161,7 +160,7 @@
 
                                 <p:outputLabel value="Código Omi: "/>
                                 <p:inputText value="#{buqueBean.buq.codigo_omi}"/>
-                                
+
                                 <p:outputLabel />
                                 <p:outputLabel />
 

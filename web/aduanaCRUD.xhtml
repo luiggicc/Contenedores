@@ -7,19 +7,18 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
-        <!-- <h:outputStylesheet name="style.css" />
+        <h:outputStylesheet name="style.css" />
         <f:metadata>
             <f:event type="preRenderView" listener="#{aduanaBean.authorized()}"/>
-        </f:metadata> -->
-     
-        
-                <div class="Container100 ui-fluid">
+        </f:metadata> 
+        <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
                 <p:panel>
                     <h:form id="frm">
                         <p:dataTable id="uTable" value="#{aduanaBean.listadoAduanas}" var="adu" widgetVar="userTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{aduanaBean.filteredAduanas}"
+                                     rowStyleClass="#{(adu.adu_estado.equals('Activo') ? '':'rowbackgorundOnInactive')}"
                                      rowsPerPageTemplate="5,10,15"  lazy="false">
                             <f:facet name="header">
                                 <p:outputPanel style="text-align: right;">
@@ -43,7 +42,7 @@
                             <p:column headerText="Descripción" filterBy="#{adu.adu_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{adu.adu_des}"/>
                             </p:column>
-                            
+
                             <p:column headerText="Estado" filterBy="#{adu.adu_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{adu.adu_estado}"/>
                             </p:column>
@@ -52,15 +51,15 @@
                             <!--############################################################################################ -->
                             <p:column  style="text-align: center">
                                 <!-- <i class="icon-edit"> -->
-                                    <p:commandLink class="icon-edit" value="Editar" actionListener="#{aduanaBean.showEditDialog(adu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                <p:commandLink class="icon-edit" value="Editar" actionListener="#{aduanaBean.showEditDialog(adu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
                                 <!-- </i> -->
                                 <br />
                                 <!-- <i class="icon-trash-2"> -->
-                                    <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{aduanaBean.eliminar(adu)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
+                                <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{aduanaBean.eliminar(adu)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                                <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
                                 <!-- </i> -->
                             </p:column>
                         </p:dataTable>
@@ -76,7 +75,7 @@
 
                                 <p:outputLabel value="Descripcion: "/>
                                 <p:inputText value="#{aduanaBean.adu.adu_des}"/>
-                                
+
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{aduanaBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>

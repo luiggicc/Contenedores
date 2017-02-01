@@ -34,7 +34,8 @@ public class OrdenRetiroDAO implements Serializable {
         String query = " Select ord.cod_ordenretiro, cli.cia_codigo, cli.cia_nombre, iti.ids_itinerario, iti.dsp_itinerario, lin.lin_codigo, lin.lin_nombre, ord.booking, "
                 + "pto.pto_codigo, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont, ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.es_temperado, "
                 + "ord.temperatura, ord.ventilacion, ord.observaciones, loc.loc_codigo as loc_salida, "
-                + "loc.loc_des as loc_salidades, loca.loc_codigo as loc_entrada, loca.loc_des as loc_entradades "
+                + "loc.loc_des as loc_salidades, loca.loc_codigo as loc_entrada, loca.loc_des as loc_entradades, "
+                + "ord.est_orden, ord.estadopdf "
                 + "from publico.ordenretiro ord "
                 + "inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo "
                 + "inner join publico.mae_itinerario iti on ord.ids_itinerario = iti.ids_itinerario "
@@ -70,6 +71,8 @@ public class OrdenRetiroDAO implements Serializable {
                 ord.setLoc_salidades(rs.getString(21));
                 ord.setLoc_entrada(rs.getInt(22));
                 ord.setLoc_entradades(rs.getString(23));
+                ord.setEst_orden(rs.getInt(24));
+                ord.setEstadopdf(rs.getInt(25));
                 listadoOrdenes.add(ord);
             }
         } catch (Exception e) {
@@ -178,29 +181,29 @@ public class OrdenRetiroDAO implements Serializable {
         }
     }
 
-    public void editOrdenRetiro(OrdenRetiro or, boolean temperado, Usuario u) throws SQLException {
+    public void editOrdenRetiro(OrdenRetiro or, boolean temperado2 ,Usuario u) throws SQLException {
         conexion con = new conexion();
         PreparedStatement pst;
         con.getConnection().setAutoCommit(false);
         ResultSet rs = null;
         String query = "";
         try {
-            if (temperado) {
-                query = "update publico.ordenretiro"
-                        + "set cia_codigo=?, ids_itinerario=?, lin_codigo=?, booking=?, pto_codigo=?, mov_xcuenta=?, cant_tipocont=?, "
-                        + "tipo_carga=?, req_especial=?,"
-                        + "inv_seguridad=?, temperatura=?, ventilacion=?, observaciones=?, loc_salida=?, loc_entrada=?, "
-                        + "fecha_mod=current_timestamp, usu_mod=?"
-                        + "where cod_ordenretiro=?";
-            } else {
-                query = "update publico.ordenretiro"
+            if (temperado2) {
+                query = "update publico.ordenretiro "
                         + "set cia_codigo=?, ids_itinerario=?, lin_codigo=?, booking=?, pto_codigo=?, mov_xcuenta=?, cant_tipocont=?, "
                         + "tipo_carga=?, req_especial=?, "
-                        + "inv_seguridad=?, observaciones=?, loc_salida=?, loc_entrada=?, fecha_mod=current_timestamp, usu_mod=?"
+                        + "inv_seguridad=?, temperatura=?, ventilacion=?, observaciones=?, loc_salida=?, loc_entrada=?, "
+                        + "fecha_mod=current_timestamp, usu_mod=? "
+                        + "where cod_ordenretiro=?";
+            } else {
+                query = "update publico.ordenretiro "
+                        + "set cia_codigo=?, ids_itinerario=?, lin_codigo=?, booking=?, pto_codigo=?, mov_xcuenta=?, cant_tipocont=?, "
+                        + "tipo_carga=?, req_especial=?, "
+                        + "inv_seguridad=?, observaciones=?, loc_salida=?, loc_entrada=?, fecha_mod=current_timestamp, usu_mod=? "
                         + "where cod_ordenretiro=?";
             }
             pst = con.getConnection().prepareStatement(query);
-            if (temperado == true) {
+            if (temperado2 == true) {
                 pst.setString(1, or.getCia_codigo());
                 pst.setInt(2, or.getIds_itinerario());
                 pst.setString(3, or.getLin_codigo());
@@ -211,15 +214,16 @@ public class OrdenRetiroDAO implements Serializable {
                 pst.setString(8, or.getTipo_carga());
                 pst.setString(9, or.getReq_especial());
                 pst.setString(10, or.getInv_seguridad());
-                pst.setString(12, or.getTemperatura());
-                pst.setString(13, or.getVentilacion());
-                pst.setString(14, or.getObservaciones());
-                pst.setInt(15, or.getLoc_salida());
-                pst.setInt(16, or.getLoc_entrada());
-                pst.setString(17, u.getLogin());
+                pst.setString(11, or.getTemperatura());
+                pst.setString(12, or.getVentilacion());
+                pst.setString(13, or.getObservaciones());
+                pst.setInt(14, or.getLoc_salida());
+                pst.setInt(15, or.getLoc_entrada());
+                pst.setString(16, u.getLogin());
+                pst.setInt(17, or.getCod_ordenretiro());
                 pst.executeUpdate();
             }
-            if (temperado == false) {
+            if (temperado2 == false) {
                 pst.setString(1, or.getCia_codigo());
                 pst.setInt(2, or.getIds_itinerario());
                 pst.setString(3, or.getLin_codigo());
@@ -234,6 +238,7 @@ public class OrdenRetiroDAO implements Serializable {
                 pst.setInt(12, or.getLoc_salida());
                 pst.setInt(13, or.getLoc_entrada());
                 pst.setString(14, u.getLogin());
+                pst.setInt(15, or.getCod_ordenretiro());
                 pst.executeUpdate();
             }
 

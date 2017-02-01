@@ -7,15 +7,16 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
-        
-        
-                <div class="Container100 ui-fluid">
+        <h:outputStylesheet name="style.css" />
+
+        <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
                 <p:panel>
                     <h:form id="frm">
                         <p:dataTable id="uTable" value="#{almacenBean.listadoAlmacenes}" var="alm" widgetVar="userTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{almacenBean.filteredAlmacenes}"
+                                     rowStyleClass="#{(alm.alm_estado.equals('Activo') ? '':'rowbackgorundOnInactive')}"
                                      rowsPerPageTemplate="5,10,15"  lazy="false">
                             <f:facet name="header">
                                 <p:outputPanel style="text-align: right;">
@@ -41,7 +42,7 @@
                                 <h:outputText value="#{alm.alm_des}"/>
                             </p:column>
                             -->
-                            
+
                             <p:column headerText="Estado" filterBy="#{alm.alm_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{alm.alm_estado}"/>
                             </p:column>

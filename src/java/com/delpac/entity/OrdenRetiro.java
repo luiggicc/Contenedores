@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author Bottago SA
  */
 public class OrdenRetiro implements Serializable {
+
     int cod_ordenretiro;
     String cia_codigo;
     String cia_nombre;
@@ -41,8 +42,12 @@ public class OrdenRetiro implements Serializable {
     String loc_entradades;
     String usu_cre;
     String usu_mod;
-    boolean estadopdf;
-    
+    int estadopdf;
+    int est_orden;
+    String req_especial2;
+    String destinario;
+    String cc;
+
     public int getCod_ordenretiro() {
         return cod_ordenretiro;
     }
@@ -275,14 +280,45 @@ public class OrdenRetiro implements Serializable {
         this.loc_entrada = loc_entrada;
     }
 
-    public boolean getEstadopdf() {
+    public int getEstadopdf() {
         return estadopdf;
     }
 
-    public void setEstadopdf(boolean estadopdf) {
+    public void setEstadopdf(int estadopdf) {
         this.estadopdf = estadopdf;
     }
 
-    
+    public int getEst_orden() {
+        return est_orden;
+    }
+
+    public void setEst_orden(int est_orden) {
+        this.est_orden = est_orden;
+    }
+
+    public String getReq_especial2() {
+        return req_especial2;
+    }
+
+    public void setReq_especial2(String req_especial2) {
+        this.req_especial2 = req_especial2;
+    }
+
+    public String getDestinario() {
+        return destinario;
+    }
+
+    public void setDestinario(String destinario) {
+        this.destinario = destinario;
+    }
+
+    public String getCc() {
+        return cc;
+    }
+
+    public void setCc(String cc) {
+        this.cc = cc;
+    }
+
     
 }
