@@ -23,11 +23,13 @@ import com.delpac.entity.Localidad;
 import com.delpac.entity.Usuario;
 
 import conexion.conexion;
+import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-
 import java.io.Serializable;
+
 import java.sql.SQLException;
 
 import java.util.ArrayList;
@@ -35,10 +37,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import javax.servlet.ServletContext;
@@ -58,6 +61,9 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.commons.mail.*;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -74,6 +80,7 @@ public class OrdenRetiroBean implements Serializable {
     private OrdenRetiroDAO daoOrdenRetiro = new OrdenRetiroDAO();
     boolean temperado;
     boolean temperado2;
+    StreamedContent stream;
 
     private int idClienteSelected;
     private List<Cliente> selectorCliente = new ArrayList<>();
@@ -92,6 +99,9 @@ public class OrdenRetiroBean implements Serializable {
 
     private int idLocalidadSelected;
     private List<Localidad> selectorLocalidad = new ArrayList<>();
+
+    private int idMailSelected;
+    private List<OrdenRetiro> selectorMail = new ArrayList<>();
 
     public void authorized() {
     }
@@ -125,8 +135,8 @@ public class OrdenRetiroBean implements Serializable {
                 LocalidadDAO daoLocalidad = new LocalidadDAO();
                 selectorLocalidad = daoLocalidad.findAll();
 
-                listadoOrdenes = daoOrdenRetiro.findAll();
-
+                selectorMail = daoOrdenRetiro.Mails();
+                listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
@@ -146,13 +156,17 @@ public class OrdenRetiroBean implements Serializable {
         ord = orde;
     }
 
+    public void showPdfDialog(OrdenRetiro orde) {
+        ord = orde;
+    }
+
     public void commitCreate() throws SQLException {
         daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
     }
 
     public void commitEdit() throws SQLException {
         daoOrdenRetiro.editOrdenRetiro(ord, temperado2, sessionUsuario);
-        listadoOrdenes = daoOrdenRetiro.findAll();
+        listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
     }
 
     public boolean temperaturaEdit() {
@@ -206,56 +220,59 @@ public class OrdenRetiroBean implements Serializable {
             JasperReport jasperReport = JasperCompileManager.compileReport(design);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con.getConnection());
             JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
+            FacesContext context2 = FacesContext.getCurrentInstance();
+            context2.addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO, "Atención", "PDF Generado " + nom_archivo));
         } catch (Exception e) {
             System.err.println(e);
         }
     }
 
-    public void enviarMail(OrdenRetiro or) throws EmailException, SQLException {
-        daoOrdenRetiro.updateVerificaPDF(ord, or.getCod_ordenretiro());
+    public void enviarMail() throws EmailException, SQLException, IOException {
+
         MultiPartEmail email = new HtmlEmail();
         try {
-            //Attach
             EmailAttachment attachment = new EmailAttachment();
             String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
-            String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
+            String nom_archivo = "Orden_de_Retiro" + ord.getCod_ordenretiro() + ".pdf";
             attachment.setPath(exportDir + nom_archivo);
             attachment.setDisposition(EmailAttachment.ATTACHMENT);
             attachment.setDescription("Orden de retiro");
             attachment.setName(nom_archivo);
-
             //Mail
-            String authuser = "jorgito14@gmail.com";
-            String authpwd = "p4s4j3r0";
+            String authuser = "Customerservice@delpac-sa.com";
+            String authpwd = "cs6609";
+//            String authuser = "jorge.castaneda@bottago.com";
+//            String authpwd = "jorgec012";
             email.setSmtpPort(587);
             email.setAuthenticator(new DefaultAuthenticator(authuser, authpwd));
-            email.setSSLOnConnect(true);
+            email.setSSLOnConnect(false);
             email.setDebug(true);
-            email.setHostName("smtp.gmail.com");
-            email.getMailSession().getProperties().put("mail.smtps.auth", "true");
+            email.setHostName("mailserver.losinkas.com");
+//            email.setHostName("ns0.ovh.net");
+            email.getMailSession().getProperties().put("mail.smtps.auth", "false");
             email.getMailSession().getProperties().put("mail.debug", "true");
-            email.getMailSession().getProperties().put("mail.smtps.port", "587");
-            email.getMailSession().getProperties().put("mail.smtps.socketFactory.port", "587");
-            email.getMailSession().getProperties().put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            email.getMailSession().getProperties().put("mail.smtp.port", "26");
+//            email.getMailSession().getProperties().put("mail.smtps.socketFactory.port", "587");
+//            email.getMailSession().getProperties().put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             email.getMailSession().getProperties().put("mail.smtps.socketFactory.fallback", "false");
-            email.getMailSession().getProperties().put("mail.smtp.starttls.enable", "true");
-            email.setFrom("jorgito14@gmail.com", "Jorge");
-            email.setSubject(or.getCia_nombre() + " / " + or.getPto_nombre() + "/ BOOKING " + or.getBooking() + or.getDsp_itinerario());
+            email.getMailSession().getProperties().put("mail.smtp.ssl.enable", "false");
+            email.setFrom("Customerservice@delpac-sa.com", "Servico al cliente Delpac");
+            email.setSubject(ord.getCia_nombre() + " / " + ord.getPto_nombre() + "/ BOOKING " + ord.getBooking() + ord.getDsp_itinerario());
             email.setMsg("<strong>Estimados:</strong><br />"
-                    + "Buenas tardes, adjunto la orden de retiro para la nave <strong>" + or.getDsp_itinerario() + "</strong><br />"
+                    + "Buenas tardes, adjunto la orden de retiro para la nave <strong>" + ord.getDsp_itinerario() + "</strong><br />"
                     + "<br />"
-                    + "<ul><li>Favor retirar el sello en uestras oficinas.</li>"
+                    + "<ul><li>Favor retirar el sello en nuestras oficinas.</li>"
                     + "<li><strong>Traer la orden de retiro</strong> para poder formalizar la entrega del sello.</li>"
                     + "<li><strong>Copia de cedula</strong> de la persona que retirará el sello.</li>"
                     + "<li><strong>Traer carta de autorización</strong> por parte del exportador nombrando al delegado que retirará el sello.</li>"
-                    + "<li><strong>MUY IMPORTANTE: Se recuerda que a partir del 1 de Julio, 2016 todo contenedor deberá contar con certificado de"
+                    + "<li><strong>MUY IMPORTANTE: Se recuerda que a partir del 1 de Julio, 2016 todo contenedor deberá contar con certificado de "
                     + "VGM (Masa Bruta Verificada) antes del embarque, caso contrario el contenedor no podrá ser considerado para embarque. CUT OFF VGM, "
                     + "24 horas antes del atraque de la nave.</strong></li> "
                     + "<br /><br />"
-                    + "Señores de <strong>" + or.getLoc_salidades() + "</strong> favor designar la unidad.<br /><br />"
-                    + "<strong>Requerimiento Especial:</strong> Contenedores <strong>"+or.getReq_especial2()+"</strong><br /><br />"
-                    + "<strong>Remark:</strong> el contenedor deberá ingresar al terminal Portuario <strong>" + or.getLoc_entradades() + "</strong> a la zona "
-                    + "que ellos le"
+                    + "Señores de <strong>" + ord.getLoc_salidades() + "</strong> favor designar la unidad.<br /><br />"
+                    + "<strong>Requerimiento Especial:</strong> Contenedores <strong>" + ord.getReq_especial2() + "</strong><br /><br />"
+                    + "<strong>Remark:</strong> el contenedor deberá ingresar al terminal Portuario <strong>" + ord.getLoc_entradades() + "</strong> a la zona "
+                    + "que ellos le "
                     + "asignen al momento de ingresar por Gate."
                     + "<br /><br />"
                     + "Gracias.<br /><br />"
@@ -263,14 +280,17 @@ public class OrdenRetiroBean implements Serializable {
                     + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
                     + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
 
-            email.addTo(or.getDestinario(), "Jorge C.");
-            email.addCc(or.getCc(), "Jorge Casta.");
-            
+            email.addTo(ord.getDestinario().split(","));
+            email.addCc(ord.getCc().split(","));
+
             //Add attach
             email.attach(attachment);
 
             //Send mail
             email.send();
+            daoOrdenRetiro.updateVerificaPDF(ord, ord.getCod_ordenretiro());
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO, "Atención", "El mail ha sido enviado"));
         } catch (EmailException ee) {
             ee.printStackTrace();
         }
@@ -426,6 +446,38 @@ public class OrdenRetiroBean implements Serializable {
 
     public void setTemperado2(boolean temperado2) {
         this.temperado2 = temperado2;
+    }
+
+    public int getIdMailSelected() {
+        return idMailSelected;
+    }
+
+    public void setIdMailSelected(int idMailSelected) {
+        this.idMailSelected = idMailSelected;
+    }
+
+    public List<OrdenRetiro> getSelectorMail() {
+        return selectorMail;
+    }
+
+    public void setSelectorMail(List<OrdenRetiro> selectorMail) {
+        this.selectorMail = selectorMail;
+    }
+
+//    public StreamedContent getStream() throws IOException {
+//        try {
+////            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
+////            String nom_archivo = "Orden_de_Retiro" + ord.getCod_ordenretiro() + ".pdf";
+////            String nom_archivo_sinext = "Orden_de_Retiro" + ord.getCod_ordenretiro();
+//            return new DefaultStreamedContent(new FileInputStream(
+//                    new File("C:\\Program Files\\Apache Software Foundation\\apache-tomcat-8.0.39\\OrdenesRetiro\\Orden_de_Retiro2017100020.pdf")),
+//                    "application/pdf", "Orden_de_Retiro2017100020");
+//        } catch (FileNotFoundException e) {
+//            throw new FacesException(e);
+//        }
+//    }
+    public void setStream(StreamedContent stream) {
+        this.stream = stream;
     }
 
 }

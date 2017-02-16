@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,6 +81,38 @@ public class LineaDAO implements Serializable {
             System.out.println("DAO LIST LINEAS: " + e.getMessage());
         } finally {
             con.desconectar();
+        }
+        return listadoLineas;
+    }
+    
+    public List<Linea> findAllLinea(){
+        conexion con = new conexion();
+        List<Linea> listadoLineas = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        
+        String query = "select lin_codigo, lin_nombre, " +
+                       "case lin_estado when 'A' then 'Activo' else 'Inactivo' end as lin_estado " +
+                       "from publico.mae_linea";
+        
+        try {
+            pst = con.getConnection().prepareStatement(query);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Linea lin = new Linea();
+                lin.setLin_codigo(rs.getString(1));
+                lin.setLin_nombre(rs.getString(2));
+                lin.setLin_estado(rs.getString(3));
+                listadoLineas.add(lin);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO LIST LINEAS PREDESCARGA: " + e.getMessage());
+        } finally {
+            try {
+                con.desconectar();
+            } catch (SQLException ex) {
+                Logger.getLogger(LocalidadDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listadoLineas;
     }

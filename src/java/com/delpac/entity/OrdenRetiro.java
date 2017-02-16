@@ -47,6 +47,10 @@ public class OrdenRetiro implements Serializable {
     String req_especial2;
     String destinario;
     String cc;
+    int mai_codigo;
+    String mai_nombre;
+    String mai_mail;
+    int asignada;
 
     public int getCod_ordenretiro() {
         return cod_ordenretiro;
@@ -320,5 +324,37 @@ public class OrdenRetiro implements Serializable {
         this.cc = cc;
     }
 
+    public int getMai_codigo() {
+        return mai_codigo;
+    }
+
+    public void setMai_codigo(int mai_codigo) {
+        this.mai_codigo = mai_codigo;
+    }
+
+    public String getMai_nombre() {
+        return mai_nombre;
+    }
+
+    public void setMai_nombre(String mai_nombre) {
+        this.mai_nombre = mai_nombre;
+    }
+
+    public String getMai_mail() {
+        return mai_mail;
+    }
+
+    public void setMai_mail(String mai_mail) {
+        this.mai_mail = mai_mail;
+    }
+
+    public int getAsignada() {
+        return asignada;
+    }
+
+    public void setAsignada(int asignada) {
+        this.asignada = asignada;
+    }
+    
     
 }

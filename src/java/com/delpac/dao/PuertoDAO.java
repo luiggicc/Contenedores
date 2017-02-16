@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -53,6 +55,38 @@ public class PuertoDAO implements Serializable {
             System.out.println("DAO LIST PUERTO: " + e.getMessage());
         } finally {
             con.desconectar();
+        }
+        return listadoPuertos;
+    }
+    
+    public List<Puerto> findAllPuertos(){
+        conexion con = new conexion();
+        List<Puerto> listadoPuertos = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        
+        String query = "select pto_codigo, pto_nombre, " +
+                       "case pto_estado when 'A' then 'Activo' else 'Inactivo' end as pto_estado " +
+                       "from publico.mae_puerto";
+        
+        try {
+            pst = con.getConnection().prepareStatement(query);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Puerto pto = new Puerto();
+                pto.setPto_codigo(rs.getString(1));
+                pto.setPto_nombre(rs.getString(2));
+                pto.setPto_estado(rs.getString(3));
+                listadoPuertos.add(pto);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO LIST PUERTOS PREDESCARGA: " + e.getMessage());
+        } finally {
+            try {
+                con.desconectar();
+            } catch (SQLException ex) {
+                Logger.getLogger(LocalidadDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listadoPuertos;
     }

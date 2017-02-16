@@ -24,7 +24,10 @@
                             styleClass="customFileUpload customUploadGrid"
                             fileUploadListener="#{cargarSellosBean.handleFileUpload}" mode="advanced"
                             oncomplete="subir();"
-                            allowTypes="/(\.|\/)(xls|xlsx)$/" />
+                            allowTypes="/(\.|\/)(xls|xlsx)$/" 
+                            label="Elegir.."
+                            uploadLabel="Cargar"
+                            cancelLabel="Cancelar"/>
 
                         <script type="text/javascript">
                             function startProgressBar()

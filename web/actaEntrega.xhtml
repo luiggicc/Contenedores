@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{actaEntregaBean.listadoOrdenes}" var="ord" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{actaEntregaBean.filteredOrdenes}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false"
+                                     resizableColumns="true" 
+                                     tableStyle="width:auto"
+                                     reflow="true">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Actas de Entrega" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column  style="text-align: center">
+                                <p:commandLink ajax="false" value="" class="icon-download" actionListener="#{actaEntregaBean.exportpdf2(ord)}"
+                                               disabled="#{ord.asignada!=0}">
+                                </p:commandLink>
+                            </p:column>
+                            
+                            <p:column  style="text-align: center">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{actaEntregaBean.showAsignarDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"
+                                               disabled="#{ord.est_orden!=1}"/>
+                            </p:column>
+
+                            <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cod_ordenretiro}"/>
+                            </p:column>
+
+                            <p:column headerText="Cliente" filterBy="#{ord.cia_nombre}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cia_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario" filterBy="#{ord.dsp_itinerario}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.dsp_itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Línea" filterBy="#{ord.lin_nombre}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.lin_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Booking" filterBy="#{ord.booking}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.booking}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto" filterBy="#{ord.pto_nombre}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.pto_nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Mov. por cuenta" filterBy="#{ord.mov_xcuenta}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.mov_xcuenta}"/>
+                            </p:column>
+
+                            <p:column headerText="Cantidad y tipo de cntr" filterBy="#{ord.cant_tipocont}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.cant_tipocont}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de carga dice/contener" filterBy="#{ord.tipo_carga}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.tipo_carga}"/>
+                            </p:column>
+
+                            <p:column headerText="Req. Especial" filterBy="#{ord.req_especial}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.req_especial}"/>
+                            </p:column>
+
+                            <p:column headerText="Sello de seguridad" filterBy="#{ord.inv_seguridad}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.inv_seguridad}"/>
+                            </p:column>
+
+                            <p:column headerText="Es Temperado?" filterBy="#{ord.es_temperado}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.es_temperado}"/>
+                            </p:column>
+
+                            <p:column headerText="Temperatura" filterBy="#{ord.temperatura}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.temperatura}"/>
+                            </p:column>
+
+                            <p:column headerText="Ventilación" filterBy="#{ord.ventilacion}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.ventilacion}"/>
+                            </p:column>
+
+                            <p:column headerText="Observaciones" filterBy="#{ord.observaciones}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.observaciones}"/>
+                            </p:column>
+
+                            <p:column headerText="Patio de Salida" filterBy="#{ord.loc_salidades}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.loc_salidades}"/>
+                            </p:column>
+
+                            <p:column headerText="Terminal Portuario" filterBy="#{ord.loc_entradades}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.loc_entradades}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos" header="Establecer como Acta de Entrega" widgetVar="wdlgDatos" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Sello de Seguridad: "/>
+                                <p:selectOneMenu id="sello" value="#{actaEntregaBean.ord.inv_seguridad}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorSello}" var="sel" itemLabel="#{sel.inv_seguridad}" itemValue="#{sel.inv_seguridad}" />
+                                </p:selectOneMenu>
+
+                                <p:commandButton ajax="true" value="Asignar" actionListener="#{actaEntregaBean.commitAsignar()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{actaEntregaBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

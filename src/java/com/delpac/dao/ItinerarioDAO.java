@@ -15,7 +15,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -121,6 +122,38 @@ public class ItinerarioDAO implements Serializable {
             System.out.println("DAO LIST ITINERARIO: " + e.getMessage());
         } finally {
             con.desconectar();
+        }
+        return listadoItinerarios;
+    }
+    
+    public List<Itinerario> findAllItinerario(){
+        conexion con = new conexion();
+        List<Itinerario> listadoItinerarios = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        
+        String query = "select ids_itinerario, dsp_itinerario, " +
+                       "case est_itinerario when 'A' then 'Activo' else 'Inactivo' end as est_itinerario " +
+                       "from publico.mae_itinerario";
+        
+        try {
+            pst = con.getConnection().prepareStatement(query);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Itinerario iti = new Itinerario();
+                iti.setIds_itinerario(rs.getInt(1));
+                iti.setDsp_itinerario(rs.getString(2));
+                iti.setEst_itinerario(rs.getString(3));
+                listadoItinerarios.add(iti);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO LIST ITINERARIOS PREDESCARGA: " + e.getMessage());
+        } finally {
+            try {
+                con.desconectar();
+            } catch (SQLException ex) {
+                Logger.getLogger(LocalidadDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listadoItinerarios;
     }
