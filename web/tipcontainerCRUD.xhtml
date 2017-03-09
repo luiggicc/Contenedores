@@ -28,10 +28,7 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-
+                            <p:column headerText="" style="text-align: center; width: 100px">
                                 <p:commandLink class="icon-edit" value="" actionListener="#{tipcontainerBean.showEditDialog(tcon)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
                                 <p:commandLink class="icon-trash-2" value="" actionListener="#{tipcontainerBean.eliminar(tcon)}"  update=":frm:uTable" >
                                     <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />

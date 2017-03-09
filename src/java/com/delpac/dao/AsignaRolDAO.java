@@ -60,20 +60,16 @@ public class AsignaRolDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         con.getConnection().setAutoCommit(false);
-        String query = "MERGE USUARIOROL AS A "
-                + "USING (SELECT ? AS IDUSUARIO, ? AS IDROL,? AS ESTADO) AS T "
-                + "ON(A.IDUSUARIO=T.IDUSUARIO AND A.IDROL=T.IDROL) "
-                + "WHEN MATCHED THEN UPDATE SET A.ESTADO=T.ESTADO "
-                + "WHEN NOT MATCHED THEN INSERT (IDUSUARIO,IDROL,ESTADO) VALUES(?,?,?);";
+        String query = "insert into publico.usuariorol (usrol_cedula, usrol_idrol, usrol_estado) "
+                + "values (?,?,?) "
+                + "on conflict(usrol_cedula, usrol_idrol) do update "
+                + "set usrol_estado = EXCLUDED.usrol_estado";
         try {
             pst = con.getConnection().prepareStatement(query);
             for (AsignaRol ar : listadoAR) {
                 pst.setString(1, us.getCedula());
                 pst.setInt(2, ar.getIdRol());
                 pst.setInt(3, ar.getEstado() == true ? 1 : 0);
-                pst.setString(4, us.getCedula());
-                pst.setInt(5, ar.getIdRol());
-                pst.setInt(6, ar.getEstado() == true ? 1 : 0);
                 pst.executeUpdate();
             }
             con.getConnection().commit();
@@ -84,5 +80,5 @@ public class AsignaRolDAO implements Serializable {
             con.desconectar();
         }
     }
-    
+
 }

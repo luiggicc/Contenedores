@@ -64,15 +64,15 @@ public class PreDescargaBean implements Serializable {
     private ItinerarioDAO daoItinerario = new ItinerarioDAO();
     private List<Itinerario> listaItinerarios = daoItinerario.findAllItinerario();
     private int ItinerarioIdSelected;
-    
+
     private LineaDAO daoLinea = new LineaDAO();
     private List<Linea> listaLineas = daoLinea.findAllLinea();
     private int LineaIdSelected;
-    
+
     private PuertoDAO daoPuerto = new PuertoDAO();
     private List<Puerto> listaPuertos = daoPuerto.findAllPuertos();
     private int PuertoIdSelected;
-    
+
     public void authorized() {
     }
 
@@ -118,11 +118,12 @@ public class PreDescargaBean implements Serializable {
         PreDescargaDAO dao = new PreDescargaDAO();
         for (PreDescarga preDescarga : getListadoPreDescarga()) {
             int flag = dao.guardarPreDescarga(preDescarga, ItinerarioIdSelected);
-//            int flag = dao.guardarPreDescarga(preDescarga);
+
             if (flag != 0) {
                 failedPreDescargaList.add(preDescarga);
             }
         }
+
     }
 
     public void downloadMatriz() {
@@ -448,5 +449,4 @@ public class PreDescargaBean implements Serializable {
         this.PuertoIdSelected = PuertoIdSelected;
     }
 
-    
 }

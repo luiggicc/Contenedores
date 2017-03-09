@@ -280,8 +280,8 @@ public class OrdenRetiroBean implements Serializable {
                     + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
                     + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
 
-            email.addTo(ord.getDestinario().split(","));
-            email.addCc(ord.getCc().split(","));
+            email.addTo("gint1@TERCON.COM.EC, gout2@TERCON.COM.EC, controlgate@TERCON.COM.EC, " +ord.getDestinario().split(","));
+            email.addCc("dgonzalez@delpac-sa.com, charmsen@delpac-sa.com, vmendoza@delpac-sa.com, vzambrano@delpac-sa.com, vchiriboga@delpac-sa.com, vortiz@delpac-sa.com, @operaciones@delpac-sa.com," + ord.getCc().split(","));
 
             //Add attach
             email.attach(attachment);

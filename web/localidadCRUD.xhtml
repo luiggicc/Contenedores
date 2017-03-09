@@ -7,7 +7,7 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
- 
+
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
                 <p:panel>
@@ -27,32 +27,26 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Código" filterBy="#{loc.loc_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{loc.loc_codigo}"/>
+                            <p:column headerText="" style="text-align: center; width: 100px">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{localidadBean.showEditDialog(loc)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{localidadBean.eliminar(loc)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
                             </p:column>
-
                             <p:column headerText="Descripción" filterBy="#{loc.loc_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{loc.loc_des}"/>
                             </p:column>
                             
-                            <p:column headerText="Estado" filterBy="#{loc.loc_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{loc.loc_estado}"/>
+                            <p:column headerText="Sender" filterBy="#{loc.loc_sender}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{loc.loc_sender}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Tipo" filterBy="#{loc.loc_tipo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{loc.loc_tipo}"/>
                             </p:column>
 
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{localidadBean.showEditDialog(loc)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{localidadBean.eliminar(loc)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
+                            <p:column headerText="Estado" filterBy="#{loc.loc_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{loc.loc_estado}"/>
                             </p:column>
                         </p:dataTable>
                     </h:form>

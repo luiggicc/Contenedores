@@ -28,6 +28,12 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <p:column headerText="" style="text-align: center; width: 100px">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{tipmanifiestoBean.showEditDialog(tman)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{tipmanifiestoBean.eliminar(tman)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
                             <p:column headerText="Código" filterBy="#{tman.tman_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{tman.tman_codigo}"/>
                             </p:column>
@@ -39,20 +45,7 @@
                             <p:column headerText="Estado" filterBy="#{tman.tman_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{tman.tman_estado}"/>
                             </p:column>
-
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-
-                                <p:commandLink class="icon-edit" value="Editar" actionListener="#{tipmanifiestoBean.showEditDialog(tman)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-
-                                <br />
-                                <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{tipmanifiestoBean.eliminar(tman)}"  update=":frm:uTable" >
-                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                </p:commandLink>
-
-                            </p:column>
-                        </p:dataTable>
+</p:dataTable>
                     </h:form>
 
                     <!--############################################################################################ -->

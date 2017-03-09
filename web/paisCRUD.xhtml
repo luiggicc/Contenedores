@@ -28,6 +28,12 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <p:column headerText="" style="text-align: center; width: 100px">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{paisBean.showEditDialog(pai)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{paisBean.eliminar(pai)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
                             <p:column headerText="Código" filterBy="#{pai.pai_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{pai.pai_codigo}"/>
                             </p:column>
@@ -38,17 +44,6 @@
 
                             <p:column headerText="Estado" filterBy="#{pai.pai_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{pai.pai_estado}"/>
-                            </p:column>
-
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                <p:commandLink class="icon-edit" value="Editar" actionListener="#{paisBean.showEditDialog(pai)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                <br />
-
-                                <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{paisBean.eliminar(pai)}"  update=":frm:uTable" >
-                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                </p:commandLink>
                             </p:column>
                         </p:dataTable>
                     </h:form>

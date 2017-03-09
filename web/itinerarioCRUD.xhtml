@@ -42,6 +42,10 @@
                             <p:column headerText="Código" filterBy="#{iti.ids_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{iti.ids_itinerario}"/>
                             </p:column>
+                            
+                            <p:column headerText="Itinerario" filterBy="#{iti.dsp_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{iti.dsp_itinerario}"/>
+                            </p:column>
 
                             <p:column headerText="Cliente" filterBy="#{iti.cia_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{iti.cia_codigo}"/>
@@ -178,11 +182,7 @@
                             <p:column headerText="Hora Zarpe" filterBy="#{iti.hor_zarpe}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{iti.hor_zarpe}"/>
                             </p:column>
-
-                            <p:column headerText="Itinerario" filterBy="#{iti.dsp_itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{iti.dsp_itinerario}"/>
-                            </p:column>
-
+                            
                             <p:column headerText="Itinerario Imp." filterBy="#{iti.dsp_itinerario_imp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{iti.dsp_itinerario_imp}"/>
                             </p:column>

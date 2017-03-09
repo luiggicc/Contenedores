@@ -6,6 +6,7 @@
 package com.delpac.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Sellos implements Serializable {
     private int secuencial;
     private String repeated = "único";
     boolean estado;
+    Date seli_fecha;
 
     @Override
     public boolean equals(Object object) {
@@ -132,6 +134,14 @@ public class Sellos implements Serializable {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public Date getSeli_fecha() {
+        return seli_fecha;
+    }
+
+    public void setSeli_fecha(Date seli_fecha) {
+        this.seli_fecha = seli_fecha;
     }
 
     

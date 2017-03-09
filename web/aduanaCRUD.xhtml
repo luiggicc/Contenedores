@@ -31,6 +31,14 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:column headerText="" style="text-align: center; width: 100px">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{aduanaBean.showEditDialog(adu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{aduanaBean.eliminar(adu)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>   
                             <p:column headerText="Código" filterBy="#{adu.adu_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{adu.adu_codigo}"/>
                             </p:column>
@@ -45,23 +53,7 @@
 
                             <p:column headerText="Estado" filterBy="#{adu.adu_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{adu.adu_estado}"/>
-                            </p:column>
-
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                <!-- <i class="icon-edit"> -->
-                                <p:commandLink class="icon-edit" value="Editar" actionListener="#{aduanaBean.showEditDialog(adu)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                <!-- </i> -->
-                                <br />
-                                <!-- <i class="icon-trash-2"> -->
-                                <p:commandLink class="icon-trash-2" value="Activar/Desactivar" actionListener="#{aduanaBean.eliminar(adu)}"  update=":frm:uTable" >
-                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                </p:commandLink>
-                                <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                <!-- </i> -->
-                            </p:column>
+                            </p:column> 
                         </p:dataTable>
                     </h:form>
 

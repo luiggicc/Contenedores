@@ -60,20 +60,16 @@ public class AsignaRecursoDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         con.getConnection().setAutoCommit(false);
-        String query = "MERGE publico.RECURSOROL AS A "
-                + "USING (SELECT ? AS IDROL,? AS IDRECURSO, ? AS ESTADO) AS T "
-                + "ON (A.rerol_IDROL=T.IDROL AND A.rerol_IDRECURSO=T.IDRECURSO) "
-                + "WHEN MATCHED THEN UPDATE SET A.rerol_ESTADO=T.ESTADO "
-                + "WHEN NOT MATCHED THEN INSERT (IDROL,IDRECURSO,ESTADO)VALUES(?,?,?);";
+        String query = "insert into publico.recursorol (rerol_idrol, rerol_idrecurso, rerol_estado) "
+                + "values (?,?,?) "
+                + "on conflict(rerol_idrol, rerol_idrecurso) do update "
+                + "set rerol_estado = EXCLUDED.rerol_estado";
         try {
             pst = con.getConnection().prepareStatement(query);
             for (AsignaRecurso ar : listadoAR) {
                 pst.setInt(1, idrol);
                 pst.setInt(2, ar.getIdRecurso());
                 pst.setInt(3, ar.getEstado() == true ? 1 : 0);
-                pst.setInt(4, idrol);
-                pst.setInt(5, ar.getIdRecurso());
-                pst.setInt(6, ar.getEstado() == true ? 1 : 0);
                 pst.executeUpdate();
             }
             con.getConnection().commit();

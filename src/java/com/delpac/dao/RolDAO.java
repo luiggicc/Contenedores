@@ -100,7 +100,7 @@ public class RolDAO implements Serializable {
         conexion con = new conexion();
         con.getConnection().setAutoCommit(false);
         PreparedStatement pst;
-        String query = "insert into publico.rol values(?,1)";
+        String query = "insert into publico.rol(rol_descripcion, rol_estado) values(?,1)";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, rol.getDescripcion().toUpperCase());

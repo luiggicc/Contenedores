@@ -27,7 +27,9 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class InventarioBean implements Serializable {
     private List<Sellos> listadoSellos = new ArrayList<>();
+    private List<Sellos> listadoEliminados = new ArrayList<>();
     private List<Sellos> filteredSellos;
+    private List<Sellos> filteredEliminados;
     private Usuario sessionUsuario;
     private Sellos sel = new Sellos();
     private SellosDAO daoSellos = new SellosDAO();
@@ -53,6 +55,7 @@ public class InventarioBean implements Serializable {
                 selectorMotivoSello = daoSellos.findAllMotivos();
                 
                 listadoSellos = daoSellos.findAll();
+                listadoEliminados = daoSellos.Eliminados();
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
@@ -132,6 +135,22 @@ public class InventarioBean implements Serializable {
 
     public void setSelectorMotivoSello(List<Sellos> selectorMotivoSello) {
         this.selectorMotivoSello = selectorMotivoSello;
+    }
+
+    public List<Sellos> getListadoEliminados() {
+        return listadoEliminados;
+    }
+
+    public void setListadoEliminados(List<Sellos> listadoEliminados) {
+        this.listadoEliminados = listadoEliminados;
+    }
+
+    public List<Sellos> getFilteredEliminados() {
+        return filteredEliminados;
+    }
+
+    public void setFilteredEliminados(List<Sellos> filteredEliminados) {
+        this.filteredEliminados = filteredEliminados;
     }
     
     

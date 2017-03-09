@@ -29,6 +29,12 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <p:column headerText="" style="text-align: center; width: 100px">
+                                <p:commandLink class="icon-edit" value="" actionListener="#{almacenBean.showEditDialog(alm)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{almacenBean.eliminar(alm)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
                             <p:column headerText="Código" filterBy="#{alm.alm_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{alm.alm_codigo}"/>
                             </p:column>
@@ -37,30 +43,8 @@
                                 <h:outputText value="#{alm.alm_nombre}"/>
                             </p:column>
 
-                            <!--
-                            <p:column headerText="Descripción" filterBy="#{alm.alm_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{alm.alm_des}"/>
-                            </p:column>
-                            -->
-
                             <p:column headerText="Estado" filterBy="#{alm.alm_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{alm.alm_estado}"/>
-                            </p:column>
-
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-                            <p:column  style="text-align: center">
-                                <i class="icon-edit">
-                                    <p:commandLink value="Editar" actionListener="#{almacenBean.showEditDialog(alm)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
-                                <br />
-                                <i class="icon-trash-2">
-                                    <p:commandLink value="Activar/Desactivar" actionListener="#{almacenBean.eliminar(alm)}"  update=":frm:uTable" >
-                                        <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
-                                    </p:commandLink>
-                                    <!-- <p:graphicImage name="images/ui-icon-trash.png" library="sentinel-layout"/>-->
-                                </i>
                             </p:column>
                         </p:dataTable>
                     </h:form>

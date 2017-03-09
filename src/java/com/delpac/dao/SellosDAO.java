@@ -33,7 +33,7 @@ public class SellosDAO implements Serializable {
                 + "case i.inv_estado "
                 + "when 'S' then 'En Stock' "
                 + "when 'A' then 'Asignado' "
-                + "else 'Eliminado' end as inv_estado "
+                + "end as inv_estado "
                 + "from publico.invsellos i "
                 + "inner join publico.mae_localidad l on i.loc_codigo = l.loc_codigo "
                 + "where inv_estado = 'S' or inv_estado = 'A'";
@@ -51,6 +51,38 @@ public class SellosDAO implements Serializable {
             }
         } catch (Exception e) {
             System.out.println("DAO SELLOS FINDALL: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+        return listadoSellos;
+    }
+
+    public List<Sellos> Eliminados() throws SQLException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        conexion con = new conexion();
+        List<Sellos> listadoSellos = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        String query = "select ise.inv_sello, ise.inv_seguridad, ms.mot_des, lo.loc_des, se.seli_fecha "
+                + "from publico.selloseliminados se "
+                + "inner join publico.invsellos ise on se.inv_codigo = ise.inv_codigo "
+                + "inner join publico.motivosello ms on se.mot_codigo = ms.mot_codigo "
+                + "inner join publico.mae_localidad lo on ise.inv_codigo = lo.loc_codigo "
+                + "order by seli_fecha desc";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Sellos sel = new Sellos();
+                sel.setInv_sello(rs.getString(1));
+                sel.setInv_seguridad(rs.getString(2));
+                sel.setMot_des(rs.getString(3));
+                sel.setLoc_des(rs.getString(4));
+                sel.setSeli_fecha(rs.getDate(5));
+                listadoSellos.add(sel);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO SELLOS LISTADO ELIMINADOS: " + e.getMessage());
         } finally {
             con.desconectar();
         }
@@ -89,7 +121,8 @@ public class SellosDAO implements Serializable {
         conexion con = new conexion();
         con.getConnection().setAutoCommit(false);
         PreparedStatement pst;
-        String query = "insert into publico.invsellos values(1, ?,?, 1, 'S')";
+        String query = "insert into publico.invsellos(inv_sello, inv_seguridad, loc_codigo, inv_estado, inv_fechacrec)"
+                + " values(?,?, 1, 'S',to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp)";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, sellos.getInv_sello());
@@ -108,7 +141,7 @@ public class SellosDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.invsellos "
-                + "set inv_sello=?, inv_seguridad=? "
+                + "set inv_sello=?, inv_seguridad=?, inv_fechamod = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp "
                 + "where inv_codigo=?";
         pst = con.getConnection().prepareStatement(query);
         try {
@@ -128,7 +161,7 @@ public class SellosDAO implements Serializable {
         PreparedStatement pst;
         PreparedStatement pst2;
         String query = "update publico.invsellos set inv_estado = 'E' where inv_codigo=?";
-        String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo) values (?,?)";
+        String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo, seli_fecha) values (?,?, to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp)";
         pst = con.getConnection().prepareStatement(query);
         pst2 = con.getConnection().prepareStatement(query2);
         try {
@@ -150,8 +183,8 @@ public class SellosDAO implements Serializable {
         int repitedFlag = 0;
         con.getConnection().setAutoCommit(false);
         PreparedStatement pst;
-        String query = "insert into publico.InvSellos(inv_sello, inv_seguridad, loc_codigo, inv_estado) "
-                + "values(?,?, 1, 'S')";
+        String query = "insert into publico.InvSellos(inv_sello, inv_seguridad, loc_codigo, inv_estado, inv_fechacrec, inv_fechamod) "
+                + "values(?,?, 1, 'S', to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp, null)";
         //String query = "insert into prospecto values(?,?,?,?,?,?,?,?,?)";
         pst = con.getConnection().prepareStatement(query);
         try {

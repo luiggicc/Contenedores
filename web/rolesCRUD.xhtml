@@ -83,11 +83,12 @@
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
                     <p:dialog id="dlgPermisos" header="Permisos Rol: #{rolBean.rol.descripcion}" widgetVar="wdlgPermisos" modal="true" 
-                              closable="false" closeOnEscape="false" style="width:600px;height: 300px">
+                              closable="true" closeOnEscape="false" style="width:300px">
                         <h:form id="frmDlgPermiso">
                             <p:dataTable id="resourceTable" value="#{rolBean.listadoPermisos}" var="recurso" widgetVar="recursoTable" rows="10" paginator="true"
                                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                         paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" filteredValue="#{rolBean.filteredAccess}" lazy="false">
+                                         paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" filteredValue="#{rolBean.filteredAccess}" lazy="false"
+                                         style="width:350px">
                                 <!-- <f:facet name="header">
                                      <p:outputPanel style="text-align: right;">
                                          <table>
@@ -100,15 +101,15 @@
                                      </p:outputPanel>
                                  </f:facet> -->
                                 <p:column headerText="Recurso" filterBy="#{recurso.descripcionRecurso}" filterStyle="display:none" filterMatchMode="contains">
-                                    <p:outputLabel value="#{recurso.descripcionRecurso}"/>
+                                    <div align="center"><p:outputLabel value="#{recurso.descripcionRecurso}"/></div>
                                 </p:column>
                                 <p:column headerText="Asignado">
-                                    <p:selectBooleanCheckbox value="#{recurso.estado}"/>
+                                    <div align="center"><p:selectBooleanCheckbox value="#{recurso.estado}"/></div>
                                 </p:column>
                             </p:dataTable>
                             <p:commandButton ajax="true" update=":frmDlgPermiso:resourceTable" 
                                              value="Guardar" actionListener="#{rolBean.commitPermission()}"
-                                             oncomplete="PF('recursoTable').clearFilters();">
+                                             oncomplete="PF('wdlgPermisos').hide();">
                                 <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                             </p:commandButton>
                             <p:commandButton value="Cancelar" actionListener="#{rolBean.onCancelPermissionDialog()}"

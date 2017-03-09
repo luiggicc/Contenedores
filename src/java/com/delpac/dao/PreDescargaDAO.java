@@ -25,7 +25,6 @@ import java.util.List;
 public class PreDescargaDAO implements Serializable {
 
     public int guardarPreDescarga(PreDescarga pre, Integer ItinerarioIdSelected) throws SQLException {
-//    public int guardarPreDescarga(PreDescarga pre) throws SQLException {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         conexion con = new conexion();
         int repitedFlag = 0;
@@ -38,8 +37,8 @@ public class PreDescargaDAO implements Serializable {
                 + "values(?, to_char(current_timestamp,'YYYY-MM-DD')::timestamp, "
                 + "?, ?, ?, ?, to_timestamp(?, 'dd/MM/YYYY'), ?, ?, ?, ?, ?, "
                 + "?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String query2 = "insert into publico.mae_container(con_codigo, con_tipcont, lin_codigo, con_tamano, con_estado) "
-                + "select ?, ?, '0002', left(?,2), 'A' "
+        String query2 = "insert into publico.mae_container(con_codigo, con_tipcont, lin_codigo, con_tamano, con_estado, con_ciclo) "
+                + "select ?, ?, '0002', left(?,2), 'A', 0 "
                 + "where not exists ( "
                 + "select * from publico.mae_container where con_codigo =?);";
         pst = con.getConnection().prepareStatement(query);

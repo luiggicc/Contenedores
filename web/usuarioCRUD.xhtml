@@ -116,14 +116,15 @@
                     <p:dialog  id="dlgPermisos" header="Roles de Usuario: #{usuarioBean.usuario.apellidos} #{usuarioBean.usuario.nombres}" widgetVar="wdlgPermisos" modal="true" 
                                closable="false" style="width:600px;height: 300px">
                         <h:form id="idDlg">
-                            <p:dataTable id="resourceTable" value="#{usuarioBean.listadoPermisos}" var="recurso" widgetVar="recursoTable" rows="10" paginator="true"
+                            <p:dataTable id="resourceTable" value="#{usuarioBean.listadoPermisos}" var="recurso" widgetVar="recursoTable" rows="5" paginator="true"
                                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                         paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" filteredValue="#{usuarioBean.filteredAccess}" lazy="false">
+                                         paginatorPosition="bottom" rowsPerPageTemplate="5,10,15" filteredValue="#{usuarioBean.filteredAccess}" lazy="false"
+                                         style="width: 350px">
                                 <p:column  headerText="Rol" filterBy="#{recurso.descripcionRol}" filterStyle="display:none" filterMatchMode="contains">
-                                    <p:outputLabel id="rol" value="#{recurso.descripcionRol}"/>
+                                    <div align="center"><p:outputLabel id="rol" value="#{recurso.descripcionRol}"/></div>
                                 </p:column>
                                 <p:column  headerText="Asignado">
-                                    <p:selectBooleanCheckbox id="asignado" value="#{recurso.estado}"/>
+                                    <div align="center"><p:selectBooleanCheckbox id="asignado" value="#{recurso.estado}"/></div>
                                 </p:column>
                             </p:dataTable>
                             <p:commandButton ajax="true" update=":idDlg:resourceTable" 

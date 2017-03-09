@@ -31,7 +31,8 @@ public class UsuarioDAO implements Serializable {
         conexion con = new conexion();
         con.getConnection().setAutoCommit(false);
         PreparedStatement pst;
-        String sql = "insert into publico.usuario values(?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into publico.usuario(usu_cedula, usu_nombres, usu_apellidos, usu_usuario, usu_clave, usu_estadoclave, usu_activo, usu_fecha_creac, usu_fecha_modif) "
+                + " values(?,?,?,?,?,?,?,current_timestamp,current_timestamp)";
         pst = con.getConnection().prepareStatement(sql);
         try {
             pst.setString(1, us.getCedula());
@@ -41,8 +42,6 @@ public class UsuarioDAO implements Serializable {
             pst.setString(5, us.getPassword());
             pst.setInt(6, 1); //valor que representa la clave debe ser cambiada.
             pst.setInt(7, 1); //valor que representa el usuario se puedo autenticar en el sistema.
-            pst.setString(8, fmt.format(new Date()));
-            pst.setString(9, null/*for now lolz*/);
             pst.executeUpdate();
 
             con.getConnection().commit();
@@ -63,15 +62,15 @@ public class UsuarioDAO implements Serializable {
         conexion con = new conexion();
         con.getConnection().setAutoCommit(false);
         PreparedStatement pst;
-        String query = "update publico.usuario set usu_nombres=?,usu_apellidos=?,usu_login=?,usu_fecha_modif=? "
-                + " where cedula=? ";
+        String query = "update publico.usuario set usu_nombres=?,usu_apellidos=?,usu_usuario=?,usu_fecha_modif=current_timestamp "
+                + " where usu_cedula=? ";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, us.getNombres().toUpperCase());
             pst.setString(2, us.getApellidos().toUpperCase());
             pst.setString(3, us.getLogin().toLowerCase());
-            pst.setString(4, fmt.format(new Date()));
-            pst.setString(5, us.getCedula());
+//            pst.setString(4, fmt.format(new Date()));
+            pst.setString(4, us.getCedula());
 
             pst.executeUpdate();
             con.getConnection().commit();

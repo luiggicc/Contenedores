@@ -27,7 +27,7 @@ public class LocalidadDAO implements Serializable{
         PreparedStatement pst;
         ResultSet rs = null;
         
-        String query = "select loc_codigo, loc_des, " +
+        String query = "select loc_codigo, loc_des, loc_sender, loc_tipo, " +
                        "case loc_estado when 'A' then 'Activo' else 'Inactivo' end as loc_estado " +
                        "from publico.mae_localidad";
         pst = con.getConnection().prepareStatement(query);
@@ -37,7 +37,9 @@ public class LocalidadDAO implements Serializable{
                 Localidad loc = new Localidad();
                 loc.setLoc_codigo(rs.getInt(1));
                 loc.setLoc_des(rs.getString(2));
-                loc.setLoc_estado(rs.getString(3));
+                loc.setLoc_sender(rs.getString(3));
+                loc.setLoc_tipo(rs.getString(4));
+                loc.setLoc_estado(rs.getString(5));
                 listadoLocalidades.add(loc);
             }
         } catch (Exception e) {

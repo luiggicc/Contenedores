@@ -31,14 +31,11 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column  style="text-align: center">
-
+                            <p:column headerText="" style="text-align: center">
                                 <p:commandLink class="icon-edit" value="" actionListener="#{buqueBean.showEditDialog(buq)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"/>
-
                                 <p:commandLink class="icon-trash-2" value="" actionListener="#{buqueBean.eliminar(buq)}"  update=":frm:uTable" >
                                     <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
                                 </p:commandLink>
-
                             </p:column>
 
                             <p:column headerText="Código" filterBy="#{buq.buq_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">

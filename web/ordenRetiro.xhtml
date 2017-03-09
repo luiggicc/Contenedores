@@ -50,9 +50,8 @@
 
                             <p:column  style="text-align: center">
                                 <p:commandLink id="enviar-mail" class="icon-mail" value="" action="#{ordenRetiroBean.showSendDialog(ord)}" oncomplete="PF('wdlgDatos2').show();" update="dlgDatos2"
-                                               disabled="#{ord.estadopdf!=0}"/>
-                                <p:tooltip id="enviar-mail-message" for="enviar-mail" value="Una vez enviado el mail, se bloqueará el resto de opciones"
-                                           showEffect="clip" hideEffect="explode" />
+                                               />
+                               
                             </p:column>
 
 

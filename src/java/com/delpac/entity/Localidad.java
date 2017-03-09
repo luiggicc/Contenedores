@@ -16,6 +16,8 @@ public class Localidad implements Serializable {
    Integer loc_codigo;
    String loc_des;
    String loc_estado;
+   String loc_sender;
+   String loc_tipo;
 
     public Integer getLoc_codigo() {
         return loc_codigo;
@@ -39,6 +41,22 @@ public class Localidad implements Serializable {
 
     public void setLoc_estado(String loc_estado) {
         this.loc_estado = loc_estado;
+    }
+
+    public String getLoc_sender() {
+        return loc_sender;
+    }
+
+    public void setLoc_sender(String loc_sender) {
+        this.loc_sender = loc_sender;
+    }
+
+    public String getLoc_tipo() {
+        return loc_tipo;
+    }
+
+    public void setLoc_tipo(String loc_tipo) {
+        this.loc_tipo = loc_tipo;
     }
    
    
