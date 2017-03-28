@@ -64,6 +64,7 @@ public class PreDescargaBean implements Serializable {
     private ItinerarioDAO daoItinerario = new ItinerarioDAO();
     private List<Itinerario> listaItinerarios = daoItinerario.findAllItinerario();
     private int ItinerarioIdSelected;
+    private String ItinerarioTextSelected;
 
     private LineaDAO daoLinea = new LineaDAO();
     private List<Linea> listaLineas = daoLinea.findAllLinea();
@@ -116,14 +117,15 @@ public class PreDescargaBean implements Serializable {
 
     public void guardarListadoPreDescarga() throws SQLException {
         PreDescargaDAO dao = new PreDescargaDAO();
-        for (PreDescarga preDescarga : getListadoPreDescarga()) {
-            int flag = dao.guardarPreDescarga(preDescarga, ItinerarioIdSelected);
-
-            if (flag != 0) {
-                failedPreDescargaList.add(preDescarga);
+        if (!getListadoPreDescarga().isEmpty()) {
+            for (PreDescarga preDescarga : getListadoPreDescarga()) {
+                int flag = dao.guardarPreDescarga(preDescarga, ItinerarioIdSelected);
+                if (flag != 0) {
+                    failedPreDescargaList.add(preDescarga);
+                }
             }
+            getListadoPreDescarga().clear();
         }
-
     }
 
     public void downloadMatriz() {
@@ -447,6 +449,14 @@ public class PreDescargaBean implements Serializable {
 
     public void setPuertoIdSelected(int PuertoIdSelected) {
         this.PuertoIdSelected = PuertoIdSelected;
+    }
+
+    public String getItinerarioTextSelected() {
+        return ItinerarioTextSelected;
+    }
+
+    public void setItinerarioTextSelected(String ItinerarioTextSelected) {
+        this.ItinerarioTextSelected = ItinerarioTextSelected;
     }
 
 }

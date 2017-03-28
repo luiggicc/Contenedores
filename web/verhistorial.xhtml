@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{verHistorialBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="Historial de movimiento de contenedores">
+                    <h:form id="frm">
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="Contenedor"/>
+                            <p:selectOneMenu id="ItinerarioMenu" value="#{verHistorialBean.containerDesSelected}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
+                                <f:selectItems value="#{verHistorialBean.listaContainers}" var="cont" 
+                                               itemLabel="#{cont.con_codigo}" itemValue="#{cont.con_codigo}"/>
+                                <p:ajax event="itemSelect"  listener="#{verHistorialBean.VerHistorial}" update="@form" oncomplete="PF('verhistorialTable').clearFilters();"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Ver último ciclo:" />
+                            <p:selectBooleanCheckbox id="chck" value="#{verHistorialBean.ciclomaximo}" >
+                                <p:ajax listener="#{verHistorialBean.VerHistorial}" update="@form"/>
+                            </p:selectBooleanCheckbox>
+                        </h:panelGrid>
+
+                        <p:dataTable id="asignacionTbl" value="#{verHistorialBean.listadoVerHistorial}" var="vhis" paginator="true" widgetVar="verhistorialTable" rows="12"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{verHistorialBean.filteredVerHistorial}" lazy="false" 
+                                     rowsPerPageTemplate="12,25,50" 
+                                     resizableColumns="true" 
+                                     tableStyle="width:auto"
+                                     reflow="true"
+                                     >                            
+
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Historial de Contenedores" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('verhistorialTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Contenedor" filterBy="#{vhis.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.equipo_identi}"/>
+                            </p:column>
+
+                            <p:column headerText="Sender" filterBy="#{vhis.sender}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.sender}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Emisión" filterBy="#{vhis.fecha_emision}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.fecha_emision}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Movimiento" filterBy="#{vhis.movimiento}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.movimiento}"/>
+                            </p:column>
+
+                            <p:column headerText="BL" filterBy="#{vhis.movimiento}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.movimiento}"/>
+                            </p:column>
+
+                            <p:column headerText="Booking" filterBy="#{vhis.booking}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.booking}"/>
+                            </p:column>
+
+                            <p:column headerText="Nave" filterBy="#{vhis.nave}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.nave}"/>
+                            </p:column>
+
+                            <p:column headerText="Viaje" filterBy="#{vhis.viaje}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.viaje}"/>
+                            </p:column>
+
+                            <p:column headerText="Itinerario" filterBy="#{vhis.itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Lloyd" filterBy="#{vhis.identi_trans}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.identi_trans}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto Carga" filterBy="#{vhis.pto_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.pto_carga}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto Descarga" filterBy="#{vhis.pto_descarga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.pto_descarga}"/>
+                            </p:column>
+
+                            <p:column headerText="Puerto Destino" filterBy="#{vhis.pto_destino}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.pto_destino}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Arribo" filterBy="#{vhis.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.fecha_arribo}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Puerto Destino" filterBy="#{vhis.fecha_salida}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.fecha_salida}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Status" filterBy="#{vhis.status}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.status}"/>
+                            </p:column>
+
+                            <p:column headerText="Peso Bruto" filterBy="#{vhis.peso_bruto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.peso_bruto}"/>
+                            </p:column>
+
+                            <p:column headerText="Sello" filterBy="#{vhis.sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.sello}"/>
+                            </p:column>
+
+                            <p:column headerText="Daño" filterBy="#{vhis.danio}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.danio}"/>
+                            </p:column>
+
+                            <p:column headerText="Temp. Ideal" filterBy="#{vhis.temp_ideal}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.temp_ideal}"/>
+                            </p:column>
+
+                            <p:column headerText="Temp. Min." filterBy="#{vhis.temp_min}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.temp_min}"/>
+                            </p:column>
+
+                            <p:column headerText="Temp. Máx." filterBy="#{vhis.temp_max}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.temp_max}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

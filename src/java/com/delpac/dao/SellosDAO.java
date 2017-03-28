@@ -58,7 +58,7 @@ public class SellosDAO implements Serializable {
     }
 
     public List<Sellos> Eliminados() throws SQLException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         conexion con = new conexion();
         List<Sellos> listadoSellos = new ArrayList<>();
         PreparedStatement pst;
@@ -78,7 +78,7 @@ public class SellosDAO implements Serializable {
                 sel.setInv_seguridad(rs.getString(2));
                 sel.setMot_des(rs.getString(3));
                 sel.setLoc_des(rs.getString(4));
-                sel.setSeli_fecha(rs.getDate(5));
+                sel.setSeli_fecha(format.parse(format.format(new Date(rs.getTimestamp(5).getTime()))));
                 listadoSellos.add(sel);
             }
         } catch (Exception e) {

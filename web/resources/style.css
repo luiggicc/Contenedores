@@ -43,6 +43,10 @@ and open the template in the editor.
     background:rgba(255, 85, 85, 0.39)!important;
 }
 
+.predescargaInactive{
+    background:rgba(128, 128, 0, 0.3)!important;
+}
+
 .loginRoles{
     display: inline-block;
     position: relative;
@@ -114,13 +118,26 @@ body {
     z-index: 100;
 }
 
+.center-block-chart1 {
+    display: block; 
+    margin: auto;
+    width: 1000px;
+    height: 350px;
+}
+
 .center-block {
-    display: block;
-    margin: 30px;
+    display: block; 
+    margin: auto;
     width: 500px;
     height: 350px;
 }
 
+.center-block-charts-little {
+    display: block; 
+    margin: auto;
+    width: 300px;
+    height: auto;
+}
 .likePrimefaceCommandLink{
     color: #27AAE1 !important;
     text-decoration: underline;

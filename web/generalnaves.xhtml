@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="General Naves">
+                    <h:form id="frm">
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="Movimiento"/>
+                            <p:selectOneMenu id="MovimientoMenu" value="#{generalNavesBean.movimiento}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
+                                <f:selectItem itemLabel="Descarga" itemValue="Descarga"/>
+                                <f:selectItem itemLabel="Export" itemValue="Export"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="Desde: "/>
+                            <p:calendar value="#{generalNavesBean.desde}" pattern="yyyy-MM-dd" navigator="true"/>
+                            <p:outputLabel value="Hasta: "/>
+                            <p:calendar value="#{generalNavesBean.hasta}" pattern="yyyy-MM-dd" navigator="true"/>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:dataTable id="generalNavesTbl" value="#{generalNavesBean.lista}" var="gna" paginator="true" widgetVar="gnavesTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{generalNavesBean.filteredGnaves}" lazy="false" 
+                                     rowsPerPageTemplate="10,25,50">                            
+                            
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Reporte de Naves a Naves" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('gnavesTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Itinerario" filterBy="#{gna.itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{gna.itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Arribo" filterBy="#{gna.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{gna.fecha_arribo}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Tipo Contenedor" filterBy="#{gna.tipo_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{gna.tipo_cont}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Total Contenedores" filterBy="#{gna.total_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{gna.total_cont}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{generalNavesBean.consultarGeneralNaves()}" />
+                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{generalNavesBean.exportpdf()}"/>  
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

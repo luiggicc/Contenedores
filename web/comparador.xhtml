@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{comparadorBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="Comparador de Contendores entre PreDescarga y Descarga">
+                    <h:form id="frm">
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="Itinerario"/>
+                            <p:selectOneMenu id="ItinerarioMenu" value="#{comparadorBean.itinerarioDSPSelected}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
+                                <f:selectItems value="#{comparadorBean.listaItinerarios}" var="com" 
+                                               itemLabel="#{com.dsp_itinerario}" itemValue="#{com.dsp_itinerario}"/>
+                                <p:ajax event="itemSelect"  listener="#{comparadorBean.CompararContenedores()}" update="@form" oncomplete="PF('comparadorTable').clearFilters();"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                        <p:dataTable id="asignacionTbl" value="#{comparadorBean.listadoComparador}" var="comparador" paginator="true" widgetVar="comparadorTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{comparadorBean.filteredComparador}" lazy="false" 
+                                     
+                                     rowsPerPageTemplate="10,25,50" 
+                                     >                            
+                            
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Comparador de Contenedores" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('comparadorTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Contenedor PreDescarga" filterBy="#{comparador.con_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"
+                                      styleClass="#{(comparador.con_codigo.equals('')? 'predescargaInactive':'')}">
+                                <p:outputLabel value="#{comparador.con_codigo}"/>
+                            </p:column>
+
+                            <p:column headerText="Contenedor Descarga" filterBy="#{comparador.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" 
+                                      styleClass="#{(comparador.equipo_identi.equals('')? 'rowbackgorundOnInactive':'')}">
+                                <p:outputLabel value="#{comparador.equipo_identi}"/>
+                            </p:column>
+
+                            <p:column headerText="Sender" filterBy="#{comparador.sender}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"
+                                      styleClass="#{(comparador.sender.equals('')? 'rowbackgorundOnInactive':'')}">
+                                <p:outputLabel value="#{comparador.sender}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Fecha Arribo" filterBy="#{comparador.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"
+                                      styleClass="#{(comparador.sender.equals('')? 'rowbackgorundOnInactive':'')}">
+                                <p:outputLabel value="#{comparador.fecha_arribo}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

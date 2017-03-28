@@ -23,6 +23,9 @@ public class Container {
     String con_estado;
     String lin_nombre;
     String tcon_nombre;
+    String cont_cont_loss;
+    String obs_cont_loss;
+    int con_ciclo;
 
     public String getCon_codigo() {
         return con_codigo;
@@ -126,6 +129,30 @@ public class Container {
 
     public void setTcon_nombre(String tcon_nombre) {
         this.tcon_nombre = tcon_nombre;
+    }
+
+    public String getCont_cont_loss() {
+        return cont_cont_loss;
+    }
+
+    public void setCont_cont_loss(String cont_cont_loss) {
+        this.cont_cont_loss = cont_cont_loss;
+    }
+
+    public String getObs_cont_loss() {
+        return obs_cont_loss;
+    }
+
+    public void setObs_cont_loss(String obs_cont_loss) {
+        this.obs_cont_loss = obs_cont_loss;
+    }
+
+    public int getCon_ciclo() {
+        return con_ciclo;
+    }
+
+    public void setCon_ciclo(int con_ciclo) {
+        this.con_ciclo = con_ciclo;
     }
     
     

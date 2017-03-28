@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReeferStock" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ebe0a1a-9015-46e9-ad8a-ae9fb7b6ee43">
+	<property name="ireport.zoom" value="1.0000000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="9a6c2d95-644a-49fa-9b8f-2dae2cb71c34"/>
+	<parameter name="RutaImagen" class="java.lang.String"/>
+	<parameter name="DesdeEmpty" class="java.util.Date"/>
+	<parameter name="HastaEmpty" class="java.util.Date"/>
+	<parameter name="DesdeImport" class="java.util.Date"/>
+	<parameter name="HastaImport" class="java.util.Date"/>
+	<parameter name="DesdeExport" class="java.util.Date"/>
+	<parameter name="HastaExport" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select 'Empty Stocks' as estado,
+       count(case when con_tipcont = '20RF' then 1 end) as RF20,
+       count(case when con_tipcont = '40HC' then 1 end) as RQ40,
+       count(case when con_tipcont = '40RF' then 1 end) as RF40,
+       max(des.ciclo) as ciclo
+from publico.descarga des
+inner join publico.mae_container con on des.equipo_identi = con.con_codigo
+where des.movimiento = 'GateIn Puerto'
+and des.fecha_arribo >= $P{DesdeEmpty}::timestamp and des.fecha_arribo <= $P{HastaEmpty}::timestamp
+union all
+select 'Import Full' as estado,
+       count(case when con.con_tipcont = '20RF' then 1 end) as RF20,
+       count(case when con.con_tipcont = '40HC' then 1 end) as RQ40,
+       count(case when con.con_tipcont = '40RF' then 1 end) as RF40,
+       max(des.ciclo) as ciclo
+from publico.descarga des
+inner join publico.mae_container con on des.equipo_identi = con.con_codigo
+where des.movimiento = 'Descarga' and status = 'Full'
+and des.fecha_arribo >= $P{DesdeImport}::timestamp and des.fecha_arribo <= $P{HastaImport}::timestamp
+union all
+select 'Export Full' as estado,
+       count(case when con.con_tipcont = '20RF' then 1 end) as RF20,
+       count(case when con.con_tipcont = '40HC' then 1 end) as RQ40,
+       count(case when con.con_tipcont = '40RF' then 1 end) as RF40,
+       max(des.ciclo) as ciclo
+from publico.descarga des
+inner join publico.mae_container con on des.equipo_identi = con.con_codigo
+where des.movimiento = 'Export' and status = 'Full'
+and des.fecha_arribo >= $P{DesdeExport}::timestamp and des.fecha_arribo <= $P{HastaExport}::timestamp]]>
+	</queryString>
+	<field name="estado" class="java.lang.String"/>
+	<field name="rf20" class="java.lang.Long"/>
+	<field name="rq40" class="java.lang.Long"/>
+	<field name="rf40" class="java.lang.Long"/>
+	<field name="ciclo" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="79" backcolor="#CCFFFF" uuid="59964bd1-f5d8-41d8-b360-3fe4aec99a91"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="454" y="0" width="101" height="79" uuid="f21b8d5d-ecde-4165-88f7-03add4c6c6ab"/>
+			</rectangle>
+			<image>
+				<reportElement x="466" y="2" width="88" height="77" uuid="8791f28c-ea08-4326-b07b-3cb795509d10"/>
+				<imageExpression><![CDATA[$P{RutaImagen} + "delpac.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="10" y="0" width="428" height="79" uuid="e5a7eac4-475f-4a71-8b4d-b634a3bd22ba"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DELPAC S.A. - Reefer Stock]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="554" height="35" backcolor="#9999FF" uuid="1c388cec-5aa7-4b41-b552-c4022dbbb876"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="350" y="0" width="204" height="35" uuid="7312fd3c-50a0-43ed-9eb8-3581bf780cc1"/>
+			</rectangle>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="350" y="0" width="204" height="35" uuid="fed27eaf-f07c-4f41-9189-5003f5b2ddeb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="0" width="324" height="35" uuid="d04455b4-7db1-4b1f-a2ec-39f9d67e1cdc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contenedores COSCON - Reefer Stock]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement x="155" y="0" width="102" height="30" uuid="3ffd8b92-6681-448d-ade4-fc16853d30a0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="155" y="0" width="102" height="30" uuid="f3edced0-e154-4da4-986b-b7e9f4a6c5eb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[RF20]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="257" y="0" width="97" height="30" uuid="e25b26b2-b181-4cb0-a06e-6a58421cd3f5"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="257" y="0" width="97" height="30" uuid="5a35ba93-45c5-44d6-8c78-0a2bbc13b10d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[RQ40]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="354" y="0" width="84" height="30" uuid="8e937f1a-7d32-406a-baeb-d73a0d5213e9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="354" y="0" width="84" height="30" uuid="98a6a641-2106-4e81-84d5-7a996cada42f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[RF40]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="42" y="0" width="113" height="20" uuid="20ce9c20-0637-41f4-b7e2-438f09f16b4a"/>
+			</rectangle>
+			<textField>
+				<reportElement x="42" y="0" width="113" height="20" uuid="3c17d57e-fd60-45e3-b834-dab5398a7213"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="155" y="0" width="102" height="20" uuid="821c01dd-d926-4747-a97c-9f07452c2a25"/>
+			</rectangle>
+			<textField>
+				<reportElement x="155" y="0" width="102" height="20" uuid="2d48aaeb-9003-4f92-b0df-2cc944769e15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{rf20}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="257" y="0" width="97" height="20" uuid="dd33c4f4-db7f-4b31-bc9a-ab43fbea0e08"/>
+			</rectangle>
+			<textField>
+				<reportElement x="257" y="0" width="97" height="20" uuid="4e4990fd-2038-4456-9ed7-f6070605c38c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{rq40}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="354" y="0" width="84" height="20" uuid="2c6e1a1b-d358-4e73-9576-3e7919a61cfb"/>
+			</rectangle>
+			<textField>
+				<reportElement x="354" y="0" width="84" height="20" uuid="ba60a19e-f60c-4b5b-8fbc-77ed2892fe52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{rf40}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="434" y="34" width="80" height="20" uuid="9e923e0d-0cf4-4786-935e-6c8335b9e0c0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="34" width="40" height="20" uuid="9a100c17-a514-4302-8853-66ee6340a6f2"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

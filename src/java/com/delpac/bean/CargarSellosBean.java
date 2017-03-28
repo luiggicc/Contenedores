@@ -119,6 +119,7 @@ public class CargarSellosBean implements Serializable{
                 failedSellosList.add(sellos);
             }
         }
+        getListadoSellos().clear();
     }
 
     public void deleteRows() {

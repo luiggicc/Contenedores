@@ -90,6 +90,11 @@ public class ContainerBean implements Serializable {
         daoContainer.deleteContainer(contai);
         listadoContainers = daoContainer.findAll();
     }
+    
+    public void lossContainer() throws SQLException {
+        daoContainer.lossContainer(conta);
+        listadoContainers = daoContainer.findAll();
+    }
 
     public List<Container> getListadoContainers() {
         return listadoContainers;

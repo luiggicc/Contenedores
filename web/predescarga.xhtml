@@ -17,9 +17,7 @@
         </f:metadata>
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
-                <p:tabView dynamic="true" cache="true">
-                    <p:tab title="Carga Masiva: PreDescarga">
-                        <p:panel>
+                <p:panel header="Proceso PreDescarga">
                             <h:form id="frm" enctype="multipart/form-data">
                                 <!-- BOTON SUBIDA-->
                                 <p:growl id="growl" showDetail="true"/>
@@ -93,7 +91,7 @@
                                 
                                 <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
                                     <p:outputLabel value="Itinerario: "/>
-                                    <p:selectOneMenu id="itinerario" value="#{preDescargaBean.itinerarioIdSelected}">
+                                    <p:selectOneMenu id="itinerario" value="#{preDescargaBean.itinerarioIdSelected}" filter="true" filterMatchMode="startsWith">
                                         <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
                                         <f:selectItems value="#{preDescargaBean.listaItinerarios}" var="iti" 
                                                        itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.ids_itinerario}" />
@@ -181,15 +179,14 @@
                                 </p:dataTable>
 
                                 <p:commandButton style="position: relative; left: 450px; top: 5px; width: 20%" value="Guardar" 
-                                                 actionListener="#{preDescargaBean.guardarListadoPreDescarga()}" />
+                                                 actionListener="#{preDescargaBean.guardarListadoPreDescarga()}" update="frm:preDescargaTable"/>
                                 <p:dialog id="basicDialog" resizable="false" header="Por favor espere...." widgetVar="dlg2" modal="true" closable="false" onShow="startProgressBar();">           
                                     <p:progressBar id="progressBarLoad" widgetVar="pbClient" style="width:300px" />   
                                 </p:dialog>
                             </h:form>
 
                         </p:panel>
-                    </p:tab>
-                </p:tabView>
+                    
             </div>
         </div>
     </ui:define>

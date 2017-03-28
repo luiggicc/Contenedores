@@ -179,7 +179,7 @@
                                 
                                 <p:column headerText="Hora" filterBy="#{inv.seli_fecha}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                     <h:outputText value="#{inv.seli_fecha}">
-                                        <f:convertDateTime pattern="hh:MM" timeZone="America/Guayaquil"/> 
+                                        <f:convertDateTime pattern="HH:mm" /> 
                                     </h:outputText>
                                 </p:column>
                             </p:dataTable>

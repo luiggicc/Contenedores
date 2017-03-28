@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="General Naves">
+                    <h:form id="frm">
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="Itinerario: "/>
+                            <p:selectOneMenu id="itinerario" value="#{detallePorNaveBean.itinerario}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItems value="#{detallePorNaveBean.selectorItinerario}" var="iti" itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.dsp_itinerario}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:dataTable id="detalleNavesTbl" value="#{detallePorNaveBean.lista}" var="dxn" paginator="true" widgetVar="dxnTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{detallePorNaveBean.filteredDxn}" lazy="false" 
+                                     rowsPerPageTemplate="10,25,50">                            
+                            
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Detalle por Nave" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('dxnTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Item" filterBy="#{dxn.item}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.item}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Line" filterBy="#{dxn.recipient}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.recipient}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Container" filterBy="#{dxn.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.equipo_identi}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Status" filterBy="#{dxn.status}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.status}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Iso" filterBy="#{dxn.iso}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.iso}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Peso Bruto" filterBy="#{dxn.peso_bruto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.peso_bruto}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Sello" filterBy="#{dxn.sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.sello}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Puerto Carga" filterBy="#{dxn.pto_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.pto_carga}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Puerto Descarga" filterBy="#{dxn.pto_descarga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.pto_descarga}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Fecha Arribo" filterBy="#{dxn.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.fecha_arribo}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="BL" filterBy="#{dxn.bl}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{dxn.bl}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{detallePorNaveBean.consultarDetallePorNave()}" />
+                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{detallePorNaveBean.exportpdf()}"/>  
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

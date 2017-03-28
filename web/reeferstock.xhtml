@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="Reefer Stock">
+                    <h:form id="frm">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="Desde: "/>
+                            <p:calendar value="#{reeferStockBean.desde}" pattern="yyyy-MM-dd" navigator="true"/>
+                            <p:outputLabel value="Hasta: "/>
+                            <p:calendar value="#{reeferStockBean.hasta}" pattern="yyyy-MM-dd" navigator="true"/>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:dataTable id="generalNavesTbl" value="#{reeferStockBean.lista}" var="rstock" paginator="true" widgetVar="rstockTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{reeferStockBean.filteredRstock}" lazy="false" 
+                                     rowsPerPageTemplate="10,25,50">                            
+
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Reporte Reefer Stock" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('rstockTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="" filterBy="#{rstock.estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rstock.estado}"/>
+                            </p:column>
+
+                            <p:column headerText="RF20" filterBy="#{rstock.rf20}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rstock.rf20}"/>
+                            </p:column>
+
+                            <p:column headerText="RQ40" filterBy="#{rstock.rq40}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rstock.rq40}"/>
+                            </p:column>
+
+                            <p:column headerText="RF40" filterBy="#{rstock.rf40}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rstock.rf40}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{reeferStockBean.ConsultarReeferStock()}" />
+                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{reeferStockBean.exportpdf()}"/>  
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

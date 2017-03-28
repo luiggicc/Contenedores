@@ -49,10 +49,6 @@
                                 <h:outputText value="#{conta.tcon_nombre}"/>
                             </p:column>
 
-                            <p:column headerText="Línea" filterBy="#{conta.lin_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{conta.lin_nombre}"/>
-                            </p:column>
-
                             <p:column headerText="Tamaño" filterBy="#{conta.con_tamano}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{conta.con_tamano}"/>
                             </p:column>
@@ -61,8 +57,16 @@
                                 <h:outputText value="#{conta.con_tar}"/>
                             </p:column>
 
-                            <p:column headerText="Estado" filterBy="#{conta.con_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:column headerText="Estado" filterBy="#{conta.con_estado}" sortBy="#{conta.con_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{conta.con_estado}"/>
+                            </p:column>
+
+                            <p:column headerText="Ciclo" filterBy="#{conta.con_ciclo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{conta.con_ciclo}"/>
+                            </p:column>
+
+                            <p:column style="text-align: center">
+                                <p:commandLink value="Loss" actionListener="#{containerBean.showEditDialog(conta)}" oncomplete="PF('wdlgDatos2').show();" update="dlgDatos2"/>
                             </p:column>
 
                         </p:dataTable>
@@ -93,6 +97,25 @@
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>
                                 <p:commandButton value="Cancelar" actionListener="#{containerBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos2" header="Contenedor Perdido" widgetVar="wdlgDatos2" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Contenedor: "/>
+                                <p:inputText value="#{containerBean.conta.con_codigo}" disabled="true"/>
+
+                                <p:outputLabel value="Observación: "/>
+                                <p:inputText value="#{containerBean.conta.obs_cont_loss}"/>
+
+                                <p:commandButton ajax="true" value="Aceptar" actionListener="#{containerBean.lossContainer()}"  oncomplete="PF('wdlgDatos2').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{containerBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos2').hide();"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

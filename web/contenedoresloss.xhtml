@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+
+                <h:form id="frm">
+                    <p:separator />
+                    <p:dataTable id="containerLossTbl" value="#{containerLossBean.lista}" var="closs" paginator="true" widgetVar="clossTable" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 paginatorPosition="bottom" filteredValue="#{containerLossBean.filteredCloss}" lazy="false" 
+                                 rowsPerPageTemplate="10,25,50">                            
+
+                        <f:facet name="header">
+                            <p:outputPanel style="text-align: right;">
+                                <table>
+                                    <tr>
+                                        <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Contenedores Perdidos" style="color: #ffffff" /></td>
+                                        <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                            <p:inputText id="globalFilter" onkeyup="PF('clossTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                    </tr>
+                                </table>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="Linea" filterBy="#{closs.recipient}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.recipient}"/>
+                        </p:column>
+
+                        <p:column headerText="Contenedor" filterBy="#{closs.cont_cont_loss}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.cont_cont_loss}"/>
+                        </p:column>
+
+                        <p:column headerText="Contenedor" filterBy="#{closs.obs_cont_loss}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.obs_cont_loss}"/>
+                        </p:column>
+
+                        <p:column headerText="Status" filterBy="#{closs.status}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.status}"/>
+                        </p:column>
+
+                        <p:column headerText="Iso" filterBy="#{closs.iso}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.iso}"/>
+                        </p:column>
+
+                        <p:column headerText="Tipo Contenedor" filterBy="#{closs.con_tipcont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.con_tipcont}"/>
+                        </p:column>
+
+                        <p:column headerText="Sello" filterBy="#{closs.sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.sello}"/>
+                        </p:column>
+
+                        <p:column headerText="Puerto Carga" filterBy="#{closs.pto_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.pto_carga}"/>
+                        </p:column>
+
+                        <p:column headerText="Puerto Descarga" filterBy="#{closs.pto_descarga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.pto_descarga}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha Arribo" filterBy="#{closs.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.fecha_arribo}">
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </p:outputLabel>
+                        </p:column>
+
+                        <p:column headerText="Fecha Salida" filterBy="#{closs.fecha_salida}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:outputLabel value="#{closs.fecha_arribo}">
+                                <f:convertDateTime pattern="dd/MM/YYYY"/>
+                            </p:outputLabel>
+                        </p:column>
+
+                    </p:dataTable>
+                    <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{containerLossBean.exportpdf()}"/>  
+                </h:form>
+
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

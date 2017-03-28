@@ -6,11 +6,65 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
+
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <h3 class="hardblue TexAlCenter">Reporte Gráfico</h3>
+        <h:body>
+            <h:form id = "dlgFormPadre">
+                <p:growl id="growl"  showDetail="true" />
 
-        
+                <h:panelGrid id="panel" columns="1">
+                    <p:panel style="width: 100%">
+                        <p:chart type="bar" model="#{dashboardBean.barra}"
+                                 class="center-block-chart1"
+                                 rendered="#{dashboardBean.barra != null}"
+                                 responsive="true">
+                            <p:ajax event="itemSelect" listener="#{dashboardBean.handleSelect}"  
+                                    update="growl dlgFrm"  oncomplete="PF('dlgBarra').show();" />
+                        </p:chart>
+                    </p:panel>
+                </h:panelGrid>
 
-        <h3 class="hardblue TexAlCenter">Este es el dashboard</h3>
-        <span class="TexAlCenter DispBlock Wid100">Use this page to start from scratch and place your custom content.</span>
+
+
+                <h:panelGrid id="panel2" columns="3" class="center-block-chart1">
+                    <p:panel>
+                        <p:chart type="bar" model="#{dashboardBean.barra2}"
+                                 class="center-block-charts-little"
+                                 rendered="#{dashboardBean.barra2 != null}"
+                                 responsive="true">
+                        </p:chart>
+                    </p:panel>
+                    <p:panel>
+                        <p:chart type="bar" model="#{dashboardBean.barra3}"
+                                 class="center-block-charts-little"
+                                 rendered="#{dashboardBean.barra3 != null}"
+                                 responsive="true">
+                        </p:chart>
+                    </p:panel>
+                    <p:panel>
+                        <p:chart type="bar" model="#{dashboardBean.barra4}"
+                                 class="center-block-charts-little"
+                                 rendered="#{dashboardBean.barra4 != null}"
+                                 responsive="true">
+                        </p:chart>
+                    </p:panel>
+                </h:panelGrid>
+
+            </h:form>
+
+            <p:dialog id="barraDialog" widgetVar="dlgBarra" header="Detalle de Contenedor">
+                <h:form id="dlgFrm">
+                    <p:panel>
+                        <p:chart type="bar" model="#{dashboardBean.barra1}"
+                                 class="center-block"
+                                 responsive="true">
+                        </p:chart>
+                    </p:panel>
+                </h:form>
+            </p:dialog>
+        </h:body>
+
     </ui:define>
 </ui:composition>
