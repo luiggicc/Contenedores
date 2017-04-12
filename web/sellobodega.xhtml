@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{selloBodegaBean.authorized()}"/>
+        </f:metadata>
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:tabView id="tabs" dynamic="true" cache="true">
+                    <p:tab id="inve_sello" title="Sellos en Bodega">
+                        <p:panel>
+                            <h:form id="frm">
+                                <div class="Separator">
+                                    <p:commandLink  value="Agregar Rango" oncomplete="PF('wdlgCrearSello').show();" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                                </div>
+                                <p:spacer height="10"/>
+                                <p:dataTable id="uTable" value="#{selloBodegaBean.listadoSelloBodega}" var="sbo" widgetVar="userTable" paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             paginatorPosition="bottom" filteredValue="#{selloBodegaBean.filteredSellosBodega}"
+                                             rowsPerPageTemplate="5,10,15"  lazy="false">
+                                    <f:facet name="header">
+                                        <p:outputPanel style="text-align: right;">
+                                            <table>
+                                                <tr>
+                                                    <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Lista de sellos en Bodega" style="color: #ffffff" /></td>
+                                                    <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                        <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                                </tr>
+                                            </table>
+                                        </p:outputPanel>
+                                    </f:facet>
+
+                                    <p:column headerText="Sello" filterBy="#{sbo.sbo_numero}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{sbo.sbo_numero}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Estado" filterBy="#{sbo.sbo_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                        <h:outputText value="#{sbo.sbo_estado}"/>
+                                    </p:column>
+
+                                    <!--############################################################################################ -->
+                                </p:dataTable>
+
+                            </h:form>
+
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:dialog id="dlgCrearSello" header="Insertar nuevo rango de sellos" resizable="false"  widgetVar="wdlgCrearSello" modal="true" responsive="true">
+                                <h:form>
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Desde"/>
+                                        <p:inputText value="#{selloBodegaBean.sbo.sbr_desde}"/>
+                                        <p:outputLabel value="Hasta"/>
+                                        <p:inputText value="#{selloBodegaBean.sbo.sbr_hasta}"/>
+                                        <p:commandButton ajax="true" actionListener="#{selloBodegaBean.commitCreate()}" value="Crear" oncomplete="PF('wdlgCrearSello').hide();" update=":tabs:frm:uTable" >
+                                            <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:commandButton value="Cancelar" actionListener="#{selloBodegaBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearSello').hide();"/>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:dialog>
+
+                            <!--############################################################################################ -->
+                            <!--############################################################################################ -->
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+                                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </p:confirmDialog>
+                        </p:panel>
+                    </p:tab>
+
+                    <!-- ########################################TAB SELLOS ELIMINADOS########################################### -->
+                    <!-- ########################################TAB SELLOS ELIMINADOS########################################### -->
+                    <p:tab id="inve_sello_eliminados" title="Rango de Sellos">
+                        <!-- <p:panel> -->
+                        <h:form id="frm2">
+                            <p:spacer height="10"/>
+                            <p:dataTable id="uTable" value="#{selloBodegaBean.listadoSelloBodegaLog}" var="sbr" widgetVar="userTable" paginator="true" rows="10"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         paginatorPosition="bottom" filteredValue="#{selloBodegaBean.filteredSellosBodegaLog}"
+                                         rowsPerPageTemplate="5,10,15"  lazy="false">
+                                <f:facet name="header">
+                                    <p:outputPanel style="text-align: right;">
+                                        <table>
+                                            <tr>
+                                                <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Log Sellos en Bodega" style="color: #ffffff" /></td>
+                                                <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                    <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                            </tr>
+                                        </table>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Desde" filterBy="#{sbr.sbr_desde}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                    <h:outputText value="#{sbr.sbr_desde}"/>
+                                </p:column>
+
+                                <p:column headerText="Hasta" filterBy="#{sbr.sbr_hasta}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                    <h:outputText value="#{sbr.sbr_hasta}"/>
+                                </p:column>
+
+                                <p:column headerText="Fecha" filterBy="#{sbr.sbr_fecha}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                    <h:outputText value="#{sbr.sbr_fecha}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd" /> 
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Estado" filterBy="#{sbr.sbr_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                    <h:outputText value="#{sbr.sbr_estado}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                        <!-- </p:panel> -->
+                    </p:tab>
+                </p:tabView>
+            </div>
+        </div>  
+
+    </ui:define>
+</ui:composition>

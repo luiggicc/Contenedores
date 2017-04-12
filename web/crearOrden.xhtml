@@ -10,6 +10,7 @@
         <style>
             .colstilo {width:200px}
             .colstiloinput {width:300px}
+            .botones {width:200px}
         </style>
         <f:metadata>
             <f:event type="preRenderView" listener="#{ordenRetiroBean.authorized()}"/>
@@ -29,9 +30,8 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Nave/Viaje: "/>
-                            <p:selectOneMenu id="itinerario" value="#{ordenRetiroBean.ord.ids_itinerario}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItems value="#{ordenRetiroBean.selectorItinerario}" var="iti" itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.ids_itinerario}" />
-                            </p:selectOneMenu>
+                            <p:inputText value="#{ordenRetiroBean.ord.dsp_itinerario}" style="width: 200px;">
+                            </p:inputText>
 
                             <p:outputLabel value="Linea Naviera: "/>
                             <p:selectOneMenu id="linea" value="#{ordenRetiroBean.ord.lin_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
@@ -52,7 +52,7 @@
                             <p:inputText value="#{ordenRetiroBean.ord.booking}" style="width: 200px"/>
 
                             <p:outputLabel value="Movilización por cuenta: "/>
-                            <p:inputText value="#{ordenRetiroBean.ord.mov_xcuenta}" style="width: 200px"/>
+                            <p:inputText id="movxcuenta" value="#{ordenRetiroBean.ord.mov_xcuenta}"  style="width: 200px"/>
 
                             <p:outputLabel value="Cantidad y tipo de cntr: "/>
                             <p:inputText value="#{ordenRetiroBean.ord.cant_tipocont}" style="width: 200px"/>
@@ -70,7 +70,7 @@
                     <p:panel>
                         <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
                             <p:outputLabel value="Contenedor Refrigerado?" />
-                            <h:selectBooleanCheckbox value="#{ordenRetiroBean.temperado}"/>
+                            <h:selectBooleanCheckbox value="#{ordenRetiroBean.temperado}" />
                             <p:outputLabel value="" />
                             <p:outputLabel value="" />
                             <p:outputLabel value="Temperatura: "/>
@@ -80,13 +80,13 @@
                             <p:inputText id="vent" value="#{ordenRetiroBean.ord.ventilacion}" required="#{checkbox == 'true'}" style="width: 200px"/>
 
 
-                            
+
                         </h:panelGrid>
                     </p:panel>
                     <p:panel>
                         <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
                             <p:outputLabel value="Observación: "/>
-                            <p:inputText value="#{ordenRetiroBean.ord.observaciones}" style="width: 200px"/>
+                            <p:inputText id="obs" value="#{ordenRetiroBean.ord.observaciones}" style="width: 200px"/>
                             <p:separator style="visibility: hidden" />
                             <p:separator style="visibility: hidden" />
                             <p:outputLabel value="Patio de salida: "/>
@@ -98,13 +98,24 @@
                             <p:selectOneMenu id="locentrada" value="#{ordenRetiroBean.ord.loc_entrada}" style="width: 200px" filter="true" filterMatchMode="startsWith">
                                 <f:selectItems value="#{ordenRetiroBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
                             </p:selectOneMenu>
-
-                            <p:commandButton ajax="true" action="/ordenRetiro?faces-redirect=true" value="Crear Orden" 
-                                             actionListener="#{ordenRetiroBean.commitCreate()}">
-
-                            </p:commandButton>
-                            <p:commandButton value="Cancelar" action="/ordenRetiro?faces-redirect=true" immediate="true" />
-
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel>
+                        <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
+                            <p:outputLabel value="Número de Ordenes: "/>
+                            <p:inputText id="nordenes" value="#{ordenRetiroBean.ingresado}" style="width: 200px" onkeydown="if (event.which &lt; 48 || event.which &gt; 57) if (event.which != 8)  return false;"/>
+                            <p:separator style="visibility: hidden" />
+                            <p:separator style="visibility: hidden" />
+                            <p:separator style="visibility: hidden" />
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel>
+                        <h:panelGrid columns="4" columnClasses="botones, botones, botones, botones">
+                            <p:separator style="visibility: hidden" />
+                            <h:commandButton id="id-crearorden" value="Crear Orden" actionListener="#{ordenRetiroBean.commitCreate1()}" 
+                                             style="width: 150px; text-align: center" class="ui-button-text"/>
+                            <p:commandButton value="Cancelar" action="/ordenRetiro?faces-redirect=true" immediate="true" style="width: 150px"/>
+                            <p:separator style="visibility: hidden" />
                         </h:panelGrid>
                     </p:panel>
                 </div>

@@ -59,7 +59,7 @@ public class LoginBean implements Serializable{
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("Usuario", sessionUsuario);
                 if (sessionUsuario.getDescripcionRol().equals("ADMINISTRADOR") || sessionUsuario.getDescripcionRol().equals("USUARIO")){
                     return "dashboard";    
-                }else if (sessionUsuario.getDescripcionRol().equals("CONSULTAS")){
+                }else if (!sessionUsuario.getDescripcionRol().equals("ADMINISTRADOR")){
                     return "dashboard";
                 }
             }

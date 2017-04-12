@@ -15,6 +15,9 @@
             <div class="ContainerIndent">
                 <p:panel header="Historial de movimiento de contenedores">
                     <h:form id="frm">
+                       <div class="Separator">
+                            <p:link  value="Agregar Movimiento" href="/faces/agregarmov.xhtml" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                        </div>
                         <h:panelGrid columns="2" >
                             <p:outputLabel value="Contenedor"/>
                             <p:selectOneMenu id="ItinerarioMenu" value="#{verHistorialBean.containerDesSelected}" style="width: 200px" filter="true" filterMatchMode="startsWith">
@@ -49,6 +52,10 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
+                            <p:column headerText="Ciclo" filterBy="#{vhis.ciclo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{vhis.ciclo}"/>
+                            </p:column>
+
                             <p:column headerText="Contenedor" filterBy="#{vhis.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <p:outputLabel value="#{vhis.equipo_identi}"/>
                             </p:column>
@@ -145,6 +152,8 @@
                         </p:dataTable>
                     </h:form>
                 </p:panel>
+
+
             </div>
         </div>
     </ui:define>

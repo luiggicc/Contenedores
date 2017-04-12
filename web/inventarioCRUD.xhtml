@@ -102,7 +102,7 @@
                                         <p:commandButton ajax="true" actionListener="#{inventarioBean.commitCreate()}" value="Crear" oncomplete="PF('wdlgCrearSello').hide();" update=":tabs:frm:uTable" >
                                             <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                         </p:commandButton>
-                                        <p:commandButton value="Cancelar" actionListener="#{canalBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearSello').hide();"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{inventarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearSello').hide();"/>
                                     </h:panelGrid>
                                 </h:form>
                             </p:dialog>

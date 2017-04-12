@@ -7,9 +7,11 @@ package com.delpac.bean;
 
 import com.delpac.dao.VerHistorialDAO;
 import com.delpac.dao.ContainerDAO;
+import com.delpac.dao.PuertoDAO;
 
 import com.delpac.entity.VerHistorial;
 import com.delpac.entity.Container;
+import com.delpac.entity.Puerto;
 import com.delpac.entity.Usuario;
 
 import javax.faces.bean.ManagedBean;
@@ -36,7 +38,12 @@ public class VerHistorialBean implements Serializable {
 
     private List<VerHistorial> listadoVerHistorial = new ArrayList<>();
     private List<VerHistorial> filteredVerHistorial;
+    
+    private int idPuertoSelected;
+    private List<Puerto> selectorPuerto = new ArrayList<>();
+    
     private VerHistorialDAO daoVerHistorial = new VerHistorialDAO();
+    private VerHistorial vhis = new VerHistorial();
     private Usuario sessionUsuario;
     boolean ciclomaximo;
 
@@ -55,6 +62,9 @@ public class VerHistorialBean implements Serializable {
                  * se ejecutan las lineas del constructor**
                  */
                 listaContainers = daoContainer.findAll();
+                
+                PuertoDAO daoPuerto = new PuertoDAO();
+                selectorPuerto = daoPuerto.findAll();
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
@@ -63,6 +73,10 @@ public class VerHistorialBean implements Serializable {
 
     public void VerHistorial() throws SQLException {
         setListadoVerHistorial(daoVerHistorial.findAll(ciclomaximo, ContainerDesSelected));
+    }
+    
+    public void commitCreate() throws SQLException {
+        daoVerHistorial.createMovimiento(vhis);
     }
 
     public ContainerDAO getDaoContainer() {
@@ -121,4 +135,29 @@ public class VerHistorialBean implements Serializable {
         this.ciclomaximo = ciclomaximo;
     }
 
+    public VerHistorial getVhis() {
+        return vhis;
+    }
+
+    public void setVhis(VerHistorial vhis) {
+        this.vhis = vhis;
+    }
+
+    public int getIdPuertoSelected() {
+        return idPuertoSelected;
+    }
+
+    public void setIdPuertoSelected(int idPuertoSelected) {
+        this.idPuertoSelected = idPuertoSelected;
+    }
+
+    public List<Puerto> getSelectorPuerto() {
+        return selectorPuerto;
+    }
+
+    public void setSelectorPuerto(List<Puerto> selectorPuerto) {
+        this.selectorPuerto = selectorPuerto;
+    }
+
+    
 }

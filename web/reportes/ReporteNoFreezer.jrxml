@@ -2,18 +2,17 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteFreezer" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69dcbcdc-ef05-4f51-810c-5e78c459e766">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="421"/>
-	<parameter name="cod_ordenretiro" class="java.lang.Integer" isForPrompting="false"/>
+	<property name="ireport.y" value="373"/>
+	<parameter name="cod_ordenretiro" class="java.lang.Integer"/>
 	<parameter name="RutaImagen" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, iti.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
+		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, ord.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
        ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.observaciones, loc.loc_des as loc_salida,
        loca.loc_des as loc_entrada, ord.fecha_crea
 from publico.ordenretiro ord
 inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo
-inner join publico.mae_itinerario iti on ord.ids_itinerario = iti.ids_itinerario
 inner join publico.mae_linea lin on ord.lin_codigo = lin.lin_codigo
 inner join publico.mae_puerto pto on ord.pto_codigo = pto.pto_codigo
 inner join publico.mae_localidad loc on ord.loc_salida = loc.loc_codigo
@@ -58,7 +57,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 			</rectangle>
 			<image>
 				<reportElement x="41" y="5" width="107" height="74" uuid="3a854a70-214c-412b-a6f5-8e9ae753092f"/>
-				<imageExpression><![CDATA[$P{RutaImagen}+"delpac.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{RutaImagen} + "delpac.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="175" y="0" width="218" height="39" forecolor="#FFFFFF" uuid="ce236989-1d47-47f3-b337-7e9607e4b2dd"/>
@@ -85,7 +84,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[Fecha elaboracion]]></text>
+				<text><![CDATA[Fecha elaboración]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="377" y="8" width="65" height="20" uuid="8b242610-d358-4600-bd31-912e600b18e1"/>
@@ -101,8 +100,8 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{cod_ordenretiro}]]></textFieldExpression>
 			</textField>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="415" y="48" width="129" height="20" uuid="607b7bd2-3c0c-4a8d-8a8f-79e2537259ac"/>
+			<textField>
+				<reportElement x="404" y="49" width="151" height="20" uuid="92423c23-2846-4176-ad3e-13559d4589f5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
@@ -140,14 +139,14 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 			</staticText>
 			<image>
 				<reportElement x="71" y="553" width="141" height="61" uuid="8838ce70-f417-4374-bf48-de68bd488d73"/>
-				<imageExpression><![CDATA[$P{RutaImagen}+"firma.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{RutaImagen} + "firma.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="41" y="12" width="483" height="20" uuid="84e9ff5c-87fa-4e00-b8d1-a81345c57ce1"/>
 				<textElement>
 					<font fontName="Arial" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Sres TERCON, favor proceder con la entrega del contenedor (es) de la caracteristica abajo descrita:]]></text>
+				<text><![CDATA[Sres TERCON, favor proceder con la entrega del contenedor (es) de la característica abajo descrita:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="74" y="52" width="100" height="20" uuid="39e390e8-17b6-486c-850f-190479bcbadb"/>
@@ -200,7 +199,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[Movilizacion x cuenta:]]></text>
+				<text><![CDATA[Movilización x cuenta:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="28" y="198" width="147" height="20" uuid="4876d508-5a5d-4776-9c5d-764c1194e557"/>
@@ -302,14 +301,14 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Se recuerda que a partir del 1 Julio 2016, todo contenedor debera contar con certificado de VGM (Masa Bruta Verificada)]]></text>
+				<text><![CDATA[Se recuerda que a partir del 1 Julio 2016, todo contenedor deberá contar con certificado de VGM (Masa Bruta Verificada)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="12" y="454" width="532" height="14" uuid="1a0f0559-4e11-4412-98e8-58c987ba3ae0"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[antes del embarque, caso contrario el contenedor no podra ser considerado para embarque. Cutt Off VGM, 24 horas antes]]></text>
+				<text><![CDATA[antes del embarque, caso contrario el contenedor no podrá ser considerado para embarque. Cutt Off VGM, 24 horas antes]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="12" y="468" width="532" height="14" uuid="ecbdae11-fe87-463c-b258-fb642748db5e"/>
@@ -323,7 +322,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Deposito debera despachar contenedores Operativos en buen estado y transportista debera pedir un EIR de salida]]></text>
+				<text><![CDATA[Deposito debera despachar contenedores Operativos en buen estado y transportista deberá pedir un EIR de salida]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="12" y="499" width="532" height="14" uuid="5715cfbb-ca4f-400b-843f-86f49e14c30b"/>
@@ -332,20 +331,6 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				</textElement>
 				<text><![CDATA[donde indique parches o novedades]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="176" y="52" width="259" height="20" uuid="44fcf1a9-b87f-44e0-8143-bc3797e82b52"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cia_nombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="175" y="72" width="260" height="20" uuid="da4d8edb-188e-44fa-bb70-8df150b473cb"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{dsp_itinerario}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement x="176" y="92" width="259" height="20" uuid="79c73613-a993-4b7e-85b7-5788147ada40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -417,18 +402,32 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="275" y="346" width="100" height="20" uuid="70784e0d-165c-4cd7-b14d-80da1ce7ae5c"/>
+				<reportElement x="274" y="347" width="100" height="20" uuid="70784e0d-165c-4cd7-b14d-80da1ce7ae5c"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loc_salida}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="302" y="374" width="100" height="20" uuid="95426d28-fbc6-49de-ba1f-e2546339b563"/>
+				<reportElement x="304" y="375" width="100" height="20" uuid="95426d28-fbc6-49de-ba1f-e2546339b563"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loc_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="174" y="52" width="262" height="20" uuid="f04fbd0a-2cbc-4382-8bfd-dc8ab24640b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cia_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="174" y="72" width="261" height="20" uuid="af01f1fc-5a8d-4b3a-a29f-90aea7c74750"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dsp_itinerario}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

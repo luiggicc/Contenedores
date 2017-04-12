@@ -4,12 +4,13 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
         <style>
-            .alinear {text-align: center}
+            .alinear {text-align: center};
         </style>
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
@@ -36,24 +37,32 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-
+                            <!--
                             <p:column  style="text-align: center">
-                                <p:commandLink ajax="false" value="" class="icon-download" actionListener="#{ordenRetiroBean.exportpdf2(ord)}"
-                                               disabled="#{ord.estadopdf!=0}">
+                                <p:commandLink ajax="true" id="icon-pdf" class="icon-file-pdf" value="" actionListener="#{ordenRetiroBean.openDialog(ord)}" onsuccess="PF('wdlg').show();" update="wrapp" />
+                            </p:column>
+                            -->
+                            <p:column> 
+                                <p:commandLink class="icon-trash-2" value="" actionListener="#{ordenRetiroBean.eliminar(ord)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="Está seguro de eliminar el registro" icon="ui-icon-alert" />
                                 </p:commandLink>
                             </p:column>
-
                             <p:column  style="text-align: center">
-                                <p:commandLink id="icon-edit" class="icon-edit" value="" actionListener="#{ordenRetiroBean.showEditDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"
-                                               disabled="#{ord.estadopdf!=0}"/>
+                                <p:commandLink id="icon-edit" class="icon-edit" value="" actionListener="#{ordenRetiroBean.showEditDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos" />
                             </p:column>
 
+                            <p:column  style="text-align: center">
+                                <h:commandLink id="icon-down" actionListener="#{ordenRetiroBean.download(ord)}"> 
+                                    <i class="icon-download" style="color: #00AEEF;"/>
+                                </h:commandLink>
+                            </p:column>
+
+                            <!--
                             <p:column  style="text-align: center">
                                 <p:commandLink id="enviar-mail" class="icon-mail" value="" action="#{ordenRetiroBean.showSendDialog(ord)}" oncomplete="PF('wdlgDatos2').show();" update="dlgDatos2"
                                                />
-                               
-                            </p:column>
-
+                            
+                            </p:column>-->
 
                             <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.cod_ordenretiro}"/>
@@ -126,6 +135,13 @@
                     </h:form>
 
                     <!--############################################################################################ -->
+                    <!--
+                    <p:dialog closeOnEscape="true" widgetVar="wdlg" header="Ver PDF" height="525" width="75%" modal="true">
+                        <p:panel id="wrapp">
+                            <p:media player="pdf" cache="false" height="500" width="100%" value="#{ordenRetiroBean.pdfFile}" />
+                        </p:panel>
+                    </p:dialog>
+                    -->
                     <!--############################################################################################ -->
                     <p:dialog id="dlgDatos" header="Editar Orden de Retiro" widgetVar="wdlgDatos" modal="true" responsive="true">
                         <h:form>
@@ -136,9 +152,7 @@
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Nave/Viaje: "/>
-                                <p:selectOneMenu id="itinerario" value="#{ordenRetiroBean.ord.ids_itinerario}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                    <f:selectItems value="#{ordenRetiroBean.selectorItinerario}" var="iti" itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.ids_itinerario}" />
-                                </p:selectOneMenu>
+                                <p:inputText value="#{ordenRetiroBean.ord.dsp_itinerario}" style="width: 200px"/>
 
                                 <p:outputLabel value="Linea Naviera: "/>
                                 <p:selectOneMenu id="linea" value="#{ordenRetiroBean.ord.lin_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
@@ -209,25 +223,44 @@
                     </p:dialog>
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
-                    <p:dialog id="dlgDatos2" header="Enviar Mensaje" widgetVar="wdlgDatos2" modal="true" responsive="true">
+
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    <p:dialog id="dlgDatos2" header="Enviar Mensaje" widgetVar="wdlgDatos2" modal="false" responsive="true" width="600px">
                         <h:form>
                             <h:panelGrid columns="3" style='width:400px;'>
+
                                 <p:outputLabel value="N° Orden: "/>
-                                <p:inputText value="#{ordenRetiroBean.ord.cod_ordenretiro}" style="width: 200px" disabled="true"/>
+                                <p:inputText value="#{ordenRetiroBean.ord.cod_ordenretiro}" style="width: 400px" disabled="true"/>
                                 <p:separator style='visibility: hidden' />
 
                                 <p:outputLabel value="Destinatario(s): "/>
-                                <p:inputText id="destinatario" value="#{ordenRetiroBean.ord.destinario}" style="width: 200px"/>
+                                <p:inputText id="destinatario" value="#{ordenRetiroBean.ord.destinario}" style="width: 400px"/>
                                 <p:tooltip id="destinatario-message" for="destinatario" value="Separar los mails por coma"
                                            showEffect="clip" hideEffect="explode" />
 
                                 <p:outputLabel value="Cc: "/>
-                                <p:inputText id="cc" value="#{ordenRetiroBean.ord.cc}" style="width: 200px"/>
+                                <p:inputText id="cc" value="#{ordenRetiroBean.ord.cc}" style="width: 400px"/>
                                 <p:tooltip id="cc-message" for="cc" value="Separar los mails por coma"
                                            showEffect="clip" hideEffect="explode" />
 
-                                <p:outputLabel value="Requerimiento Especial: Contenedores "/>
-                                <p:inputText value="#{ordenRetiroBean.ord.req_especial2}" style="width: 200px"/>
+                                <p:outputLabel value="Señores de #{ordenRetiroBean.ord.loc_salidades}: favor"/>
+                                <p:inputText id="cond" value="#{ordenRetiroBean.ord.condicion}" style="width: 400px"/>
+                                <p:separator style='visibility: hidden' />
+
+                                <p:outputLabel value="Observaciones: "/>
+                                <p:inputTextarea id="obser" value="#{ordenRetiroBean.ord.detalle}" style="width: 400px" autoResize="false"/>
+                                <p:separator style='visibility: hidden' />
+
+                                <p:outputLabel value="Requerimiento Especial: "/>
+                                <p:inputText value="#{ordenRetiroBean.ord.req_especial2}" style="width: 400px"/>
+                                <p:separator style='visibility: hidden' />
+
+                                <p:outputLabel value="Remark: "/>
+                                <p:inputTextarea value="#{ordenRetiroBean.ord.remark}" style="width: 400px" autoResize="false"/>
+                                <p:separator style='visibility: hidden' />
+
                                 <p:separator style='visibility: hidden' />
                             </h:panelGrid>
                             <h:panelGrid columns="2" style="width:300px; margin: 0 auto;">

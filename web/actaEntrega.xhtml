@@ -33,14 +33,21 @@
                             </f:facet>
 
                             <p:column  style="text-align: center">
-                                <p:commandLink ajax="false" value="" class="icon-download" actionListener="#{actaEntregaBean.exportpdf2(ord)}"
-                                               disabled="#{ord.asignada!=0}">
-                                </p:commandLink>
+                                <h:commandLink value="" actionListener="#{actaEntregaBean.download(ord)}">
+                                    <i class="icon-download" style="color: #00AEEF;"/>
+                                </h:commandLink>
                             </p:column>
                             
                             <p:column  style="text-align: center">
-                                <p:commandLink class="icon-edit" value="" actionListener="#{actaEntregaBean.showAsignarDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos"
-                                               disabled="#{ord.est_orden!=1}"/>
+                                <p:commandLink id="asignar" class="icon-edit" value="" actionListener="#{actaEntregaBean.showAsignarDialog(ord)}" oncomplete="PF('wdlgDatos').show();" update="dlgDatos" />
+                                <p:tooltip id="asignar-message" for="asignar" value="Asignar sello"
+                                           showEffect="clip" hideEffect="explode" />
+                            </p:column>
+                            
+                            <p:column  style="text-align: center">
+                                <p:commandLink id="icon-edit-orden" class="icon-doc-text-inv" value="" actionListener="#{actaEntregaBean.showEditDialogActa(ord)}" oncomplete="PF('wdlgDatosEdit').show();" update="dlgDatosEdit" />
+                                <p:tooltip id="icon-edit-orden-message" for="icon-edit-orden" value="Editar Acta"
+                                           showEffect="clip" hideEffect="explode" />
                             </p:column>
 
                             <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterMatchMode="contains" style="text-align: center">
@@ -49,6 +56,10 @@
 
                             <p:column headerText="Cliente" filterBy="#{ord.cia_nombre}" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.cia_nombre}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Sello de seguridad" filterBy="#{ord.inv_seguridad}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.inv_seguridad}"/>
                             </p:column>
 
                             <p:column headerText="Itinerario" filterBy="#{ord.dsp_itinerario}" filterMatchMode="contains" style="text-align: center">
@@ -81,10 +92,6 @@
 
                             <p:column headerText="Req. Especial" filterBy="#{ord.req_especial}" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.req_especial}"/>
-                            </p:column>
-
-                            <p:column headerText="Sello de seguridad" filterBy="#{ord.inv_seguridad}" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{ord.inv_seguridad}"/>
                             </p:column>
 
                             <p:column headerText="Es Temperado?" filterBy="#{ord.es_temperado}" filterMatchMode="contains" style="text-align: center">
@@ -131,6 +138,88 @@
                         </h:form>
                     </p:dialog>
 
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+                    
+                    <p:dialog id="dlgDatosEdit" header="Editar Orden de Retiro" widgetVar="wdlgDatosEdit" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="4">
+                                <p:outputLabel value="Cliente: "/>
+                                <p:selectOneMenu id="cliente" value="#{actaEntregaBean.ord.cia_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorCliente}" var="cli" itemLabel="#{cli.cia_nombre}" itemValue="#{cli.cia_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Nave/Viaje: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.dsp_itinerario}" style="width: 200px"/>
+
+                                <p:outputLabel value="Linea Naviera: "/>
+                                <p:selectOneMenu id="linea" value="#{actaEntregaBean.ord.lin_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorLinea}" var="lin" itemLabel="#{lin.lin_nombre}" itemValue="#{lin.lin_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Booking: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.booking}" style="width: 200px"/>
+
+                                <p:outputLabel value="Puerto de embarque: "/>
+                                <p:selectOneMenu id="puerto" value="#{actaEntregaBean.ord.pto_codigo}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Movilización por cuenta: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.mov_xcuenta}" style="width: 200px"/>
+
+                                <p:outputLabel value="Cantidad y tipo de cntr: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.cant_tipocont}" style="width: 200px"/>
+
+                                <p:outputLabel value="Tipo de carga dice/contener: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.tipo_carga}" style="width: 200px"/>
+
+                                <p:outputLabel value="Requerimiento Especial: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.req_especial}" style="width: 200px"/>
+
+                                <p:outputLabel value="Sello de seguridad N: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.inv_seguridad}" style="width: 200px"/>
+
+
+                                <p:outputLabel value="Contenedor Temperado?" />
+                                <h:selectBooleanCheckbox id="tempcheckbox" value="#{actaEntregaBean.temperado2}"> 
+                                </h:selectBooleanCheckbox>
+                                <p:outputLabel value="" />
+                                <p:outputLabel value="" />
+                                <p:outputLabel value="Temperatura: "/>
+                                <p:inputText id="temp" value="#{actaEntregaBean.ord.temperatura}" style="width: 200px"/>
+
+                                <p:outputLabel value="Ventilación: "/>
+                                <p:inputText id="vent" value="#{actaEntregaBean.ord.ventilacion}" style="width: 200px"/>
+
+
+                                <p:outputLabel value="Observación: "/>
+                                <p:inputText value="#{actaEntregaBean.ord.observaciones}" style="width: 200px"/>
+
+                                <p:outputLabel value="" />    
+                                <p:outputLabel value="" />
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:separator></p:separator>
+                                <p:outputLabel value="Patio de salida: "/>
+                                <p:selectOneMenu id="locsalida" value="#{actaEntregaBean.ord.loc_salida}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Terminal Portuario: "/>
+                                <p:selectOneMenu id="locentrada" value="#{actaEntregaBean.ord.loc_entrada}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{actaEntregaBean.selectorLocalidad}" var="loc" itemLabel="#{loc.loc_des}" itemValue="#{loc.loc_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:commandButton ajax="true" value="Editar" actionListener="#{actaEntregaBean.commitEditActa()}"  oncomplete="PF('wdlgDatosEdit').hide();" update=":frm:uTable">
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" actionListener="#{actaEntregaBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatosEdit').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                    
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->
 

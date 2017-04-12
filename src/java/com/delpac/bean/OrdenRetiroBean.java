@@ -9,8 +9,6 @@ import com.delpac.dao.OrdenRetiroDAO;
 import com.delpac.entity.OrdenRetiro;
 import com.delpac.dao.ClienteDAO;
 import com.delpac.entity.Cliente;
-import com.delpac.dao.ItinerarioDAO;
-import com.delpac.entity.Itinerario;
 import com.delpac.dao.LineaDAO;
 import com.delpac.entity.Linea;
 import com.delpac.dao.PuertoDAO;
@@ -27,22 +25,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+
 import java.io.Serializable;
-
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.faces.FacesException;
+
 import javax.faces.application.FacesMessage;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
+
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -51,21 +48,19 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
-import net.sf.jasperreports.engine.JasperCompileManager;
-
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+
 import org.apache.commons.mail.*;
-import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 /**
+ * Usar ApplicationScoped en el caso de ver el PDF online
  *
  * @author Bottago SA
  */
@@ -75,18 +70,20 @@ public class OrdenRetiroBean implements Serializable {
 
     private List<OrdenRetiro> listadoOrdenes = new ArrayList<>();
     private List<OrdenRetiro> filteredOrdenes;
+
     private Usuario sessionUsuario;
     private OrdenRetiro ord = new OrdenRetiro();
     private OrdenRetiroDAO daoOrdenRetiro = new OrdenRetiroDAO();
+    private StreamedContent downloadableFile;
+
     boolean temperado;
     boolean temperado2;
-    StreamedContent stream;
+    String path;
+    StreamedContent pdfFile;
+    int ingresado;
 
     private int idClienteSelected;
     private List<Cliente> selectorCliente = new ArrayList<>();
-
-    private int idItinerarioSelected;
-    private List<Itinerario> selectorItinerario = new ArrayList<>();
 
     private int idLineaSelected;
     private List<Linea> selectorLinea = new ArrayList<>();
@@ -99,9 +96,6 @@ public class OrdenRetiroBean implements Serializable {
 
     private int idLocalidadSelected;
     private List<Localidad> selectorLocalidad = new ArrayList<>();
-
-    private int idMailSelected;
-    private List<OrdenRetiro> selectorMail = new ArrayList<>();
 
     public void authorized() {
     }
@@ -120,14 +114,11 @@ public class OrdenRetiroBean implements Serializable {
                 ClienteDAO daoCliente = new ClienteDAO();
                 selectorCliente = daoCliente.findAll();
 
-                ItinerarioDAO daoItinerario = new ItinerarioDAO();
-                selectorItinerario = daoItinerario.findAll();
-
                 LineaDAO daoLinea = new LineaDAO();
                 selectorLinea = daoLinea.findAll();
 
                 PuertoDAO daoPuerto = new PuertoDAO();
-                selectorPuerto = daoPuerto.findAll();
+                selectorPuerto = daoPuerto.findAllPuertosOrden();
 
                 SellosDAO daoSello = new SellosDAO();
                 selectorSello = daoSello.findAll();
@@ -135,11 +126,30 @@ public class OrdenRetiroBean implements Serializable {
                 LocalidadDAO daoLocalidad = new LocalidadDAO();
                 selectorLocalidad = daoLocalidad.findAll();
 
-                selectorMail = daoOrdenRetiro.Mails();
                 listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
+                ord.setMov_xcuenta("Exportador");
+                ord.setInv_seguridad("Se entrega en oficina Delpac");
+                ord.setObservaciones("Se entrega el sello botella en las oficinas DELPAC. El mismo debe ir forzosamente por asutnos documentales con el Contenedor Asignado");
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
+        }
+    }
+
+    public void openDialog(OrdenRetiro ord) throws FileNotFoundException {
+        path = System.getProperty("catalina.base") + "\\OrdenesRetiro\\Orden_de_Retiro" + ord.getCod_ordenretiro() + ".pdf";
+        File file = new File(path);
+        getPdfFile();
+    }
+
+    public StreamedContent getPdfFile() throws FileNotFoundException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            return new DefaultStreamedContent();
+        } else {
+            DefaultStreamedContent dsc = new DefaultStreamedContent(new FileInputStream(new File(path)), "application/pdf");
+            dsc.setName(new File(path).getName() + ".pdf");
+            return dsc;
         }
     }
 
@@ -151,24 +161,97 @@ public class OrdenRetiroBean implements Serializable {
     public void onCancelDialog() {
         setOrd(new OrdenRetiro());
     }
+    
+    public void commitEdit() throws SQLException {
+        int keyGenerated = daoOrdenRetiro.editOrdenRetiro(ord, temperado2, sessionUsuario);
+        listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
+    }    
+
+    public void eliminar(OrdenRetiro orde) throws SQLException {
+        daoOrdenRetiro.deleteOrden(orde);
+        listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
+    }
 
     public void showSendDialog(OrdenRetiro orde) {
         ord = orde;
     }
 
-    public void showPdfDialog(OrdenRetiro orde) {
-        ord = orde;
-    }
-
-    public void commitCreate() throws SQLException {
-        daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario);
-    }
-
-    public void commitEdit() throws SQLException {
-        daoOrdenRetiro.editOrdenRetiro(ord, temperado2, sessionUsuario);
+    public void commitCreate1() throws SQLException, JRException, IOException {
+        int keyGenerated = daoOrdenRetiro.crearOrdenRetiro(ord, temperado, sessionUsuario, ingresado);
+        conexion con = new conexion();
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+            String temperatura = temperado == true ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
+            String jrxmlPath = temperatura.equals("ReporteFreezer.jasper") ? "ReporteFreezer.jrxml" : "ReporteNoFreezer.jrxml";//server
+            String nom_archivo = "OR_BK_" + ord.getBooking() + ".pdf";
+            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";//server
+            String exportPath = exportDir + nom_archivo;//server            
+            String dirReporte = servleContext.getRealPath("/reportes/" + temperatura);
+            File reporte = new File(servleContext.getRealPath("/reportes/") + jrxmlPath);
+            HashMap<String, Object> parametros = new HashMap<String, Object>();
+            List<JasperPrint> prints = new ArrayList<JasperPrint>();
+            for (int cont = 1; cont <= ingresado; cont++) {
+                parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+                parametros.put("cod_ordenretiro", keyGenerated);
+                keyGenerated--;
+                JasperPrint jasperPrint = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());//server
+                prints.add(jasperPrint);
+            }
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+            response.addHeader("Content-disposition", "attachment;filename=" + nom_archivo);
+            response.setContentType("application/pdf");
+            JRPdfExporter exporter = new JRPdfExporter();
+            exporter.setExporterInput(SimpleExporterInput.getInstance(prints));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+            SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+            configuration.setCreatingBatchModeBookmarks(true);
+            exporter.setConfiguration(configuration);
+            exporter.exportReport();
+            context.responseComplete();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
         listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
     }
 
+    public void download(OrdenRetiro ord) throws SQLException, JRException, IOException {
+        conexion con = new conexion();
+        try {
+            HashMap<String, Object> parametros = new HashMap<String, Object>();
+            //Contexto
+            FacesContext context = FacesContext.getCurrentInstance();
+            ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+            //Parametros
+            parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+            parametros.put("cod_ordenretiro", ord.getCod_ordenretiro());
+            //String del jasper
+            String temperatura = temperado == true ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
+//            String jrxmlPath = temperatura.equals("ReporteFreezer.jasper") ? "ReporteFreezer.jrxml" : "ReporteNoFreezer.jrxml";//server
+            //InputStream
+//            InputStream is = new FileInputStream(servleContext.getRealPath("/reportes/") + jrxmlPath);//server
+            String dirReporte = servleContext.getRealPath("/reportes/" + temperatura);
+            String nom_archivo = "OR_BK_" + ord.getBooking() + ".pdf";
+//            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";//server
+//            String exportPath = exportDir + nom_archivo;//server
+            //JasperDesign
+//            JasperDesign design = JRXmlLoader.load(is);//server
+//            JasperReport jasperReport = JasperCompileManager.compileReport(design);//server
+            //Servlet Response
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+            response.addHeader("Content-disposition", "attachment;filename=" + nom_archivo);
+            response.setContentType("application/pdf");
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con.getConnection());//server
+            JasperPrint jasperPrint = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
+//            JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath); //server
+            JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
+            context.responseComplete();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        listadoOrdenes = daoOrdenRetiro.findAllOrdenes();
+    }
+    
     public boolean temperaturaEdit() {
         boolean check;
         if (ord.getEs_temperado() == 1) {
@@ -179,56 +262,8 @@ public class OrdenRetiroBean implements Serializable {
         return check;
     }
 
-    public void exportpdf(OrdenRetiro or) throws JRException, IOException, SQLException {
-        daoOrdenRetiro.updateVerificaPDF(ord, or.getCod_ordenretiro());
-        conexion con = new conexion();
-        Map<String, Object> parametros = new HashMap<String, Object>();
-        FacesContext context = FacesContext.getCurrentInstance();
-        ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
-        parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
-        parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
-
-        String temperatura = or.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
-
-        String dirReporte = servleContext.getRealPath("/reportes/" + temperatura);
-        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
-        response.addHeader("Content-disposition", "attachment;filename=" + nom_archivo);
-
-        response.setContentType("application/pdf");
-        JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
-        JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
-        context.responseComplete();
-
-    }
-
-    public void exportpdf2(OrdenRetiro or) throws JRException, IOException, SQLException {
-        conexion con = new conexion();
-        try {
-            HashMap<String, Object> parametros = new HashMap<String, Object>();
-            FacesContext context = FacesContext.getCurrentInstance();
-            ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
-            parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
-            parametros.put("cod_ordenretiro", or.getCod_ordenretiro());
-            String temperatura = or.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
-            String jrxmlPath = temperatura.equals("ReporteFreezer.jasper") ? "ReporteFreezer.jrxml" : "ReporteNoFreezer.jrxml";
-            InputStream is = new FileInputStream(servleContext.getRealPath("/reportes/") + jrxmlPath);
-            String nom_archivo = "Orden_de_Retiro" + or.getCod_ordenretiro() + ".pdf";
-            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
-            String exportPath = exportDir + nom_archivo;
-            JasperDesign design = JRXmlLoader.load(is);
-            JasperReport jasperReport = JasperCompileManager.compileReport(design);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con.getConnection());
-            JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
-            FacesContext context2 = FacesContext.getCurrentInstance();
-            context2.addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO, "Atención", "PDF Generado " + nom_archivo));
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
-
     public void enviarMail() throws EmailException, SQLException, IOException {
-
+        StringBuilder sb = new StringBuilder();
         MultiPartEmail email = new HtmlEmail();
         try {
             EmailAttachment attachment = new EmailAttachment();
@@ -239,28 +274,35 @@ public class OrdenRetiroBean implements Serializable {
             attachment.setDescription("Orden de retiro");
             attachment.setName(nom_archivo);
             //Mail
-            String authuser = "Customerservice@delpac-sa.com";
-            String authpwd = "cs6609";
+            String authuser = "Customerservice@delpac-sa.com";//LosInkas
+            String authpwd = "cs6609";//LosInkas
 //            String authuser = "jorge.castaneda@bottago.com";
 //            String authpwd = "jorgec012";
+//            String authuser = "jorgito14@gmail.com";
+//            String authpwd = "p4s4j3r0";
             email.setSmtpPort(587);
             email.setAuthenticator(new DefaultAuthenticator(authuser, authpwd));
-            email.setSSLOnConnect(false);
+            email.setSSLOnConnect(false); //LosInkas
+//            email.setSSLOnConnect(true); //Gmail
             email.setDebug(true);
-            email.setHostName("mailserver.losinkas.com");
+            email.setHostName("mailserver.losinkas.com"); //LosInkas
 //            email.setHostName("ns0.ovh.net");
+//            email.setHostName("smtp.gmail.com");
             email.getMailSession().getProperties().put("mail.smtps.auth", "false");
             email.getMailSession().getProperties().put("mail.debug", "true");
-            email.getMailSession().getProperties().put("mail.smtp.port", "26");
-//            email.getMailSession().getProperties().put("mail.smtps.socketFactory.port", "587");
-//            email.getMailSession().getProperties().put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            email.getMailSession().getProperties().put("mail.smtp.port", "26"); //LosInkas
+//            email.getMailSession().getProperties().put("mail.smtp.port", "587");
+//            email.getMailSession().getProperties().put("mail.smtps.socketFactory.port", "587"); //gmail
+            email.getMailSession().getProperties().put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); //gmail
             email.getMailSession().getProperties().put("mail.smtps.socketFactory.fallback", "false");
             email.getMailSession().getProperties().put("mail.smtp.ssl.enable", "false");
-            email.setFrom("Customerservice@delpac-sa.com", "Servico al cliente Delpac");
-            email.setSubject(ord.getCia_nombre() + " / " + ord.getPto_nombre() + "/ BOOKING " + ord.getBooking() + ord.getDsp_itinerario());
-            email.setMsg("<strong>Estimados:</strong><br />"
-                    + "Buenas tardes, adjunto la orden de retiro para la nave <strong>" + ord.getDsp_itinerario() + "</strong><br />"
-                    + "<br />"
+            email.setFrom("Customerservice@delpac-sa.com", "Servico al cliente Delpac");//LosInkas
+//            email.setFrom("jorgito14@gmail.com", "Prueba envío de correo");
+            email.setSubject(ord.getCia_nombre() + " / " + ord.getPto_nombre() + "/ BOOKING " + ord.getBooking() + " " + ord.getDsp_itinerario());
+
+            sb.append("<strong>Estimados:</strong><br />").append(System.lineSeparator());
+            sb.append("Buenas, adjunto la orden de retiro para la nave <strong>" + ord.getDsp_itinerario() + "</strong><br />").append(System.lineSeparator());
+            sb.append("<br />"
                     + "<ul><li>Favor retirar el sello en nuestras oficinas.</li>"
                     + "<li><strong>Traer la orden de retiro</strong> para poder formalizar la entrega del sello.</li>"
                     + "<li><strong>Copia de cedula</strong> de la persona que retirará el sello.</li>"
@@ -268,20 +310,35 @@ public class OrdenRetiroBean implements Serializable {
                     + "<li><strong>MUY IMPORTANTE: Se recuerda que a partir del 1 de Julio, 2016 todo contenedor deberá contar con certificado de "
                     + "VGM (Masa Bruta Verificada) antes del embarque, caso contrario el contenedor no podrá ser considerado para embarque. CUT OFF VGM, "
                     + "24 horas antes del atraque de la nave.</strong></li> "
-                    + "<br /><br />"
-                    + "Señores de <strong>" + ord.getLoc_salidades() + "</strong> favor designar la unidad.<br /><br />"
-                    + "<strong>Requerimiento Especial:</strong> Contenedores <strong>" + ord.getReq_especial2() + "</strong><br /><br />"
-                    + "<strong>Remark:</strong> el contenedor deberá ingresar al terminal Portuario <strong>" + ord.getLoc_entradades() + "</strong> a la zona "
-                    + "que ellos le "
-                    + "asignen al momento de ingresar por Gate."
-                    + "<br /><br />"
-                    + "Gracias.<br /><br />"
-                    + "<strong>Saludos Cordiales / Best Regards</strong><br />"
-                    + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
-                    + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
-
-            email.addTo("gint1@TERCON.COM.EC, gout2@TERCON.COM.EC, controlgate@TERCON.COM.EC, " +ord.getDestinario().split(","));
-            email.addCc("dgonzalez@delpac-sa.com, charmsen@delpac-sa.com, vmendoza@delpac-sa.com, vzambrano@delpac-sa.com, vchiriboga@delpac-sa.com, vortiz@delpac-sa.com, @operaciones@delpac-sa.com," + ord.getCc().split(","));
+                    + "<br /><br />").append(System.lineSeparator());
+            sb.append("Señores de <strong>" + ord.getLoc_salidades() + "</strong> favor " + ord.getCondicion() + "<br /><br />").append(System.lineSeparator());
+            if (!ord.getDetalle().isEmpty()) {
+                sb.append(ord.getDetalle()).append(System.lineSeparator());
+                sb.append("<br /><strong>Requerimiento Especial: " + ord.getReq_especial2() + "</strong><br /><br />").append(System.lineSeparator());
+                sb.append("<strong>Remark:</strong> " + ord.getRemark() + " <br /><br />").append(System.lineSeparator());
+                sb.append("Gracias.<br /><br />"
+                        + "<strong>Saludos Cordiales / Best Regards</strong><br />"
+                        + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
+                        + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
+            } else {
+                sb.append("<br /><strong>Requerimiento Especial: " + ord.getReq_especial2() + "</strong><br /><br />").append(System.lineSeparator());
+                sb.append("<strong>Remark:</strong> " + ord.getRemark() + " <br /><br />").append(System.lineSeparator());
+                sb.append("Gracias.<br /><br />"
+                        + "<strong>Saludos Cordiales / Best Regards</strong><br />"
+                        + "JOSE CARRIEL M. II DELPAC S.A. II Av. 9 de Octubre 2009 y Los Ríos, Edificio el Marqués II Guayaquil - Ecuador <br />"
+                        + "Tel.: +593 42371 172/ +593 42365 626 II Cel.: +59 998152266 II Mail: jcarriel@delpac-sa.com");
+                email.setMsg(sb.toString());
+            }
+            email.setMsg(sb.toString());
+            email.addTo(ord.getDestinario().split(","));
+            //email.addTo("gint1@tercon.com.ec, gout2@tercon.com.ec, controlgate@tercon.com.ec, " + ord.getDestinario().split(",")); //LosInkas
+            if (!ord.getCc().isEmpty()) {
+                //email.addCc("dgonzalez@delpac-sa.com, charmsen@delpac-sa.com, vmendoza@delpac-sa.com, vzambrano@delpac-sa.com, vchiriboga@delpac-sa.com, vortiz@delpac-sa.com, mbenitez@delpac-sa.com, crobalino@delpac-sa.com, jcarriel@delpac-sa.com, fsalame@delpac-sa.com," + ord.getCc().split(",")); //LosInkas
+                email.addCc("jorge_3_11_91@hotmail," + ord.getCc().split(",")); //LosInkas
+            } else {
+//                email.addCc("dgonzalez@delpac-sa.com, charmsen@delpac-sa.com, vmendoza@delpac-sa.com, vzambrano@delpac-sa.com, vchiriboga@delpac-sa.com, vortiz@delpac-sa.com, mbenitez@delpac-sa.com, crobalino@delpac-sa.com, jcarriel@delpac-sa.com, fsalame@delpac-sa.com"); //LosInkas
+                email.addCc("jorge_3_11_91@hotmail.com"); //LosInkas
+            }
 
             //Add attach
             email.attach(attachment);
@@ -342,22 +399,6 @@ public class OrdenRetiroBean implements Serializable {
 
     public void setSelectorCliente(List<Cliente> selectorCliente) {
         this.selectorCliente = selectorCliente;
-    }
-
-    public int getIdItinerarioSelected() {
-        return idItinerarioSelected;
-    }
-
-    public void setIdItinerarioSelected(int idItinerarioSelected) {
-        this.idItinerarioSelected = idItinerarioSelected;
-    }
-
-    public List<Itinerario> getSelectorItinerario() {
-        return selectorItinerario;
-    }
-
-    public void setSelectorItinerario(List<Itinerario> selectorItinerario) {
-        this.selectorItinerario = selectorItinerario;
     }
 
     public int getIdLineaSelected() {
@@ -448,36 +489,32 @@ public class OrdenRetiroBean implements Serializable {
         this.temperado2 = temperado2;
     }
 
-    public int getIdMailSelected() {
-        return idMailSelected;
+    public String getPath() {
+        return path;
     }
 
-    public void setIdMailSelected(int idMailSelected) {
-        this.idMailSelected = idMailSelected;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public List<OrdenRetiro> getSelectorMail() {
-        return selectorMail;
+    public void setPdfFile(StreamedContent pdfFile) {
+        this.pdfFile = pdfFile;
     }
 
-    public void setSelectorMail(List<OrdenRetiro> selectorMail) {
-        this.selectorMail = selectorMail;
+    public StreamedContent getDownloadableFile() {
+        return downloadableFile;
     }
 
-//    public StreamedContent getStream() throws IOException {
-//        try {
-////            String exportDir = System.getProperty("catalina.base") + "/OrdenesRetiro/";
-////            String nom_archivo = "Orden_de_Retiro" + ord.getCod_ordenretiro() + ".pdf";
-////            String nom_archivo_sinext = "Orden_de_Retiro" + ord.getCod_ordenretiro();
-//            return new DefaultStreamedContent(new FileInputStream(
-//                    new File("C:\\Program Files\\Apache Software Foundation\\apache-tomcat-8.0.39\\OrdenesRetiro\\Orden_de_Retiro2017100020.pdf")),
-//                    "application/pdf", "Orden_de_Retiro2017100020");
-//        } catch (FileNotFoundException e) {
-//            throw new FacesException(e);
-//        }
-//    }
-    public void setStream(StreamedContent stream) {
-        this.stream = stream;
+    public void setDownloadableFile(StreamedContent downloadableFile) {
+        this.downloadableFile = downloadableFile;
+    }
+
+    public int getIngresado() {
+        return ingresado;
+    }
+
+    public void setIngresado(int ingresado) {
+        this.ingresado = ingresado;
     }
 
 }

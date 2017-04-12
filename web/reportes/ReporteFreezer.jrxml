@@ -3,16 +3,15 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="cod_ordenretiro" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="cod_ordenretiro" class="java.lang.Integer"/>
 	<parameter name="RutaImagen" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, iti.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
+		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, ord.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
        ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.temperatura, ord.ventilacion, ord.observaciones, loc.loc_des as loc_salida, loca.loc_des as loc_entrada, ord.fecha_crea
 from publico.ordenretiro ord
 inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo
-inner join publico.mae_itinerario iti on ord.ids_itinerario = iti.ids_itinerario
 inner join publico.mae_linea lin on ord.lin_codigo = lin.lin_codigo
 inner join publico.mae_puerto pto on ord.pto_codigo = pto.pto_codigo
 inner join publico.mae_localidad loc on ord.loc_salida = loc.loc_codigo

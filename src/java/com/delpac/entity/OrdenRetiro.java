@@ -51,6 +51,17 @@ public class OrdenRetiro implements Serializable {
     String mai_nombre;
     String mai_mail;
     int asignada;
+    String condicion;
+    String detalle;
+    String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public int getCod_ordenretiro() {
         return cod_ordenretiro;
@@ -355,6 +366,20 @@ public class OrdenRetiro implements Serializable {
     public void setAsignada(int asignada) {
         this.asignada = asignada;
     }
-    
-    
+
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    public String getCondicion() {
+        return condicion;
+    }
+
+    public void setCondicion(String condicion) {
+        this.condicion = condicion;
+    }
 }

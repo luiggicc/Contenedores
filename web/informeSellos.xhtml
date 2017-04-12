@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <h:form id="frm">
+            <p:panel header="Informe sellos entregados">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Booking"/>
+                    <p:inputText maxlength="20" value="#{informeSellosBean.booking}" onkeydown="if (event.which &lt; 48 || event.which &gt; 57) if (event.which != 8)  return false;" />
+                </h:panelGrid>
+            </p:panel>
+            <p:dataTable id="tbl_report" var="report" value="#{informeSellosBean.listadoOrdenes}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="Orden N°" />
+                        <p:column headerText="Fecha" />
+                        <p:column headerText="Tipo y Tamaño" />
+                        <p:column headerText="Empaque" />
+                        <p:column headerText="Sello" />
+                        <p:column headerText="Cliente" />
+                        <p:column headerText="Itinerario" />
+                        <p:column headerText="Booking" />
+                    </p:row>
+                </p:columnGroup> 
+                <p:column>
+                    <h:outputLabel value="#{report.cod_ordenretiro}"/>
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.fecha_crea}"/>
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.cant_tipocont}"/>
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.inv_seguridad}"/>
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.inv_sello}"/>
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.cia_nombre}" />                    
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.dsp_itinerario}" />
+                </p:column>
+                <p:column>
+                    <h:outputLabel value="#{report.booking}"/>
+                </p:column>
+            </p:dataTable>
+            <div style="text-align: center">
+                <i class="icon-search">
+                    <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{informeSellosBean.consultarInforme()}"  />
+                </i>
+                <i class="icon-file-pdf">
+                    <h:commandLink styleClass="likePrimefaceCommandLink" actionListener="#{informeSellosBean.exportpdf()}"  >  
+                        Exportar
+                    </h:commandLink>
+                </i>
+                <i class="icon-arrows-cw">
+                    <h:commandLink styleClass="likePrimefaceCommandLink" value="Limpiar" actionListener="#{informeSellosBean.limpiar()}" />
+                </i>
+            </div>
+
+        </h:form>
+
+
+    </ui:define>
+
+</ui:composition>

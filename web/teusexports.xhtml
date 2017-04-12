@@ -7,9 +7,80 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
-        
-        <h3 class="hardblue TexAlCenter">Empty Page</h3>
-        <span class="TexAlCenter DispBlock Wid100">Use this page to start from scratch and place your custom content.</span>
-    </ui:define>
+        <h:outputStylesheet name="style.css" />
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel header="Report Line Exports">
+                    <h:form id="frm">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="Año: "/>
+                            <p:inputText maxlength="4" value="#{teusExportBean.anio}" onkeydown="if (event.which &lt; 48 || event.which &gt; 57) if (event.which != 8)  return false;"/> 
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:dataTable id="teusExportTbl" value="#{teusExportBean.lista}" var="rli" paginator="true" widgetVar="texpoTable" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{teusExportBean.filteredTexpo}" lazy="false" 
+                                     rowsPerPageTemplate="10,25,50">                            
 
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="ReportLine Exportaciones" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('texpoTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Mes" filterBy="#{rli.mes}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.mes}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Arribo" filterBy="#{rli.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.fecha_arribo}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Itinerario" filterBy="#{rli.itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.itinerario}"/>
+                            </p:column>
+
+                            <p:column headerText="20'" filterBy="#{rli.cont20}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.cont20}"/>
+                            </p:column>
+
+                            <p:column headerText="40'" filterBy="#{rli.cont40}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.cont40}"/>
+                            </p:column>
+
+                            <p:column headerText="40RH" filterBy="#{rli.cont40rh}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.cont40rh}"/>
+                            </p:column>
+
+                            <p:column headerText="20' MTY" filterBy="#{rli.cont20mty}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.cont20mty}"/>
+                            </p:column>
+
+                            <p:column headerText="40' MTY" filterBy="#{rli.cont40mty}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.cont40mty}"/>
+                            </p:column>
+
+                            <p:column headerText="MTY Teus" filterBy="#{rli.contemptyteus}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.contemptyteus}"/>
+                            </p:column>
+
+                            <p:column headerText="FULL Teus" filterBy="#{rli.contfullteus}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{rli.contfullteus}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{teusExportBean.ConsultarReportLineExport()}" />
+                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{teusExportsBean.exportpdf()}"/>  
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
 </ui:composition>

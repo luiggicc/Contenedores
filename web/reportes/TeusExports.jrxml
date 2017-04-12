@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TeusExports" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5668c875-75c8-4f11-9ec3-a60a54835749">
+	<property name="ireport.zoom" value="3.452271214393105"/>
+	<property name="ireport.x" value="753"/>
+	<property name="ireport.y" value="329"/>
+	<parameter name="RutaImagen" class="java.lang.String"/>
+	<parameter name="anio" class="java.lang.Float"/>
+	<queryString>
+		<![CDATA[Select to_char(des.fecha_salida, 'TMMONTH') as anio, to_char(des.fecha_salida, 'DD/MM/YYYY') as fecha_arribo, des.itinerario,
+       (count(case when con.con_tamano='20' and des.movimiento = 'Export' then 1 end)) as cont20,
+       (count(case when con.con_tamano='40' and des.movimiento = 'Export' then 1 end)) as cont40,
+       (count(case when con.con_tipcont='40RH' and des.movimiento = 'Descarga' then 1 end)) as cont40rhnor,
+       (count(case when con.con_tamano='20' and des.movimiento = 'Export' and des.status = 'Empty' then 1 end)) as cont20mty,
+       (count(case when con.con_tamano='40' and des.movimiento = 'Export' and des.status = 'Empty' then 1 end)) as cont40mty,
+       ((count(case when con.con_tamano = '20' and des.movimiento = 'Export' and des.status = 'Empty' then 1 end)) +
+        (count(case when con.con_tamano = '40' and des.movimiento = 'Export' and des.status = 'Empty' then 1 end))*2) as contemptyteus,
+        ((count(case when con.con_tamano = '20' and des.movimiento = 'Export' and des.status = 'Full' then 1 end)) +
+        (count(case when con.con_tamano = '40' and des.movimiento = 'Export' and des.status = 'Full' then 1 end))*2) as contfullteus
+from publico.descarga des
+inner join publico.mae_container con on des.equipo_identi = con.con_codigo
+where des.movimiento = 'Export' and extract(year from des.fecha_salida) = $P{anio}
+group by anio, des.fecha_salida, des.itinerario]]>
+	</queryString>
+	<field name="anio" class="java.lang.String"/>
+	<field name="fecha_arribo" class="java.lang.String"/>
+	<field name="itinerario" class="java.lang.String"/>
+	<field name="cont20" class="java.lang.Long"/>
+	<field name="cont40" class="java.lang.Long"/>
+	<field name="cont40rhnor" class="java.lang.Long"/>
+	<field name="cont20mty" class="java.lang.Long"/>
+	<field name="cont40mty" class="java.lang.Long"/>
+	<field name="contemptyteus" class="java.lang.Long"/>
+	<field name="contfullteus" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="79" backcolor="#CCFFFF" uuid="b8e1dd05-e7a7-495f-bc73-ea4b4ce8e15c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="454" y="0" width="101" height="79" uuid="ed48c798-dc37-4491-ace7-98e0b5b39e12"/>
+			</rectangle>
+			<image>
+				<reportElement x="466" y="2" width="88" height="77" uuid="5dbdf368-12bc-4a2d-849a-3c6ab7816643"/>
+				<imageExpression><![CDATA[$P{RutaImagen} + "delpac.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="10" y="0" width="428" height="79" uuid="ee322018-df2d-45d0-a5a2-4341bb1039a7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DELPAC S.A. - Exportaciones año ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="302" y="0" width="113" height="79" uuid="4b2e24e8-e967-4e2f-a07f-5a608963535b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="0" width="554" height="35" backcolor="#9999FF" uuid="d67ce510-9598-478d-91f9-f18a7fdda703"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="351" y="0" width="204" height="35" uuid="a6f8f46d-dfa5-436e-a7ec-0563537abfcb"/>
+			</rectangle>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="351" y="0" width="204" height="35" uuid="fa030223-182a-4d9b-9460-0865a51bceb6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="0" width="324" height="35" uuid="1d01fcb7-5cbf-4174-8ce1-da4459ed0232"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contenedores COSCON - Report Line - Importaciones - ]]></text>
+			</staticText>
+			<textField pattern="###0">
+				<reportElement x="274" y="0" width="75" height="35" uuid="dd0aff9a-14a5-4cdc-8e03-468547bac7dc"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="0" width="68" height="20" backcolor="#FFFF66" uuid="f718c9fa-6de4-497f-af6e-ef6da7d75430"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="69" height="20" uuid="cfc3f594-1557-43cc-8cb2-5cc44df49a3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mes]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="69" y="0" width="66" height="20" backcolor="#FFFF66" uuid="dc6b58da-b486-4eb9-aa83-54b18c39f4e2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="69" y="0" width="66" height="20" uuid="4b20ed94-e4d7-4b85-ae6a-0d21081d0553"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="135" y="0" width="100" height="20" backcolor="#FFFF66" uuid="386790d1-920e-4da6-b588-4102205adc44"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="135" y="0" width="100" height="20" uuid="ef03b338-d562-4a0c-88a2-1034e1d9b4e3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vessel]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="235" y="0" width="40" height="20" backcolor="#FFFF66" uuid="65ef8f51-1921-41de-b507-16a3a33bc503"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="235" y="0" width="40" height="20" uuid="0f562777-70c1-4118-bc03-af1b3b3647c7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[20']]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="275" y="0" width="40" height="20" backcolor="#FFFF66" uuid="ebd79e0d-b0f0-4a8f-a116-3946b4b91498"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="275" y="0" width="40" height="20" uuid="01a2c67c-1da4-4238-990f-26721ae28d22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[40']]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="315" y="0" width="55" height="20" backcolor="#FFFF66" uuid="a10ba52e-2c67-46f0-81c6-eda785e3b2ee"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="315" y="0" width="55" height="20" uuid="9da77312-583f-4519-8401-6d10d6898ce8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[40RH]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="370" y="0" width="45" height="20" backcolor="#FFFF66" uuid="48e2d1a6-0f53-4216-b4de-81c8130145ed"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="370" y="0" width="45" height="20" uuid="6ab31de8-9f15-4797-9118-efe599c6bd37"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[20' MTY]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="415" y="0" width="45" height="20" backcolor="#FFFF66" uuid="586e4fe8-8257-40a0-9bf5-8077b325c03b"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="415" y="0" width="45" height="20" uuid="72484a37-7a8f-4c24-ba4b-acacbd47c0d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[40' MTY]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="460" y="0" width="55" height="20" backcolor="#FFFF66" uuid="110f498a-12c8-4193-b429-7db3b1deaafd"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="460" y="0" width="55" height="20" uuid="28c86d69-edb9-4022-80f6-8709e7226d53"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MTY TEUS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="515" y="0" width="40" height="20" backcolor="#FFFF66" uuid="0b749417-5f6d-40fc-a4fc-6b65b14398f4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="515" y="0" width="40" height="20" uuid="b9433014-ff8b-4bd3-86eb-ed287eb5d6c4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FULL TEUS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="2" y="0" width="68" height="20" uuid="dde80bf4-dd53-4920-aff9-70509da7d269"/>
+			</rectangle>
+			<textField>
+				<reportElement x="1" y="0" width="69" height="20" uuid="0c311c0e-17c0-4ae7-8630-6019c9c25389"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="70" y="0" width="66" height="20" uuid="c9236e0d-a39c-453b-9c54-140e64a1dba0"/>
+			</rectangle>
+			<textField>
+				<reportElement x="70" y="0" width="66" height="20" uuid="f6106758-2359-486c-93e8-051a1c5bf41b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fecha_arribo}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="136" y="0" width="100" height="20" uuid="c2b91bdf-7326-414c-a0cd-3c51cf4f26a5"/>
+			</rectangle>
+			<textField>
+				<reportElement x="136" y="0" width="100" height="20" uuid="c7e67e28-f739-44a7-9527-29ab700f3e1d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{itinerario}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="236" y="0" width="40" height="20" uuid="87fa5d15-c5d3-4684-80b7-d959fd7782a4"/>
+			</rectangle>
+			<textField>
+				<reportElement x="236" y="0" width="40" height="20" uuid="d87e6c21-b63d-458b-bd33-3ac97afe71d2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cont20}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="276" y="0" width="40" height="20" uuid="d173ceb1-6502-4e15-9283-d9f522d5bafa"/>
+			</rectangle>
+			<textField>
+				<reportElement x="276" y="0" width="40" height="20" uuid="c5897fe8-52a4-4525-b1e2-5faa73968bc1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cont40}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="316" y="0" width="55" height="20" uuid="7b6b9fe9-324e-4f6a-b94d-5b4196cfd916"/>
+			</rectangle>
+			<textField>
+				<reportElement x="316" y="0" width="55" height="20" uuid="a2975157-a50f-4a23-8f41-312c23d43ec8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cont40rhnor}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="371" y="0" width="45" height="20" uuid="19e534c0-38dd-4e15-8a48-ffa59e2db60c"/>
+			</rectangle>
+			<textField>
+				<reportElement x="371" y="0" width="45" height="20" uuid="3008db1f-e85c-43c7-a512-509ca82e640f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cont20mty}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="416" y="0" width="45" height="20" uuid="7376adaf-d484-473d-958d-0c1b8f279414"/>
+			</rectangle>
+			<textField>
+				<reportElement x="416" y="0" width="45" height="20" uuid="b6b362f0-ba8d-434d-9ce4-819ac9240e5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cont40mty}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="0" width="55" height="20" uuid="b094bb59-5e04-4dfe-b443-43fce591222a"/>
+			</rectangle>
+			<textField>
+				<reportElement x="461" y="0" width="55" height="20" uuid="2dc6184c-7a53-4f87-9821-56dd6ae8f04b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{contemptyteus}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="516" y="0" width="40" height="20" uuid="c10ad141-61f3-4182-a465-fa5e07fb8f76"/>
+			</rectangle>
+			<textField>
+				<reportElement x="516" y="0" width="40" height="20" uuid="de493dd9-bd2d-4d9d-9ade-78c6de7c0897"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{contfullteus}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="435" y="34" width="80" height="20" uuid="f0acaad7-a154-4c5e-9eb1-1c488d82883b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="34" width="40" height="20" uuid="795ef43d-c7dd-411a-938f-663dd36b3af0"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

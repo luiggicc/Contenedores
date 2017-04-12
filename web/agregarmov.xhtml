@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <style>
+            .colstilo {width:200px}
+            .colstiloinput {width:300px}
+        </style>
+        <h:form id="frm">
+            <div class="ContainerIndent">
+                <div class="ui-panel ui-widget ui-widget-content ui-corner-all">
+                    <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                        <span class="ui-panel-title">Crear Movimiento de Contenedor</span>
+                    </div>
+                    <p:panel>
+                        <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
+
+                            <p:outputLabel value="Sender: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.sender}" style="width: 200px"/>
+
+                            <p:outputLabel value="Recipiente: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.recipient}" style="width: 200px"/>
+
+                            <p:outputLabel value="Fecha Emisión: "/>
+                            <p:calendar value="#{verHistorialBean.vhis.fecha_emision}" style="width: 200px" pattern="yyyy-MM-dd" navigator="true"/>
+
+                            <p:outputLabel value="Id Sender: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.id_sender}" style="width: 200px"/>
+
+                            <p:outputLabel value="Movimiento: " />
+                            <p:selectOneMenu id="movimiento" value="#{verHistorialBean.vhis.movimiento}" style="width: 200px">
+                                <f:selectItem itemLabel="Descarga" itemValue="Descarga" />
+                                <f:selectItem itemLabel="GateOut Puerto" itemValue="GateOut Puerto" />
+                                <f:selectItem itemLabel="GateIn Patio" itemValue="GateIn Patio" />
+                                <f:selectItem itemLabel="GateOut Patio" itemValue="GateOut Patio" />
+                                <f:selectItem itemLabel="GateIn Puerto" itemValue="GateIn Puerto" />
+                                <f:selectItem itemLabel="Export" itemValue="Export" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="BL: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.bl}" style="width: 200px"/>
+
+                            <p:outputLabel value="Booking: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.booking}" style="width: 200px"/>
+
+                            <p:outputLabel value="Nave: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.nave}" style="width: 200px"/>
+
+                            <p:outputLabel value="Viaje: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.viaje}" style="width: 200px"/>
+
+                            <p:outputLabel value="Itinerario: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.itinerario}" style="width: 200px"/>
+
+                            <p:outputLabel value="Carrier Code: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.carrier_code}" style="width: 200px"/>
+
+                            <p:outputLabel value="Tipo Identificación: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.identi_tip}" style="width: 200px"/>
+
+                            <p:outputLabel value="Identificación: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.identi_trans}" style="width: 200px"/>
+
+                            <p:outputLabel value="Puerto de Carga: "/>
+                            <p:selectOneMenu id="pto_carga" value="#{verHistorialBean.vhis.pto_carga}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Puerto de Descarga: "/>
+                            <p:selectOneMenu id="pto_descarga" value="#{verHistorialBean.vhis.pto_descarga}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Puerto de Destino: "/>
+                            <p:selectOneMenu id="pto_destino" value="#{verHistorialBean.vhis.pto_destino}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha Arribo: "/>
+                            <p:calendar value="#{verHistorialBean.vhis.fecha_arribo}" pattern="yyyy-MM-dd" navigator="true"/>
+                            
+                            <p:outputLabel value="Fecha Salida: "/>
+                            <p:calendar value="#{verHistorialBean.vhis.fecha_salida}" pattern="yyyy-MM-dd" navigator="true"/>
+                            
+                            <p:outputLabel value="Contenedor: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.equipo_identi}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Status: " />
+                            <p:selectOneMenu id="status" value="#{verHistorialBean.vhis.status}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Empty" itemValue="Empty" />
+                                <f:selectItem itemLabel="Full" itemValue="Full" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Peso Bruto: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.peso_bruto}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Sello: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.sello}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Daño: " />
+                            <p:selectOneMenu id="danio" value="#{verHistorialBean.vhis.status}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Sin daño" itemValue="Sin daño" />
+                                <f:selectItem itemLabel="Equipo Dañado" itemValue="Equipo Dañado" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Código del Daño:"/>
+                            <p:inputText value="#{verHistorialBean.vhis.danio_cod}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Temp. Ideal: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.temp_ideal}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Temp. Mínima: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.temp_min}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Temp. Máxima: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.temp_max}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Ciclo: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.ciclo}" style="width: 200px"/>
+                            
+                            <p:outputLabel value="Código Iso: "/>
+                            <p:inputText value="#{verHistorialBean.vhis.iso}" style="width: 200px"/>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:panel>
+                        <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
+                            <p:commandButton ajax="true" action="/verhistorial?faces-redirect=true" value="Crear Movimiento" 
+                                             actionListener="#{verHistorialBean.commitCreate()}">
+
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" action="/verhistorial?faces-redirect=true" immediate="true" />
+
+                        </h:panelGrid>
+                    </p:panel>
+                </div>
+            </div>
+        </h:form>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+        </p:confirmDialog>
+    </ui:define>
+
+</ui:composition>

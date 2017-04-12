@@ -12,15 +12,20 @@ import java.util.Date;
  *
  * @author Bottago SA
  */
-public class VerHistorial implements Serializable{
+public class VerHistorial implements Serializable {
+
     String sender;
+    String recipient;
     Date fecha_emision;
+    String id_sender;
     String movimiento;
     String bl;
     String booking;
     String nave;
     String viaje;
     String itinerario;
+    String carrier_code;
+    String identi_tip;
     String identi_trans;
     String pto_carga;
     String pto_descarga;
@@ -32,10 +37,78 @@ public class VerHistorial implements Serializable{
     String peso_bruto;
     String sello;
     String danio;
+    String danio_cod;
     String temp_ideal;
     String temp_min;
     String temp_max;
+    String iso;
     int ciclo;
+    String pto_codigo;
+    String pto_nombre;
+
+    public String getPto_codigo() {
+        return pto_codigo;
+    }
+
+    public void setPto_codigo(String pto_codigo) {
+        this.pto_codigo = pto_codigo;
+    }
+
+    public String getPto_nombre() {
+        return pto_nombre;
+    }
+
+    public void setPto_nombre(String pto_nombre) {
+        this.pto_nombre = pto_nombre;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public void setIso(String iso) {
+        this.iso = iso;
+    }
+
+    public String getDanio_cod() {
+        return danio_cod;
+    }
+
+    public void setDanio_cod(String danio_cod) {
+        this.danio_cod = danio_cod;
+    }
+
+    public String getIdenti_tip() {
+        return identi_tip;
+    }
+
+    public void setIdenti_tip(String identi_tip) {
+        this.identi_tip = identi_tip;
+    }
+
+    public String getCarrier_code() {
+        return carrier_code;
+    }
+
+    public void setCarrier_code(String carrier_code) {
+        this.carrier_code = carrier_code;
+    }
+
+    public String getId_sender() {
+        return id_sender;
+    }
+
+    public void setId_sender(String id_sender) {
+        this.id_sender = id_sender;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
 
     public String getSender() {
         return sender;
@@ -221,5 +294,4 @@ public class VerHistorial implements Serializable{
         this.ciclo = ciclo;
     }
 
-    
 }

@@ -57,6 +57,39 @@ public class SellosDAO implements Serializable {
         return listadoSellos;
     }
 
+    public List<Sellos> findAllStock() throws SQLException {
+        conexion con = new conexion();
+        List<Sellos> listadoSellos = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        String query = " Select i.inv_codigo,i.inv_sello, i.inv_seguridad, l.loc_des, "
+                + "case i.inv_estado "
+                + "when 'S' then 'En Stock' "
+                + "when 'A' then 'Asignado' "
+                + "end as inv_estado "
+                + "from publico.invsellos i "
+                + "inner join publico.mae_localidad l on i.loc_codigo = l.loc_codigo "
+                + "where inv_estado = 'S'";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Sellos sel = new Sellos();
+                sel.setInv_codigo(rs.getInt(1));
+                sel.setInv_sello(rs.getString(2));
+                sel.setInv_seguridad(rs.getString(3));
+                sel.setLoc_des(rs.getString(4));
+                sel.setInv_estado(rs.getString(5));
+                listadoSellos.add(sel);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO SELLOS FINDALL: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+        return listadoSellos;
+    }
+    
     public List<Sellos> Eliminados() throws SQLException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         conexion con = new conexion();
@@ -160,16 +193,21 @@ public class SellosDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         PreparedStatement pst2;
+        PreparedStatement pst3;
         String query = "update publico.invsellos set inv_estado = 'E' where inv_codigo=?";
         String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo, seli_fecha) values (?,?, to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp)";
+        String query3 = "update publico.sellobodega set estado = 'E' where sbo_numero=?";
         pst = con.getConnection().prepareStatement(query);
         pst2 = con.getConnection().prepareStatement(query2);
+        pst3 = con.getConnection().prepareStatement(query3);
         try {
             pst.setInt(1, sel.getInv_codigo());
             pst2.setInt(1, sel.getInv_codigo());
             pst2.setInt(2, sel.getMot_codigo());
+            pst3.setLong(1, Long.valueOf(sel.getInv_codigo()));
             pst.executeUpdate();
             pst2.executeUpdate();
+            pst3.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO DELETE SELLO: " + e.getMessage());
         } finally {
