@@ -105,9 +105,9 @@ public class CargarSellosBean implements Serializable{
     }
 
     public void clearFailedList() {
+        failedSellosList.clear();
         uploadedFilesList.clear();
         listadoSellos.clear();
-        failedSellosList.clear();
         cantidadSellosRepetidos = 0;
     }
 
@@ -120,6 +120,7 @@ public class CargarSellosBean implements Serializable{
             }
         }
         getListadoSellos().clear();
+        clearFailedList();
     }
 
     public void deleteRows() {

@@ -20,6 +20,27 @@ public class Dashboard implements Serializable{
     int conteo_puerto;
     int conteo_cliente;
     int conteo_vacio;
+    int sellos_stock;
+    String sellos_estado;
+
+    public int getSellos_stock() {
+        return sellos_stock;
+    }
+
+    public void setSellos_stock(int sellos_stock) {
+        this.sellos_stock = sellos_stock;
+    }
+
+    public String getSellos_estado() {
+        return sellos_estado;
+    }
+
+    public void setSellos_estado(String sellos_estado) {
+        this.sellos_estado = sellos_estado;
+    }
+    
+
+    
 
     public String getTipo_cont() {
         return tipo_cont;

@@ -89,7 +89,7 @@ public class SellosDAO implements Serializable {
         }
         return listadoSellos;
     }
-    
+
     public List<Sellos> Eliminados() throws SQLException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         conexion con = new conexion();
@@ -98,9 +98,10 @@ public class SellosDAO implements Serializable {
         ResultSet rs = null;
         String query = "select ise.inv_sello, ise.inv_seguridad, ms.mot_des, lo.loc_des, se.seli_fecha "
                 + "from publico.selloseliminados se "
-                + "inner join publico.invsellos ise on se.inv_codigo = ise.inv_codigo "
-                + "inner join publico.motivosello ms on se.mot_codigo = ms.mot_codigo "
-                + "inner join publico.mae_localidad lo on ise.inv_codigo = lo.loc_codigo "
+                + "left join publico.invsellos ise on se.inv_codigo = ise.inv_codigo "
+                + "left join publico.motivosello ms on se.mot_codigo = ms.mot_codigo "
+                + "left join publico.mae_localidad lo on ise.inv_codigo = lo.loc_codigo "
+                + "where ise.inv_sello is not null "
                 + "order by seli_fecha desc";
         pst = con.getConnection().prepareStatement(query);
         try {

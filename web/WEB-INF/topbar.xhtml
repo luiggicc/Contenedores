@@ -5,7 +5,9 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
-
+    <h:head>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['sentinel-layout/images/favicon.ico']}"  />
+    </h:head>
     <h:form>
         <p:growl id="msg" showDetail="true" sticky="true" />
         <p:idleMonitor timeout="900000">
@@ -16,7 +18,7 @@
     <h:form id="top">
         <div id="layout-header" class="Unselectable fontRegular">
             <a id="layout-logo">
-                <h:graphicImage name="images/LOGO.svg" styleClass="Fleft" library="sentinel-layout"/>
+                <h:graphicImage name="images/barco.svg" styleClass="Fleft" library="sentinel-layout"/>
                 <span class="Fs19 FontTitilliumSemiBoldItalic Fleft"><span class="softblue">AGENCIA</span><span class="hardblue">DEL PACIFICO</span></span>
             </a>
             <ul id="sm-topmenu" class="layout-header-widgets white Fs14">

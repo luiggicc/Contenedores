@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteFreezerAsignada" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69dcbcdc-ef05-4f51-810c-5e78c459e766">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="335"/>
 	<parameter name="cod_ordenretiro" class="java.lang.Integer"/>
 	<parameter name="RutaImagen" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -139,7 +139,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<text><![CDATA[Representante del Exportador]]></text>
 			</staticText>
 			<image>
-				<reportElement x="71" y="553" width="141" height="61" uuid="8838ce70-f417-4374-bf48-de68bd488d73"/>
+				<reportElement x="71" y="566" width="141" height="52" uuid="8838ce70-f417-4374-bf48-de68bd488d73"/>
 				<imageExpression><![CDATA[$P{RutaImagen}+"firma.jpg"]]></imageExpression>
 			</image>
 			<staticText>
@@ -253,80 +253,80 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<reportElement x="175" y="258" width="260" height="20" uuid="19448cc0-77ac-4cab-a94f-c3283dbde5e8"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="175" y="318" width="260" height="57" uuid="24a51e6f-2fc5-43d7-84c4-de0998bd4a02"/>
+				<reportElement x="175" y="318" width="260" height="70" uuid="24a51e6f-2fc5-43d7-84c4-de0998bd4a02"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="12" y="385" width="532" height="14" uuid="ae2ca834-a79c-46d3-bdb5-0b5f94d178a0"/>
+				<reportElement x="12" y="398" width="532" height="14" uuid="ae2ca834-a79c-46d3-bdb5-0b5f94d178a0"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Salida: El (los) contenedor(es) debera(n) salir desde el patio de "                    " (KM. 21 via perimetral junto a Kubiec)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="399" width="532" height="14" uuid="b1b82b45-2a6b-4640-8080-58bce3c3de5a"/>
+				<reportElement x="12" y="412" width="532" height="14" uuid="b1b82b45-2a6b-4640-8080-58bce3c3de5a"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[08H00 a 17H00. Pasado esta hora el sobretiempo es por cuenta del exportador, gestionado previamente con la agencia.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="413" width="532" height="14" uuid="5a7dfb34-d59b-4da7-8c5b-1fdc68f96b25"/>
+				<reportElement x="12" y="426" width="532" height="14" uuid="5a7dfb34-d59b-4da7-8c5b-1fdc68f96b25"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Ingresa: El (los) contenedor(es) deberan ingresar al terminal Portuario "                       " a la zona que ellos les]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="427" width="532" height="14" uuid="3092e2f6-b466-4198-890c-37836b5029e3"/>
+				<reportElement x="12" y="440" width="532" height="14" uuid="3092e2f6-b466-4198-890c-37836b5029e3"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[asignen al momento de ingresar por Gate.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="441" width="532" height="14" uuid="bc614da4-0602-4ed8-b3a8-5bf8bcfe5b40"/>
+				<reportElement x="12" y="454" width="532" height="14" uuid="bc614da4-0602-4ed8-b3a8-5bf8bcfe5b40"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Notar que el peso de la carga no debe exceder del que refleja en la puerta del contenedor, de lo contrario no]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="455" width="532" height="14" uuid="d24fc37a-2806-43b0-8c3b-ceb676ee5402"/>
+				<reportElement x="12" y="468" width="532" height="14" uuid="d24fc37a-2806-43b0-8c3b-ceb676ee5402"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[sera embarcado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="478" width="532" height="14" uuid="7fd005f6-3cc5-478d-8ecc-f69f2c15d1de"/>
+				<reportElement x="12" y="491" width="532" height="14" uuid="7fd005f6-3cc5-478d-8ecc-f69f2c15d1de"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Se recuerda que a partir del 1 Julio 2016, todo contenedor debera contar con certificado de VGM (Masa Bruta Verificada)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="492" width="532" height="14" uuid="1a0f0559-4e11-4412-98e8-58c987ba3ae0"/>
+				<reportElement x="12" y="505" width="532" height="14" uuid="1a0f0559-4e11-4412-98e8-58c987ba3ae0"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[antes del embarque, caso contrario el contenedor no podra ser considerado para embarque. Cutt Off VGM, 24 horas antes]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="506" width="532" height="14" uuid="ecbdae11-fe87-463c-b258-fb642748db5e"/>
+				<reportElement x="12" y="519" width="532" height="14" uuid="ecbdae11-fe87-463c-b258-fb642748db5e"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[del atraque de la nave.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="523" width="532" height="14" uuid="9e6933ba-45a5-4010-a805-5cadfc0938b5"/>
+				<reportElement x="12" y="536" width="532" height="14" uuid="9e6933ba-45a5-4010-a805-5cadfc0938b5"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Deposito debera despachar contenedores Operativos en buen estado y transportista debera pedir un EIR de salida]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="537" width="532" height="14" uuid="5715cfbb-ca4f-400b-843f-86f49e14c30b"/>
+				<reportElement x="12" y="550" width="532" height="14" uuid="5715cfbb-ca4f-400b-843f-86f49e14c30b"/>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
@@ -444,21 +444,21 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textFieldExpression><![CDATA[$F{ventilacion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="176" y="318" width="259" height="57" uuid="05479217-c63a-458b-83bb-34f9b1babff5"/>
-				<textElement>
-					<font fontName="Arial"/>
+				<reportElement x="176" y="318" width="259" height="70" uuid="05479217-c63a-458b-83bb-34f9b1babff5"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="277" y="385" width="100" height="20" uuid="70784e0d-165c-4cd7-b14d-80da1ce7ae5c"/>
+				<reportElement x="277" y="398" width="100" height="20" uuid="70784e0d-165c-4cd7-b14d-80da1ce7ae5c"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loc_salida}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="305" y="412" width="100" height="20" uuid="95426d28-fbc6-49de-ba1f-e2546339b563"/>
+				<reportElement x="304" y="426" width="100" height="20" uuid="95426d28-fbc6-49de-ba1f-e2546339b563"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>

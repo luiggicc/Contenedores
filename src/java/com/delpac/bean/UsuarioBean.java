@@ -24,13 +24,15 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
+
 /**
  *
  * @author Bottago SA
  */
 @ManagedBean
 @ViewScoped
-public class UsuarioBean implements Serializable{
+public class UsuarioBean implements Serializable {
+
     private List<Usuario> listadoUsuarios = new ArrayList<>();
     private List<Usuario> filteredUsers;
     private Usuario sessionUsuario;
@@ -39,11 +41,11 @@ public class UsuarioBean implements Serializable{
     private List<AsignaRol> listadoPermisos = new ArrayList<>();
     private List<AsignaRol> filteredAccess;
     private AsignaRolDAO daoAsignaRol = new AsignaRolDAO();
-    
-        public void authorized() {
+
+    public void authorized() {
     }
-        
-            public UsuarioBean() {
+
+    public UsuarioBean() {
         try {
             sessionUsuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("Usuario");
             if (sessionUsuario == null) {
@@ -57,8 +59,8 @@ public class UsuarioBean implements Serializable{
             System.out.println("Bean Constructor: " + e.getMessage());
         }
     }
-            
-                public void showEditDialog(Usuario u) {
+
+    public void showEditDialog(Usuario u) {
         usuario = u;
     }
 
@@ -74,7 +76,7 @@ public class UsuarioBean implements Serializable{
     public void onCancelDialog() {
         setUsuario(new Usuario());
     }
-    
+
     public void commitEdit() throws SQLException {
         boolean flag = daoUsuario.editUsuario(usuario, sessionUsuario);
         if (flag) {
@@ -117,7 +119,7 @@ public class UsuarioBean implements Serializable{
             RequestContext.getCurrentInstance().update("frm:growl");
         }
     }
-    
+
     public void commitProfiles() throws SQLException, IOException {
         boolean flagValidation = validateProfiles();
         System.out.println(flagValidation);
@@ -126,7 +128,11 @@ public class UsuarioBean implements Serializable{
             setListadoPermisos(daoAsignaRol.rolesAsignadosbyUsuario(usuario));
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Roles concedidos correctamente"));
-            RequestContext.getCurrentInstance().update("frm:growl");
+//            RequestContext.getCurrentInstance().update("frm:growl");
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(ec.getRequestContextPath() + "/faces/usuarioCRUD.xhtml");
+            
+
         } else {
             setListadoPermisos(daoAsignaRol.rolesAsignadosbyUsuario(usuario));
             FacesContext context = FacesContext.getCurrentInstance();
@@ -134,7 +140,7 @@ public class UsuarioBean implements Serializable{
             RequestContext.getCurrentInstance().update("frm:growl");
         }
     }
-    
+
     public boolean validateProfiles() {
         int contador = 0;
         for (AsignaRol ar : getListadoPermisos()) {
@@ -144,13 +150,13 @@ public class UsuarioBean implements Serializable{
         }
         return contador >= 1;
     }
-    
+
     public void onCancelProfileDialog() throws IOException {
         //String url = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("Url");
         //FacesContext.getCurrentInstance().getExternalContext().redirect(url + "/faces/usuarioCRUD.xhtml");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.redirect(ec.getRequestContextPath()+"/faces/usuarioCRUD.xhtml");
-        
+        ec.redirect(ec.getRequestContextPath() + "/faces/usuarioCRUD.xhtml");
+
     }
 
     public Usuario getUsuario() {
@@ -193,7 +199,4 @@ public class UsuarioBean implements Serializable{
         this.listadoPermisos = listadoPermisos;
     }
 
-    
 }
-
-

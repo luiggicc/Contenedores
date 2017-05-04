@@ -12,6 +12,10 @@
             <div class="ContainerIndent">
                 <p:panel>
                     <h:form id="frm">
+                        <div class="Separator">
+                            <p:commandLink  value="Agregar Cliente" oncomplete="PF('wdlgCrearCliente').show();" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
+                        </div>
+                        <p:spacer height="10"/>
                         <p:dataTable id="uTable" value="#{clienteBean.listadoClientes}" var="cli" widgetVar="userTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{clienteBean.filteredClientes}"
@@ -112,12 +116,72 @@
                             <p:column headerText="Estado" filterBy="#{cli.cia_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cli.cia_estado}"/>
                             </p:column>
-
-                            <!--############################################################################################ -->
-                            <!--############################################################################################ -->
-
                         </p:dataTable>
                     </h:form>
+
+                    <!--############################################################################################ -->
+                    <!--############################################################################################ -->
+
+                    <p:dialog id="dlgCrearCliente" header="Crear Cliente" resizable="false"  widgetVar="wdlgCrearCliente" modal="true" responsive="true">
+                        <h:form>
+                            <h:panelGrid columns="4">
+                                <p:outputLabel value="Identificación: "/>
+                                <p:selectOneMenu id="identificacion" value="#{clienteBean.cli.cod_tipidentifica}" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{clienteBean.selectorTipIdent}" var="tpi" itemLabel="#{tpi.tpi_nombre}" itemValue="#{tpi.tpi_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="RUC: "/>
+                                <p:inputText value="#{clienteBean.cli.ruc_numero}"/>
+
+                                <p:separator  />
+                                <p:separator  />
+                                <p:separator  />
+                                <p:separator  />
+
+                                <p:outputLabel value="Código: "/>
+                                <p:inputText id="codigo" value="#{clienteBean.cli.cia_codigo}"/>
+                                <p:tooltip id="codigo-message" for="codigo" value="Insertar ruc"
+                                           showEffect="clip" hideEffect="explode" />
+                                <p:separator style="visibility: hidden" />
+                                <p:outputLabel value="Cliente: "/>
+                                <p:inputText value="#{clienteBean.cli.cia_nombre}"/>
+
+                                <p:outputLabel value="País: "/>
+                                <p:selectOneMenu id="pais" value="#{clienteBean.cli.pai_codigo}" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{clienteBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Dirección: "/>
+                                <p:inputText value="#{clienteBean.cli.cia_direccion}"/>
+
+                                <p:outputLabel value="Ciudad: "/>
+                                <p:inputText value="#{clienteBean.cli.nom_ciudad}"/>
+
+                                <p:outputLabel value="Teléfono 1: "/>
+                                <p:inputText value="#{clienteBean.cli.telefono1}"/>
+
+                                <p:outputLabel value="Teléfono 2: "/>
+                                <p:inputText value="#{clienteBean.cli.telefono2}"/>
+
+                                <p:outputLabel value="Fax: "/>
+                                <p:inputText value="#{clienteBean.cli.cia_fax}"/>
+
+                                <p:outputLabel value="Mail: "/>
+                                <p:inputText value="#{clienteBean.cli.cia_mail}"/>
+
+
+                                <p:outputLabel value="Observación: "/>
+                                <p:inputText value="#{clienteBean.cli.cia_obs}"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns ="2" >
+                                <p:commandButton ajax="true" style="width: 150px" value="Crear" actionListener="#{clienteBean.commitCreate()}"  oncomplete="PF('wdlgCrearCliente').hide();" update=":frm:uTable">
+                                <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" style="width: 150px" actionListener="#{clienteBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearCliente').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
 
                     <!--############################################################################################ -->
                     <!--############################################################################################ -->

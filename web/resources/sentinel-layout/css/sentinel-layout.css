@@ -75,7 +75,8 @@ body{background-color: #F6F8F8; margin:0px;}
 .GRAYback{background-color:#F7F7F7;}
 
 /* LOGIN PAGE */
-.login-back{background-image:url("#{resource['sentinel-layout:images/login-back.svg']}"); background-position:top left; background-repeat:no-repeat; background-size: 50%;}
+.login-back{background-image:url("#{resource['sentinel-layout:images/login-back.svg']}"); background-position:top left; background-repeat:no-repeat; background-size: 50%;} 
+.login-back-index{background-image:url("#{resource['sentinel-layout:images/fondo.jpg']}"); background-position:top left; background-repeat:no-repeat; background-size: cover;}
 .error-back{background-image:url("#{resource['sentinel-layout:images/error-back.svg']}"); background-position:right bottom; background-repeat:no-repeat; background-size: 900px; background-attachment: fixed;}
 
     #login-logo{width:auto; margin-bottom:-2px; padding:0px; margin:18px; line-height: 30px; display:inline-block;}

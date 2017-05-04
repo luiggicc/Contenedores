@@ -182,4 +182,36 @@ public class DashboardDAO {
         }
         return lista;
     }
+
+    public List<Dashboard> StockSellos() throws SQLException {
+        List<Dashboard> lista = null;
+        ResultSet rs;
+        conexion con = new conexion();
+        PreparedStatement pst;
+        try {
+            String query = "select case inv_estado when 'A' then 'Asignado' "
+                    + "when 'E' then 'Eliminado' "
+                    + "when 'S' then 'Disponible' "
+                    + "END as estado, "
+                    + "count(inv_estado) as stock "
+                    + "from publico.invsellos "
+                    + "group by estado ";
+            pst = con.getConnection().prepareStatement(query);
+            rs = pst.executeQuery();
+            lista = new ArrayList();
+            while (rs.next()) {
+                Dashboard dashboard = new Dashboard();
+                dashboard.setSellos_stock(rs.getInt("stock"));
+                dashboard.setSellos_estado(rs.getString("estado"));
+                lista.add(dashboard);
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.out.println("DAO Dashboard Stock sellos: " + e.getMessage());
+            con.getConnection().rollback();
+        } finally {
+            con.desconectar();
+        }
+        return lista;
+    }
 }

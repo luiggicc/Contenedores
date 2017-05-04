@@ -127,10 +127,10 @@
                                     <div align="center"><p:selectBooleanCheckbox id="asignado" value="#{recurso.estado}"/></div>
                                 </p:column>
                             </p:dataTable>
-                            <p:commandButton ajax="true" update=":idDlg:resourceTable" 
+                            <p:commandButton ajax="true"  
                                              value="Guardar" actionListener="#{usuarioBean.commitProfiles()}"
-                                             oncomplete="PF('recursoTable').clearFilters();">
-                                <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                             oncomplete="PF('recursoTable').clearFilters();PF('wdlgPermisos').hide();"
+                                             update=":frm:uTable :frm:growl :idDlg:resourceTable">
                             </p:commandButton>
                             <p:commandButton ajax="true" value="Cancelar" actionListener="#{usuarioBean.onCancelProfileDialog()}" 
                                              oncomplete="PF('wdlgPermisos').hide();" update=":frm:uTable :frm:growl :idDlg:resourceTable"/>

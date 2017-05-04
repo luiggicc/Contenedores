@@ -6,29 +6,27 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
         <h:outputStylesheet name="style.css" />
         <h3 class="hardblue TexAlCenter">Reporte Gráfico</h3>
         <h:body>
             <h:form id = "dlgFormPadre">
                 <p:growl id="growl"  showDetail="true" />
+                <div class="ui-fluid">
+                    <p:panelGrid id="panel" columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:panel >
+                            <p:chart type="bar" model="#{dashboardBean.barra}"
+                                     class="center-block-chart1"
+                                     rendered="#{dashboardBean.barra != null}"
+                                     responsive="true">
+                                <p:ajax event="itemSelect" listener="#{dashboardBean.handleSelect}"  
+                                        update="growl dlgFrm"  oncomplete="PF('dlgBarra').show();" />
+                            </p:chart>
+                        </p:panel>
+                    </p:panelGrid>
+                </div>
 
-                <h:panelGrid id="panel" columns="1">
-                    <p:panel style="width: 100%">
-                        <p:chart type="bar" model="#{dashboardBean.barra}"
-                                 class="center-block-chart1"
-                                 rendered="#{dashboardBean.barra != null}"
-                                 responsive="true">
-                            <p:ajax event="itemSelect" listener="#{dashboardBean.handleSelect}"  
-                                    update="growl dlgFrm"  oncomplete="PF('dlgBarra').show();" />
-                        </p:chart>
-                    </p:panel>
-                </h:panelGrid>
-
-
-
-                <h:panelGrid id="panel2" columns="3" class="center-block-chart1">
+                <p:panelGrid id="panel2" columns="3" layout="grid" styleClass="ui-panelgrid-blank">
                     <p:panel>
                         <p:chart type="bar" model="#{dashboardBean.barra2}"
                                  class="center-block-charts-little"
@@ -50,7 +48,17 @@
                                  responsive="true">
                         </p:chart>
                     </p:panel>
-                </h:panelGrid>
+                </p:panelGrid>
+
+                <p:panelGrid id="panel3" columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:panel>
+                        <p:chart type="bar" model="#{dashboardBean.barra5}"
+                                 class="center-block-charts-little"
+                                 rendered="#{dashboardBean.barra5 != null}"
+                                 responsive="true" >
+                        </p:chart>
+                    </p:panel>
+                </p:panelGrid>
 
             </h:form>
 

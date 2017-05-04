@@ -69,6 +69,37 @@ public class ClienteDAO implements Serializable {
         }
         return listadoClientes;
     }
+    
+    public void createCliente(Cliente cli) throws SQLException {
+        conexion con = new conexion();
+        con.getConnection().setAutoCommit(false);
+        PreparedStatement pst;
+        String query = "insert into publico.mae_clientes(cod_tipidentifica, cia_codigo, ruc_numero, cia_nombre, pai_codigo, "
+                + "cia_direccion, nom_ciudad, telefono1, telefono2, cia_fax, cia_mail, cia_obs, cia_estado)"
+                + " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'A')";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            pst.setString(1, cli.getCod_tipidentifica());
+            pst.setString(2, cli.getCia_codigo());
+            pst.setString(3, cli.getRuc_numero());
+            pst.setString(4, cli.getCia_nombre());
+            pst.setString(5, cli.getPai_codigo());
+            pst.setString(6, cli.getCia_direccion());
+            pst.setString(7, cli.getNom_ciudad());
+            pst.setString(8, cli.getTelefono1());
+            pst.setString(9, cli.getTelefono2());
+            pst.setString(10, cli.getCia_fax());
+            pst.setString(11, cli.getCia_mail());
+            pst.setString(12, cli.getCia_obs());
+            pst.executeUpdate();
+            con.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println("DAO CREATE CLIENTE: " + e.getMessage());
+            con.getConnection().rollback();
+        } finally {
+            con.desconectar();
+        }
+    }
 
     public void editCliente(Cliente cli) throws SQLException {
         conexion con = new conexion();

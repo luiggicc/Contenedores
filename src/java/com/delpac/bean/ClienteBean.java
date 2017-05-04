@@ -71,6 +71,11 @@ public class ClienteBean implements Serializable {
         }
     }
 
+    public void commitCreate() throws SQLException {
+        daoCliente.createCliente(cli);
+        listadoClientes = daoCliente.findAll();
+    }
+    
     public void showEditDialog(Cliente clie) {
         cli = clie;
     }
