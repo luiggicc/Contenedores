@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteFreezerNoAsignada" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69dcbcdc-ef05-4f51-810c-5e78c459e766">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="435"/>
 	<parameter name="cod_ordenretiro" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="RutaImagen" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -10,7 +10,7 @@
 	<queryString>
 		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, ord.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
        ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.observaciones, loc.loc_des as loc_salida,
-       loca.loc_des as loc_entrada, ord.fecha_crea
+       loca.loc_des as loc_entrada, ord.fecha_crea, loc.loc_direccion
 from publico.ordenretiro ord
 inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo
 inner join publico.mae_linea lin on ord.lin_codigo = lin.lin_codigo
@@ -34,6 +34,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 	<field name="loc_salida" class="java.lang.String"/>
 	<field name="loc_entrada" class="java.lang.String"/>
 	<field name="fecha_crea" class="java.sql.Timestamp"/>
+	<field name="loc_direccion" class="java.lang.String"/>
 	<filterExpression><![CDATA[new Boolean(true)]]></filterExpression>
 	<background>
 		<band splitType="Stretch"/>
@@ -259,7 +260,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Salida: El (los) contenedor(es) debera(n) salir desde el patio de "                    " (KM. 21 via perimetral junto a Kubiec)]]></text>
+				<text><![CDATA[Salida: El (los) contenedor(es) debera(n) salir desde el patio de "                    " ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="12" y="397" width="532" height="14" uuid="b1b82b45-2a6b-4640-8080-58bce3c3de5a"/>
@@ -428,6 +429,10 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loc_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="383" width="170" height="14" uuid="4f78b636-0bdb-48c5-896b-aefe65a529cc"/>
+				<textFieldExpression><![CDATA[$F{loc_direccion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

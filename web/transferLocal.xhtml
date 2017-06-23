@@ -8,6 +8,27 @@
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
         <h:outputStylesheet name="style.css" />
+        <script>
+            function selectAll(checkAll) {
+                var checked = checkAll.checked;
+
+                //to change the checked attribute                
+                $(':checkbox[id*="selectRows"]').attr('checked', checked);
+
+                if (checked) {
+                    $('div[id*="selectRows"] > div').each(function () {
+                        $(this).addClass('ui-state-active');
+                        $(this).children('span').addClass('ui-icon ui-icon-check');
+                    });
+                } else {
+                    $('div[id*="selectRows"] > div').each(function () {
+                        $(this).removeClass('ui-state-active');
+                        $(this).children('span').removeClass('ui-icon ui-icon-check');
+                    });
+                }
+            }
+        </script>
+
         <f:metadata>
             <f:event type="preRenderView" listener="#{transferBean.authorized()}"/>
         </f:metadata>
@@ -28,9 +49,8 @@
                         <p:dataTable id="asignacionTbl" value="#{transferBean.listadoSellos}" var="asignacion" paginator="true" widgetVar="asignacionTable" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{transferBean.filteredSellos}" lazy="false" 
-                                     rowsPerPageTemplate="10,25,50" 
-                                     >                            
-                            
+                                     rowsPerPageTemplate="10,25,50">                            
+
                             <f:facet name="header">
                                 <p:outputPanel style="text-align: right;">
                                     <table>
@@ -42,22 +62,27 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Sello" filterBy="#{asignacion.inv_sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:column headerText="Sello" filterBy="#{asignacion.inv_sello}" filterMatchMode="contains" style="text-align: center">
                                 <p:outputLabel value="#{asignacion.inv_sello}"/>
                             </p:column>
 
-                            <p:column headerText="N° Seguridad" filterBy="#{asignacion.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:column headerText="N° Seguridad" filterBy="#{asignacion.inv_seguridad}" filterMatchMode="contains" style="text-align: center">
                                 <p:outputLabel value="#{asignacion.inv_seguridad}"/>
                             </p:column>
 
-                            <p:column headerText="Localidad" filterBy="#{asignacion.loc_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                            <p:column headerText="Localidad" filterBy="#{asignacion.loc_des}" filterMatchMode="contains" style="text-align: center">
                                 <p:outputLabel value="#{asignacion.loc_des}"/>
                             </p:column>
-                            
-                            <p:column headerText="Asignado" style="text-align: center"> 
-                                <p:selectBooleanCheckbox value="#{asignacion.estado}"/>
-                            </p:column>
 
+                            <!--                            <p:column headerText="Asignado" style="text-align: center" > 
+                                                            <p:selectBooleanCheckbox value="# {asignacion.estado}" />
+                                                        </p:column>-->
+                            <p:column headerText="Asignado" style="text-align: center">
+                                <f:facet name="header" >Asignado <br />
+                                    <p:selectBooleanCheckbox id="selectBoxHeader" onchange="selectAll(this);"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox id="selectRows" value="#{asignacion.estado}" style="text-align: center"/>
+                            </p:column>
                         </p:dataTable>
                         <p:commandButton ajax="true" update="@form" 
                                          style="position: relative; left: 450px; top: 5px; width: 20%" 

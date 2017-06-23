@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -106,7 +107,7 @@ public class ActaEntregaBean implements Serializable {
                 selectorLocalidad = daoLocalidad.findAll();
 
                 SellosDAO daoSello = new SellosDAO();
-                selectorSello = daoSello.findAllStock();
+                selectorSello = daoSello.findAllStockAsignar();
 
                 listadoOrdenes = daoOrdenRetiro.findAll();
             }
@@ -131,6 +132,13 @@ public class ActaEntregaBean implements Serializable {
 
     public void onCancelDialog() {
         setOrd(new OrdenRetiro());
+    }
+    
+    public void regresion(OrdenRetiro orde) throws SQLException {
+        daoOrdenRetiro.regresionOrden(orde);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+        "Regresión exitosa", "Has devuelto el sello al stock"));
+        listadoOrdenes = daoOrdenRetiro.findAll();
     }
 
     public void commitAsignar() throws SQLException, JRException, IOException {

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author Bottago SA
  */
 public class LocalidadDAO implements Serializable{
-    public List<Localidad> findAll() throws SQLException {
+    public List<Localidad> findAll() {
         conexion con = new conexion();
         List<Localidad> listadoLocalidades = new ArrayList<>();
         PreparedStatement pst;
@@ -30,8 +30,8 @@ public class LocalidadDAO implements Serializable{
         String query = "select loc_codigo, loc_des, loc_sender, loc_tipo, " +
                        "case loc_estado when 'A' then 'Activo' else 'Inactivo' end as loc_estado " +
                        "from publico.mae_localidad";
-        pst = con.getConnection().prepareStatement(query);
         try {
+            pst = con.getConnection().prepareStatement(query);
             rs = pst.executeQuery();
             while (rs.next()) {
                 Localidad loc = new Localidad();
@@ -45,7 +45,11 @@ public class LocalidadDAO implements Serializable{
         } catch (Exception e) {
             System.out.println("DAO LIST LOCALIDADES: " + e.getMessage());
         } finally {
+            try{
             con.desconectar();
+            } catch (SQLException ex) {
+                Logger.getLogger(LocalidadDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return listadoLocalidades;
     }

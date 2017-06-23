@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Semanal" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8303a1e2-b28d-487d-942c-004c36b4850d">
-	<property name="ireport.zoom" value="1.2100000000000017"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.title" value="title"/>
 	<parameter name="RutaImagen" class="java.lang.String"/>
 	<parameter name="desde" class="java.util.Date"/>
 	<parameter name="hasta" class="java.util.Date"/>
 	<queryString>
-		<![CDATA[select row_number() over (order by fecha_arribo) as Item, des.nave, des.viaje, to_char(des.fecha_arribo, 'DD/MM/YYYY') as fecha_arribo,
+		<![CDATA[select row_number() over (order by date(fecha_arribo)) as Item, des.nave, date(des.fecha_arribo) as fecha_arribo,
 count(case when des.movimiento = 'Descarga' and des.status = 'Full' then 1 end) as Cont_import,
 
 (count(case when con.con_tamano='20' and des.movimiento = 'Descarga' and des.status = 'Full' then 1 end)  +
@@ -48,13 +51,12 @@ from publico.descarga des
 inner join publico.mae_container con on des.equipo_identi = con.con_codigo
 where (des.movimiento = 'Descarga' or des.movimiento = 'Export')
 and des.fecha_arribo between $P{desde} and $P{hasta}
-group by des.nave, des.viaje, des.fecha_arribo
-order by des.fecha_arribo]]>
+group by des.nave, date(des.fecha_arribo)
+order by date(des.fecha_arribo)]]>
 	</queryString>
 	<field name="item" class="java.lang.Long"/>
 	<field name="nave" class="java.lang.String"/>
-	<field name="viaje" class="java.lang.String"/>
-	<field name="fecha_arribo" class="java.lang.String"/>
+	<field name="fecha_arribo" class="java.sql.Date"/>
 	<field name="cont_import" class="java.lang.Long"/>
 	<field name="teus_import" class="java.lang.Long"/>
 	<field name="cont_empty_import" class="java.lang.Long"/>
@@ -80,7 +82,7 @@ order by des.fecha_arribo]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="26" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DELPAC S.A. - Reporte Semanal]]></text>
+				<text><![CDATA[DELPAC S.A. - Weekly statistic report]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="634" y="0" width="168" height="106" uuid="67f50ecb-82a9-43c5-9b37-389662fa2b5a"/>
@@ -96,13 +98,6 @@ order by des.fecha_arribo]]>
 			<rectangle>
 				<reportElement x="0" y="0" width="802" height="35" backcolor="#9999FF" uuid="30777850-ac08-4c30-ba02-16011772cd53"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="7" y="0" width="407" height="35" uuid="6f76ade5-720d-40c2-8e78-14d581d44f92"/>
-				<textElement verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Contenedores COSCON - Semanal (Full & Empty)]]></text>
-			</staticText>
 			<rectangle>
 				<reportElement x="598" y="0" width="204" height="35" uuid="e83baac9-a6fd-44ac-a32c-c249c3c6f52a"/>
 			</rectangle>
@@ -112,6 +107,13 @@ order by des.fecha_arribo]]>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="598" height="35" uuid="8c0adbde-2bdf-41e3-844d-4f1d3d371b61"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cont. Import/Export from " + new SimpleDateFormat("yyyy-MMM-dd").format($P{desde}) + " to " + new SimpleDateFormat("yyyy-MMM-dd").format($P{hasta})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -128,24 +130,14 @@ order by des.fecha_arribo]]>
 				<text><![CDATA[#]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="33" y="0" width="151" height="60" backcolor="#CCCCFF" uuid="9d8c0e7d-9991-48a7-823b-cb772347d539"/>
+				<reportElement x="33" y="0" width="244" height="60" backcolor="#CCCCFF" uuid="9d8c0e7d-9991-48a7-823b-cb772347d539"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="33" y="21" width="151" height="20" uuid="a93678cb-13c5-41dc-bede-306dfd52c183"/>
+				<reportElement x="33" y="21" width="244" height="20" uuid="a93678cb-13c5-41dc-bede-306dfd52c183"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[nave]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="184" y="0" width="93" height="60" backcolor="#CCCCFF" uuid="4aacc7e9-f5b1-4c7c-8b05-f7e7d8145047"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="184" y="21" width="93" height="20" uuid="914aa47c-8d65-4c5f-8bf7-d2ab3a1aa16d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[viaje]]></text>
+				<text><![CDATA[Vessel name]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="277" y="0" width="105" height="60" backcolor="#CCCCFF" uuid="9118d61d-3109-4aac-b222-8f30e195ffba"/>
@@ -155,7 +147,7 @@ order by des.fecha_arribo]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Fecha Arribo]]></text>
+				<text><![CDATA[Date]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="382" y="0" width="35" height="60" backcolor="#FFFF33" uuid="b052ba95-faf7-4aaf-be14-90ae49e4df30"/>
@@ -330,20 +322,12 @@ order by des.fecha_arribo]]>
 				<textFieldExpression><![CDATA[$F{item}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="33" y="0" width="151" height="20" uuid="525f18eb-1605-48bb-8dc9-8abb32f0ae6c"/>
+				<reportElement x="33" y="0" width="244" height="20" uuid="525f18eb-1605-48bb-8dc9-8abb32f0ae6c"/>
 			</rectangle>
 			<textField>
-				<reportElement x="33" y="0" width="151" height="20" uuid="20a9f481-51ab-4936-b093-1404c50966c3"/>
+				<reportElement x="33" y="0" width="244" height="20" uuid="20a9f481-51ab-4936-b093-1404c50966c3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{nave}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement x="184" y="0" width="93" height="20" uuid="cab86b0c-9080-41f6-ac0d-205d425e7847"/>
-			</rectangle>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="184" y="0" width="93" height="20" uuid="891b3099-1480-41f0-be68-2b3bab7995aa"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{viaje}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="277" y="0" width="104" height="20" uuid="e349fd3f-5b5d-4945-a5b3-8cd0625de329"/>

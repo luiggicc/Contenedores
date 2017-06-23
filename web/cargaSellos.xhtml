@@ -3,7 +3,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
@@ -13,7 +14,7 @@
         </f:metadata>
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
-                <p:panel>
+                <p:panel id="pnlMayor">
                     <h:form id="frm" enctype="multipart/form-data">
                         <!-- BOTON SUBIDA-->
                         <p:growl id="growl" showDetail="true"/>
@@ -82,7 +83,6 @@
                             }
                         </script>
                         <!-- FIN BOTON DESCARGA-->
-
                         <p:dataTable id="sellosTable" value="#{cargarSellosBean.listadoSellos}" var="sellos" widgetVar="sellTable" paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{cargarSellosBean.filteredSellos}" 
@@ -120,23 +120,23 @@
                                 </div>
                             </f:facet>
                         </p:dataTable>
-                        
-                        <p:commandButton style="position: relative; left: 450px; top: 5px; width: 20%" value="Guardar" 
+
+                        <p:commandButton id="guardarSellos" style="position: relative; left: 450px; top: 5px; width: 20%" value="Guardar" 
                                          actionListener="#{cargarSellosBean.guardarListadoSellos()}"
                                          oncomplete="PF('failBox').show();" update="failsDialog"
                                          />
+
 
                         <p:dialog id="basicDialog" resizable="false" header="Por favor espere...." widgetVar="dlg2" modal="true" closable="false" onShow="startProgressBar();">           
                             <p:progressBar id="progressBarLoad" widgetVar="pbClient" style="width:300px" />   
                         </p:dialog>
 
-
+                        <p:blockUI block="pnlMayor" trigger="guardarSellos" />
                     </h:form>
-
                     <p:dialog id="failsDialog" resizable="false" header="Informe de Registros Fallidos" widgetVar="failBox" modal="true"
                               closable="true" closeOnEscape="true">   
-                        <h:form>
-                            <p:dataTable id="tblFailSellos" value="#{cargarSellosBean.failedSellosList}" var="failed" widgetVar="sellTable" paginator="true" rows="10"
+                        <h:form id="frmDialog">
+                            <p:dataTable id="tblFailSellos" value="#{cargarSellosBean.failedSellosList}" var="failed" widgetVar="sellTable" paginator="true" rows="5"
                                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                          rowsPerPageTemplate="5,10,15" lazy="false" paginatorPosition="bottom" style="width:600px;height: 300px">
                                 <p:column headerText="Sello">
@@ -146,9 +146,11 @@
                                     <h:outputText value="#{failed.inv_seguridad}"/>
                                 </p:column>
                             </p:dataTable>
-                            <p:commandButton ajax="true" style="position: relative; left: 450px; top: 5px; width: 20%" value="Ok!"
-                                             actionListener="#{cargarSellosBean.clearFailedList()}" 
-                                             oncomplete="PF('failBox').hide();" /> 
+                            <p:commandButton style="position: relative; left: 450px; top: 5px; width: 20%" value="Ok!"
+                                             actionListener="#{cargarSellosBean.clearFailedList()}"
+                                             update="@([id$=sellosTable])"
+                                             oncomplete="PF('failBox').hide();">
+                            </p:commandButton>
                         </h:form>
                     </p:dialog>
                 </p:panel>

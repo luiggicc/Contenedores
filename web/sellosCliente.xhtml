@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputStylesheet name="style.css" />
+        <div class="Container100 ui-fluid">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <h:form id="frm">
+                        <p:dataTable id="uTable" value="#{sellosClienteBean.listadoSellosCliente}" var="scli" widgetVar="userTable" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     paginatorPosition="bottom" filteredValue="#{sellosClienteBean.filteredSellosCliente}"
+                                     rowsPerPageTemplate="5,10,15"  lazy="false"
+                                     reflow="true">
+                            <f:facet name="header">
+                                <p:outputPanel style="text-align: right;">
+                                    <table>
+                                        <tr>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Número de dias de sellos en cliente" style="color: #ffffff" /></td>
+                                            <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
+                                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="Palabra clave"/></td>
+                                        </tr>
+                                    </table>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Cliente" filterBy="#{scli.cia_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{scli.cia_nombre}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Orden N°" filterBy="#{scli.cod_ordenretiro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{scli.cod_ordenretiro}"/>
+                            </p:column>
+
+                            <p:column headerText="Booking" filterBy="#{scli.booking}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{scli.booking}"/>
+                            </p:column>
+
+                            <p:column headerText="Sello Seguridad" filterBy="#{scli.inv_seguridad}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{scli.inv_seguridad}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha Orden" filterBy="#{scli.fecha_crea}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="#{scli.fecha_crea}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Dias" filterBy="#{scli.diferencia}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{scli.diferencia}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

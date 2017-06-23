@@ -3,6 +3,9 @@
 	<property name="ireport.zoom" value="0.8264462809917357"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.title" value="title"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<parameter name="movimiento" class="java.lang.String"/>
 	<parameter name="desde" class="java.util.Date">
@@ -13,19 +16,22 @@
 	</parameter>
 	<parameter name="RutaImagen" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select des.itinerario, des.fecha_arribo, con.con_tipcont || ' ' || des.status as tipo_cont, count(con.con_tipcont) as total_cont
+		<![CDATA[select des.itinerario, des.fecha_arribo, con.con_tipcont || ' ' || des.status as tipo_cont,
+count(con.con_tipcont) as total_cont
 from publico.descarga des
 inner join publico.mae_container con on des.equipo_identi = con.con_codigo
 where des.movimiento = $P{movimiento}
 and (fecha_arribo >= $P{desde}::timestamp)
 and (fecha_arribo <= $P{hasta}::timestamp)
+and des.itinerario is not null
 group by des.itinerario, des.fecha_arribo, con.con_tipcont, des.status
-order by itinerario]]>
+order by des.fecha_arribo asc]]>
 	</queryString>
 	<field name="itinerario" class="java.lang.String"/>
 	<field name="fecha_arribo" class="java.sql.Timestamp"/>
 	<field name="tipo_cont" class="java.lang.String"/>
 	<field name="total_cont" class="java.lang.Long"/>
+	<sortField name="fecha_arribo"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -74,153 +80,6 @@ order by itinerario]]>
 			</textField>
 		</band>
 	</pageHeader>
-	<detail>
-		<band height="125" splitType="Stretch">
-			<crosstab>
-				<reportElement x="0" y="0" width="802" height="125" uuid="0eef10b0-273b-4618-8749-4214423a36c0"/>
-				<rowGroup name="tipo_cont" width="70" totalPosition="End">
-					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{tipo_cont}]]></bucketExpression>
-					</bucket>
-					<crosstabRowHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="2b5942d7-7388-4e4d-8959-981dce9a668b"/>
-								<textElement verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{tipo_cont}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabRowHeader>
-					<crosstabTotalRowHeader>
-						<cellContents backcolor="#BFE1FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<staticText>
-								<reportElement x="0" y="0" width="70" height="25" uuid="14d9934c-10b4-4457-9dff-2d7ad02c27f4"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total]]></text>
-							</staticText>
-						</cellContents>
-					</crosstabTotalRowHeader>
-				</rowGroup>
-				<columnGroup name="itinerario" height="30">
-					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{itinerario}]]></bucketExpression>
-					</bucket>
-					<crosstabColumnHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="30" uuid="e109c204-d911-4d82-9961-dbfba6c88724"/>
-								<textElement verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{itinerario}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabColumnHeader>
-					<crosstabTotalColumnHeader>
-						<cellContents/>
-					</crosstabTotalColumnHeader>
-				</columnGroup>
-				<columnGroup name="fecha_arribo" height="29">
-					<bucket class="java.util.Date">
-						<bucketExpression><![CDATA[$F{fecha_arribo}]]></bucketExpression>
-					</bucket>
-					<crosstabColumnHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="29" uuid="368ce2bb-05a1-47f4-a6e6-5e8a38e73613"/>
-								<textElement verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{fecha_arribo}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabColumnHeader>
-					<crosstabTotalColumnHeader>
-						<cellContents/>
-					</crosstabTotalColumnHeader>
-				</columnGroup>
-				<measure name="total_contMeasure" class="java.lang.Long">
-					<measureExpression><![CDATA[$F{total_cont}]]></measureExpression>
-				</measure>
-				<crosstabCell width="90" height="25">
-					<cellContents>
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="25" uuid="93cd79a8-e04e-4cc3-96f5-6e45c7e33be6"/>
-							<textElement verticalAlignment="Middle"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell width="90" height="25" rowTotalGroup="tipo_cont">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="25" uuid="fc020ee3-589c-42bd-ac33-070e70a90b59"/>
-							<textElement verticalAlignment="Middle"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell width="50" columnTotalGroup="itinerario">
-					<cellContents backcolor="#005FB3" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="10510845-7fda-4f4f-b391-52b99bc9a9b1"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell rowTotalGroup="tipo_cont" columnTotalGroup="itinerario">
-					<cellContents backcolor="#005FB3" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="93bb9d59-724f-4f27-ad74-a798840c055b"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell width="50" columnTotalGroup="fecha_arribo">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="4235ab79-b34a-4467-a7e0-5ebec5e3bf16"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell rowTotalGroup="tipo_cont" columnTotalGroup="fecha_arribo">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="f5d51c23-a9fd-4ff0-adc9-5be92c02a076"/>
-							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-			</crosstab>
-		</band>
-	</detail>
 	<pageFooter>
 		<band height="54" splitType="Stretch">
 			<textField>
@@ -234,4 +93,151 @@ order by itinerario]]>
 			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="109">
+			<crosstab>
+				<reportElement x="0" y="0" width="802" height="109" uuid="448f02b7-25e5-4aee-b5e6-16022ea3dca8"/>
+				<rowGroup name="tipo_cont" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{tipo_cont}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="b99f4d1c-8a8d-4bf6-8e25-c69c2f729a97"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{tipo_cont}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25" uuid="d1ff0a28-8d8b-4ee3-9079-783aa2b52334"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="fecha_arribo" height="30">
+					<bucket class="java.sql.Timestamp">
+						<bucketExpression><![CDATA[$F{fecha_arribo}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="30" uuid="6dca9186-6c32-4b2d-a618-f0e10cb5168b"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{fecha_arribo}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="itinerario" height="30">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{itinerario}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="30" uuid="3e92d30c-2250-415a-937f-47e133393789"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{itinerario}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="total_contMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total_cont}]]></measureExpression>
+				</measure>
+				<crosstabCell width="90" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="25" uuid="3d13e866-c25c-4477-8534-f36fe778f9fc"/>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="90" height="25" rowTotalGroup="tipo_cont">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="90" height="25" uuid="d3e88f2c-1202-4b9a-978c-0ede42d5e46b"/>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="itinerario">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="5fbfd119-2fa2-4895-9a1f-54fb37e58a12"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="tipo_cont" columnTotalGroup="itinerario">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="d47b0b08-fa83-4651-800a-f66304801cfc"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="fecha_arribo">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="ce97b8d4-cf6b-4459-a65e-4331b7f9afa9"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="tipo_cont" columnTotalGroup="fecha_arribo">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="b4bb08b9-4a5e-40b6-afed-07b022044928"/>
+							<textFieldExpression><![CDATA[$V{total_contMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
 </jasperReport>

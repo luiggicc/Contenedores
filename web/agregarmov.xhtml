@@ -10,6 +10,7 @@
         <style>
             .colstilo {width:200px}
             .colstiloinput {width:300px}
+            .dateTimeField input {width:200px}
         </style>
         <h:form id="frm">
             <div class="ContainerIndent">
@@ -18,126 +19,137 @@
                         <span class="ui-panel-title">Crear Movimiento de Contenedor</span>
                     </div>
                     <p:panel>
-                        <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
-
-                            <p:outputLabel value="Sender: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.sender}" style="width: 200px"/>
-
-                            <p:outputLabel value="Recipiente: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.recipient}" style="width: 200px"/>
-
-                            <p:outputLabel value="Fecha Emisión: "/>
-                            <p:calendar value="#{verHistorialBean.vhis.fecha_emision}" style="width: 200px" pattern="yyyy-MM-dd" navigator="true"/>
-
-                            <p:outputLabel value="Id Sender: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.id_sender}" style="width: 200px"/>
+                        <h:panelGrid id="pnlfrm" columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
 
                             <p:outputLabel value="Movimiento: " />
-                            <p:selectOneMenu id="movimiento" value="#{verHistorialBean.vhis.movimiento}" style="width: 200px">
+                            <p:selectOneMenu id="movimiento" value="#{verHistorialBean.vhis.movimiento}" style="width: 200px !important">
+                                <f:selectItem itemLabel="Seleccionar.." itemValue="0" />
                                 <f:selectItem itemLabel="Descarga" itemValue="Descarga" />
                                 <f:selectItem itemLabel="GateOut Puerto" itemValue="GateOut Puerto" />
                                 <f:selectItem itemLabel="GateIn Patio" itemValue="GateIn Patio" />
                                 <f:selectItem itemLabel="GateOut Patio" itemValue="GateOut Patio" />
                                 <f:selectItem itemLabel="GateIn Puerto" itemValue="GateIn Puerto" />
                                 <f:selectItem itemLabel="Export" itemValue="Export" />
+                                <p:ajax update="frm:pnlfrm" />
                             </p:selectOneMenu>
 
-                            <p:outputLabel value="BL: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.bl}" style="width: 200px"/>
+                            <p:outputLabel value="Fecha: "/>
+                            <p:calendar value="#{verHistorialBean.vhis.fecha_arribo}" styleClass="dateTimeField" pattern="yyyy-MM-dd HH:mm:ss" navigator="true" showOn="button" />
 
-                            <p:outputLabel value="Booking: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.booking}" style="width: 200px"/>
+                            <p:outputLabel value="Contenedor: "/>
+                            <p:autoComplete id="autoCon" value="#{verHistorialBean.container}" completeMethod="#{verHistorialBean.completarContainer}" 
+                                            minQueryLength="3" maxResults="5" var="cont" forceSelection="true"
+                                            converter="converter"
+                                            itemValue="#{cont}" itemLabel="#{cont.con_codigo}" inputStyle="width: 200px" 
+                                            required="true" requiredMessage="Movimiento es requerido">
+                                <p:ajax event="itemSelect" listener="#{verHistorialBean.onItemSelectUsuario}" />
+                                <f:facet name="itemtip">
+                                    <h:panelGrid columns="2" cellpadding="5" border="1">
+                                        <h:outputText value="Tipo cont:" />
+                                        <h:outputText value="#{cont.con_tipcont}" />
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:autoComplete>
 
-                            <p:outputLabel value="Nave: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.nave}" style="width: 200px"/>
+                            <p:outputLabel value="BL: " rendered="#{verHistorialBean.vhis.movimiento == 'Descarga'}"/>
+                            <p:inputText value="#{verHistorialBean.vhis.bl}" style="width: 200px" rendered="#{verHistorialBean.vhis.movimiento == 'Descarga'}"
+                                         required="true" requiredMessage="BL es requerida"/>
 
-                            <p:outputLabel value="Viaje: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.viaje}" style="width: 200px"/>
+                            <p:outputLabel value="Booking: " rendered="#{verHistorialBean.vhis.movimiento == 'Export'}"/>
+                            <p:inputText value="#{verHistorialBean.vhis.booking}" style="width: 200px" rendered="#{verHistorialBean.vhis.movimiento == 'Export'}"
+                                         required="true" requiredMessage="Booking es requerida"/>
 
                             <p:outputLabel value="Itinerario: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.itinerario}" style="width: 200px"/>
+                            <p:autoComplete id="autoIti" value="#{verHistorialBean.iti}" 
+                                            completeMethod="#{verHistorialBean.completarItinerario}" 
+                                            minQueryLength="3" maxResults="5" var="iti" forceSelection="true" converter="converter"
+                                            itemValue="#{iti}" itemLabel="#{iti.dsp_itinerario}" inputStyle="width: 200px">
+                                <p:ajax event="itemSelect" listener="#{verHistorialBean.onItemSelectUsuarioI}" />
+                            </p:autoComplete>
 
-                            <p:outputLabel value="Carrier Code: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.carrier_code}" style="width: 200px"/>
+                            <p:outputLabel value="Puerto de Carga: " rendered="#{not verHistorialBean.vhis.movimiento eq 'GateIn Patio' or
+                                                                                 not verHistorialBean.vhis.movimiento eq 'GateIn Puerto' or
+                                                                                 not verHistorialBean.vhis.movimiento eq 'Export'}"/>
+                            <p:autoComplete id="ptoCarg" value="#{verHistorialBean.puerto}" 
+                                            completeMethod="#{verHistorialBean.completarPuerto}" converter="converter"
+                                            minQueryLength="3" maxResults="5" var="puer" forceSelection="true"
+                                            itemValue="#{puer}" itemLabel="#{puer.pto_codigo}" inputStyle="width: 200px"
+                                            rendered="#{not verHistorialBean.vhis.movimiento eq 'GateIn Patio' or
+                                                        not verHistorialBean.vhis.movimiento eq 'GateIn Puerto'}">
+                                <p:ajax event="itemSelect" listener="#{verHistorialBean.onItemSelectUsuarioP}" />
+                                <f:facet name="itemtip">
+                                    <h:panelGrid columns="2" cellpadding="5" border="1">
+                                        <h:outputText value="Nombre: " />
+                                        <h:outputText value="#{puer.pto_nombre}" />
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:autoComplete>
 
-                            <p:outputLabel value="Tipo Identificación: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.identi_tip}" style="width: 200px"/>
+                            <p:outputLabel value="Puerto de Descarga: " rendered="#{not verHistorialBean.vhis.movimiento eq 'Descarga' or not verHistorialBean.vhis.movimiento eq 'GateIn Patio'}"/>
+                            <p:autoComplete id="ptoDesc" value="#{verHistorialBean.puertoDesc}" 
+                                            completeMethod="#{verHistorialBean.completarPuerto}" converter="converter"
+                                            minQueryLength="3" maxResults="5" var="puer" forceSelection="true"
+                                            itemValue="#{puer}" itemLabel="#{puer.pto_codigo}" inputStyle="width: 200px"
+                                            rendered="#{not verHistorialBean.vhis.movimiento eq 'Descarga' or not verHistorialBean.vhis.movimiento eq 'GateIn Patio'}">
+                                <p:ajax event="itemSelect" listener="#{verHistorialBean.onItemSelectUsuarioP}" />
+                                <f:facet name="itemtip">
+                                    <h:panelGrid columns="2" cellpadding="5" border="1">
+                                        <h:outputText value="Nombre: " />
+                                        <h:outputText value="#{puer.pto_nombre}" />
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:autoComplete>
 
-                            <p:outputLabel value="Identificación: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.identi_trans}" style="width: 200px"/>
+                            <p:outputLabel value="Ciudad Destino: " rendered="#{not verHistorialBean.vhis.movimiento eq 'Descarga' or not verHistorialBean.vhis.movimiento eq 'GateIn Patio'}"/>
+                            <p:autoComplete id="ptoDest" value="#{verHistorialBean.puertoDest}" 
+                                            completeMethod="#{verHistorialBean.completarPuerto}" converter="converter"
+                                            minQueryLength="3" maxResults="5" var="puer" forceSelection="true"
+                                            itemValue="#{puer}" itemLabel="#{puer.pto_codigo}" inputStyle="width: 200px"
+                                            rendered="#{not verHistorialBean.vhis.movimiento eq 'Descarga' or not verHistorialBean.vhis.movimiento eq 'GateIn Patio'}">
+                                <p:ajax event="itemSelect" listener="#{verHistorialBean.onItemSelectUsuarioP}" />
+                                <f:facet name="itemtip">
+                                    <h:panelGrid columns="2" cellpadding="5" border="1">
+                                        <h:outputText value="Nombre: " />
+                                        <h:outputText value="#{puer.pto_nombre}" />
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:autoComplete>
 
-                            <p:outputLabel value="Puerto de Carga: "/>
-                            <p:selectOneMenu id="pto_carga" value="#{verHistorialBean.vhis.pto_carga}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Puerto de Descarga: "/>
-                            <p:selectOneMenu id="pto_descarga" value="#{verHistorialBean.vhis.pto_descarga}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Puerto de Destino: "/>
-                            <p:selectOneMenu id="pto_destino" value="#{verHistorialBean.vhis.pto_destino}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItems value="#{verHistorialBean.selectorPuerto}" var="pto" itemLabel="#{pto.pto_nombre}" itemValue="#{pto.pto_codigo}" />
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Fecha Arribo: "/>
-                            <p:calendar value="#{verHistorialBean.vhis.fecha_arribo}" pattern="yyyy-MM-dd" navigator="true"/>
-                            
-                            <p:outputLabel value="Fecha Salida: "/>
-                            <p:calendar value="#{verHistorialBean.vhis.fecha_salida}" pattern="yyyy-MM-dd" navigator="true"/>
-                            
-                            <p:outputLabel value="Contenedor: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.equipo_identi}" style="width: 200px"/>
-                            
                             <p:outputLabel value="Status: " />
-                            <p:selectOneMenu id="status" value="#{verHistorialBean.vhis.status}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                            <p:selectOneMenu id="status" value="#{verHistorialBean.vhis.status}" style="width: 200px" 
+                                             filter="true" filterMatchMode="startsWith">
                                 <f:selectItem itemLabel="Empty" itemValue="Empty" />
                                 <f:selectItem itemLabel="Full" itemValue="Full" />
                             </p:selectOneMenu>
-                            
+
                             <p:outputLabel value="Peso Bruto: "/>
                             <p:inputText value="#{verHistorialBean.vhis.peso_bruto}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Sello: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.sello}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Daño: " />
-                            <p:selectOneMenu id="danio" value="#{verHistorialBean.vhis.status}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItem itemLabel="Sin daño" itemValue="Sin daño" />
-                                <f:selectItem itemLabel="Equipo Dañado" itemValue="Equipo Dañado" />
-                            </p:selectOneMenu>
-                            
-                            <p:outputLabel value="Código del Daño:"/>
-                            <p:inputText value="#{verHistorialBean.vhis.danio_cod}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Temp. Ideal: "/>
+
+                            <p:outputLabel value="Sello: " rendered="#{verHistorialBean.vhis.movimiento eq 'Descarga' or 
+                                                                       verHistorialBean.vhis.movimiento eq 'GateOut Puerto' or 
+                                                                       verHistorialBean.vhis.movimiento eq 'Export'}"/>
+                            <p:inputText value="#{verHistorialBean.vhis.sello}" style="width: 200px" rendered="#{verHistorialBean.vhis.movimiento eq 'Descarga' or 
+                                                  verHistorialBean.vhis.movimiento eq 'GateOut Puerto' or 
+                                                  verHistorialBean.vhis.movimiento eq 'Export'}"/>
+
+                            <p:outputLabel value="Observación Daño:"/>
+                            <p:inputText value="#{verHistorialBean.vhis.danio}" style="width: 200px"/>
+
+                            <p:outputLabel value="Temperatura: "/>
                             <p:inputText value="#{verHistorialBean.vhis.temp_ideal}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Temp. Mínima: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.temp_min}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Temp. Máxima: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.temp_max}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Ciclo: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.ciclo}" style="width: 200px"/>
-                            
-                            <p:outputLabel value="Código Iso: "/>
-                            <p:inputText value="#{verHistorialBean.vhis.iso}" style="width: 200px"/>
-                        </h:panelGrid>
-                    </p:panel>
-
-                    <p:panel>
-                        <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
-                            <p:commandButton ajax="true" action="/verhistorial?faces-redirect=true" value="Crear Movimiento" 
-                                             actionListener="#{verHistorialBean.commitCreate()}">
-
-                            </p:commandButton>
-                            <p:commandButton value="Cancelar" action="/verhistorial?faces-redirect=true" immediate="true" />
 
                         </h:panelGrid>
                     </p:panel>
+
+                    <!--                            action="/verhistorial?faces-redirect=true"-->
+                    <h:panelGrid columns="2" columnClasses="colstilo, colstilo">
+                        <p:commandButton ajax="true"  update="@form" value="Crear Movimiento" 
+                                         actionListener="# {verHistorialBean.commitCreate}" style="width: 200px"/>
+
+                        <p:commandButton value="Cancelar" action="/verhistorial?faces-redirect=true" immediate="true" style="width: 200px"/>
+
+                    </h:panelGrid>
+
                 </div>
             </div>
         </h:form>

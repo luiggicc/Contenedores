@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.delpac.bean;
+
 import conexion.conexion;
 import com.delpac.dao.TeusExportsDAO;
 import com.delpac.entity.TeusExports;
@@ -23,9 +24,14 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 /**
  *
@@ -34,31 +40,63 @@ import net.sf.jasperreports.engine.JasperPrint;
 @ManagedBean
 @ViewScoped
 public class TeusExportBean {
+
     List<TeusExports> lista = new ArrayList<>();
     List<TeusExports> filteredTexpo;
     String anio;
     TeusExportsDAO daoTeusExports = new TeusExportsDAO();
     TeusExports rli = new TeusExports();
-    
-    public void ConsultarReportLineExport() throws SQLException{
-            lista = daoTeusExports.ReportExport(anio);
+
+    public void ConsultarReportLineExport() throws SQLException {
+        lista = daoTeusExports.ReportExport(anio);
     }
-    
-    public void exportpdf() throws JRException, IOException{
+
+    public void exportpdf() throws JRException, IOException {
         conexion con = new conexion();
+        Float f = Float.parseFloat(anio);
         Map<String, Object> parametros = new HashMap<String, Object>();
         FacesContext context = FacesContext.getCurrentInstance();
         ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
         parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
-        parametros.put("anio", anio);
+        parametros.put("anio", f);
 
         String dirReporte = servleContext.getRealPath("/reportes/TeusExports.jasper");
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        response.addHeader("Content-disposition", "attachment;filename=ReportLine_Exports_"+anio+ ".pdf");
+//        response.addHeader("Content-disposition", "attachment;filename=ReportLine_Exports_"+anio+ ".pdf");
+        response.addHeader("Content-disposition", "inline");
         response.setContentType("application/pdf");
 
         JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
         JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
+        context.responseComplete();
+    }
+
+    public void exportexcel() throws JRException, IOException {
+        conexion con = new conexion();
+        Float f = Float.parseFloat(anio);
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+        parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+        parametros.put("anio", f);
+        parametros.put(JRParameter.IS_IGNORE_PAGINATION, true);
+
+        String dirReporte = servleContext.getRealPath("/reportes/TeusExports.jasper");
+        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+        response.addHeader("Content-disposition", "attachment;filename=ReportLine_Exports_" + anio + ".xlsx");
+        response.setContentType("application/xlsx");
+
+        JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
+        JRXlsxExporter expor = new JRXlsxExporter();
+        expor.setExporterInput(new SimpleExporterInput(impres));
+        expor.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+
+        SimpleXlsxReportConfiguration config = new SimpleXlsxReportConfiguration();
+        config.setCollapseRowSpan(Boolean.FALSE);
+        config.setWhitePageBackground(Boolean.FALSE);
+        config.setRemoveEmptySpaceBetweenRows(Boolean.TRUE);
+        expor.setConfiguration(config);
+        expor.exportReport();
         context.responseComplete();
     }
 
@@ -101,6 +139,5 @@ public class TeusExportBean {
     public void setRli(TeusExports rli) {
         this.rli = rli;
     }
-    
-    
+
 }

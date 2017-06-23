@@ -6,6 +6,7 @@
 package com.delpac.dao;
 
 import com.delpac.entity.Itinerario;
+import com.delpac.entity.Usuario;
 import conexion.conexion;
 
 import java.io.Serializable;
@@ -126,6 +127,32 @@ public class ItinerarioDAO implements Serializable {
         return listadoItinerarios;
     }
     
+    public List<Itinerario> findAllItinerarioMov() throws SQLException {
+        conexion con = new conexion();
+        List<Itinerario> listadoItinerarios = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+
+        String query = "select distinct(itinerario) as itinerario "
+                + "from publico.descarga "
+                + "where movimiento = 'Descarga' "
+                + "and itinerario is not null";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Itinerario iti = new Itinerario();
+                iti.setDsp_itinerario(rs.getString(1));
+                listadoItinerarios.add(iti);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO LIST ITINERARIO MOVIMIENTO DETALLE POR NAVE: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+        return listadoItinerarios;
+    }
+    
     public List<Itinerario> findAllItinerario(){
         conexion con = new conexion();
         List<Itinerario> listadoItinerarios = new ArrayList<>();
@@ -158,83 +185,43 @@ public class ItinerarioDAO implements Serializable {
         return listadoItinerarios;
     }
 
-    public void editItinerario(Itinerario iti) throws SQLException {
+    public void editItinerario(Itinerario iti, Usuario usu) throws SQLException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.mae_itinerario "
-                + "set cod_cia=?, cod_linea=?, cod_buque=?, cod_ptoarribo=?, cod_ptoinicio=?, cod_ptoeta=?, cod_ptofisico=?, cod_trafico=?, "
-                + "cod_aduana=?, cod_tipmanifiesto=?, cod_tipmanifiesto_exp=?, num_viaje=?, nom_capitan=?, cod_manifiesto=?, "
-                + "cod_manifiesto_exp=?, num_anio=?, obs_itinerario=?, nom_muelle=?, fec_arribo=?, hor_arribo=?, fec_platica=?, "
-                + "hor_platica=?, fec_muelle=?, hor_muelle=?, fec_iniope=?, hor_iniope=?, fec_finope=?, hor_finope=?, fec_cutdry=?, hor_cutdry=?, "
-                + "fec_cutssr=?, "
-                + "hor_cutssr=?, fec_zarpe=?, hor_zarpe=?, fec_mod=(to_char(current_timestamp,'YYYY-MM-DD HH24:MI:SS'))::timestamp, usr_mod=?, dsp_itinerario=?, "
+                + "set cod_linea=?, cod_buque=?, cod_ptoarribo=?, cod_ptoinicio=?, cod_ptoeta=?, cod_trafico=?, "
+                + "num_viaje=?, cod_manifiesto=?, "
+                + "cod_manifiesto_exp=?, num_anio=?, fec_arribo=?, hor_arribo=?, "
+                + "fec_zarpe=?, hor_zarpe=?, fec_mod=(to_char(current_timestamp,'YYYY-MM-DD HH24:MI:SS'))::timestamp, usr_mod=?, dsp_itinerario=?, "
                 + "dsp_itinerario_imp=?, num_viaje_imp=?, dsp_itinerario_exp=?, num_viaje_exp=? "
                 + "where ids_itinerario=?";
         pst = con.getConnection().prepareStatement(query);
         try {
-            pst.setString(1, iti.getCia_codigo());
-            pst.setString(2, iti.getLin_codigo());
-            pst.setString(3, iti.getBuq_codigo());
-            pst.setString(4, iti.getCod_ptoarribo());
-            pst.setString(5, iti.getCod_ptoinicio());
-            pst.setString(6, iti.getCod_ptoeta());
-            pst.setString(7, iti.getCod_ptofisico());
-            pst.setString(8, iti.getTra_codigo());
-            pst.setString(9, iti.getAdu_codigo());
-            pst.setString(10, iti.getCod_tipmanifiesto());
-            pst.setString(11, iti.getCod_tipmanifiesto_exp());
-            pst.setString(12, iti.getNum_viaje());
-            pst.setString(13, iti.getNom_capitan());
-            pst.setString(14, iti.getCod_manifiesto());
-            pst.setString(15, iti.getCod_manifiesto_exp());
-            pst.setInt(16, iti.getNum_anio());
-            pst.setString(17, iti.getObs_itinerario());
-            pst.setString(18, iti.getNom_muelle());
-            //pst.setDate(19, iti.getFec_arribo());
-            pst.setDate(19, java.sql.Date.valueOf(format.format(iti.getFec_arribo())));
-            
-            pst.setString(20, iti.getHor_arribo());
-            //pst.setString(21, format.format(iti.getFec_platica()));
-            pst.setDate(21, java.sql.Date.valueOf(format.format(iti.getFec_platica())));
-            
-            pst.setString(22, iti.getHor_platica());
-            //pst.setString(23, format.format(iti.getFec_muelle()));
-            pst.setDate(23, java.sql.Date.valueOf(format.format(iti.getFec_muelle())));
-            
-            pst.setString(24, iti.getHor_muelle());
-            //pst.setString(25, format.format(iti.getFec_iniope()));
-            pst.setObject(25, java.sql.Date.valueOf(format.format(iti.getFec_iniope())));
-
-            pst.setString(26, iti.getHor_iniope());
-            //pst.setString(27, format.format(iti.getFec_finope()));
-            pst.setObject(27, java.sql.Date.valueOf(format.format(iti.getFec_finope())));
-            
-            pst.setString(28, iti.getHor_finope());
-            //pst.setString(29, format.format(iti.getFec_cutdry()));
-            pst.setObject(29, java.sql.Date.valueOf(format.format(iti.getFec_cutdry())));
-            
-            pst.setString(30, iti.getHor_cutdry());
-            //pst.setString(31, format.format(iti.getFec_cutssr()));
-            pst.setObject(31, java.sql.Date.valueOf(format.format(iti.getFec_cutssr())));
-            
-            pst.setString(32, iti.getHor_cutssr());
-            //pst.setString(33, format.format(iti.getFec_zarpe()));
-            pst.setObject(33, java.sql.Date.valueOf(format.format(iti.getFec_zarpe())));
-            
-            pst.setString(34, iti.getHor_zarpe());
-            
-
-            pst.setString(35, iti.getUsr_mod());
-            pst.setString(36, iti.getDsp_itinerario());
-            pst.setString(37, iti.getDsp_itinerario_imp());
-            pst.setString(38, iti.getNum_viaje_imp());
-            pst.setString(39, iti.getDsp_itinerario_exp());
-            pst.setString(40, iti.getNum_viaje_exp());
-            
-            pst.setInt(43, iti.getIds_itinerario());
+            pst.setString(1, iti.getLin_codigo());
+            pst.setString(2, iti.getBuq_codigo());
+            pst.setString(3, iti.getCod_ptoarribo());
+            pst.setString(4, iti.getCod_ptoinicio());
+            pst.setString(5, iti.getCod_ptoeta());
+            pst.setString(6, iti.getTra_codigo());
+            pst.setString(7, iti.getNum_viaje());
+            pst.setString(8, iti.getCod_manifiesto());
+            pst.setString(9, iti.getCod_manifiesto_exp());
+            pst.setInt(10, iti.getNum_anio());
+            //pst.setTimestamp(11, new jva.sql.Timestamp(iti.getFec_arribo().getTime())
+            pst.setDate(11, java.sql.Date.valueOf(format.format(iti.getFec_arribo())));
+            pst.setString(12, iti.getHor_arribo());
+            pst.setObject(13, java.sql.Date.valueOf(format.format(iti.getFec_zarpe())));
+            pst.setString(14, iti.getHor_zarpe());
+            pst.setString(15, usu.getLogin());
+            pst.setString(16, iti.getDsp_itinerario());
+            pst.setString(17, iti.getDsp_itinerario_imp());
+            pst.setString(18, iti.getNum_viaje_imp());
+            pst.setString(19, iti.getDsp_itinerario_exp());
+            pst.setString(20, iti.getNum_viaje_exp());
+            pst.setInt(21, iti.getIds_itinerario());
             pst.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO EDIT ITINERARIO: " + e.getMessage());

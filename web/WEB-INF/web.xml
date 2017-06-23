@@ -14,7 +14,7 @@
     </context-param>
     <context-param>
         <param-name>environment</param-name>
-        <param-value>produccion</param-value>
+        <param-value>desarrollo</param-value>
     </context-param>
     <context-param>
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DetallePorNave" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b53db35a-1bfa-45c6-b5b3-13077019dc98">
-	<property name="ireport.zoom" value="1.1000000000000032"/>
-	<property name="ireport.x" value="122"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.title" value="title"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -111,13 +114,6 @@ order by equipo_identi]]>
 			<rectangle>
 				<reportElement x="0" y="0" width="801" height="35" backcolor="#9999FF" uuid="1c5d03b4-221a-490f-9a05-c941d04e8e38"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="10" y="0" width="407" height="35" uuid="d1848327-7a99-4782-8a36-1928778daf77"/>
-				<textElement verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Contenedores COSCON - Detalle por Naves]]></text>
-			</staticText>
 			<rectangle>
 				<reportElement x="597" y="0" width="204" height="35" uuid="5d451019-2208-4b03-b33f-da37cbff39ca"/>
 			</rectangle>
@@ -127,6 +123,13 @@ order by equipo_identi]]>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="-1" width="444" height="36" uuid="eb86ecb8-20b8-44ae-ad5c-85c7da62d43f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Contenedores COSCON - Detalle por Naves - " + $P{itinerario}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -246,57 +249,90 @@ order by equipo_identi]]>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField>
+			<rectangle>
+				<reportElement x="0" y="1" width="45" height="19" uuid="b3f5da08-8b8b-4050-bf50-e1c8282569ce"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="45" height="20" uuid="d6aa64bc-8ee4-4374-9b6d-2c1e30b1748b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{item}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="45" y="1" width="72" height="19" uuid="0899c641-f0c0-4382-a886-55398f83721d"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="45" y="0" width="72" height="20" uuid="6e3643ba-8edd-4bc1-8aa7-79cd452ed3cc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{recipient}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="117" y="1" width="72" height="19" uuid="003f2ff2-982f-42ff-88e4-24bd0d987963"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="117" y="0" width="72" height="20" uuid="86b12bec-d5a9-4971-815a-fe1bb718fbdf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{equipo_identi}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="189" y="1" width="72" height="19" uuid="3eff2f97-f472-4200-8153-2d0ad1d5e036"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="189" y="0" width="72" height="20" uuid="469e699c-4bd3-4c8a-904b-8eee0384058c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="261" y="1" width="72" height="19" uuid="43b06cfa-cfba-47f1-855c-ae1055429aa6"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="261" y="0" width="72" height="20" uuid="6454a80f-b62b-4342-b8cd-26220a2f5c8f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="333" y="1" width="72" height="19" uuid="900f9f31-08d2-4d01-99b9-83072cb47c10"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="333" y="0" width="72" height="20" uuid="2fdb0d68-85dd-4271-b4e1-3f580e4b53c7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{peso_bruto}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="405" y="1" width="72" height="19" uuid="f7651f72-0563-48b0-b8d4-fe4bd988c53f"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="405" y="0" width="72" height="20" uuid="61c29d26-4bd4-4a69-bbbf-237625cbbe56"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{sello}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="477" y="1" width="72" height="19" uuid="312ac182-03f8-4b5b-8638-4b0ad9f784a9"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="477" y="0" width="72" height="20" uuid="ae4f3c6e-8990-4389-aa83-7432e1aca25e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{pto_carga}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="549" y="1" width="72" height="19" uuid="1fd0919c-57d4-48d5-8650-4eaf80b74216"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="549" y="0" width="72" height="20" uuid="dda2e46a-d4d7-4ae4-baa3-619854eea1d6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{pto_descarga}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="621" y="1" width="72" height="19" uuid="bc5ba75f-b6f6-4ce0-a29a-0dc829997d5e"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="621" y="0" width="72" height="20" uuid="3c7cdf72-cb4c-4b80-a45c-18348ddd7260"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fecha_arribo}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<rectangle>
+				<reportElement x="693" y="1" width="108" height="19" uuid="eddc9fe3-e184-48a4-8f7f-e1765b7f0d5e"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
 				<reportElement x="693" y="0" width="108" height="20" uuid="545f0239-d54b-481b-8e35-ed9ff398e545"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{bl}]]></textFieldExpression>

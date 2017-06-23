@@ -17,6 +17,7 @@ public class Comparador implements Serializable{
     String equipo_identi;
     String sender;
     Date fecha_arribo;
+    String dsp_itinerario;
 
     public String getCon_codigo() {
         return con_codigo;
@@ -48,6 +49,14 @@ public class Comparador implements Serializable{
 
     public void setFecha_arribo(Date fecha_arribo) {
         this.fecha_arribo = fecha_arribo;
+    }
+
+    public String getDsp_itinerario() {
+        return dsp_itinerario;
+    }
+
+    public void setDsp_itinerario(String dsp_itinerario) {
+        this.dsp_itinerario = dsp_itinerario;
     }
     
     

@@ -32,7 +32,7 @@ public class OrdenRetiroDAO implements Serializable {
         PreparedStatement pst;
         ResultSet rs = null;
         String query = "Select ord.cod_ordenretiro, cli.cia_codigo, cli.cia_nombre, ord.dsp_itinerario, lin.lin_codigo, lin.lin_nombre, ord.booking, "
-                + "pto.pto_codigo, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont, ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.es_temperado, "
+                + "pto.pto_codigo, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont, ord.tipo_carga, ord.req_especial, ord.inv_seguridad, invs.inv_sello, ord.es_temperado, "
                 + "ord.temperatura, ord.ventilacion, ord.observaciones, loc.loc_codigo as loc_salida, "
                 + "loc.loc_des as loc_salidades, loca.loc_codigo as loc_entrada, loca.loc_des as loc_entradades, "
                 + "ord.est_orden, ord.estadopdf, ord.asignado "
@@ -42,6 +42,7 @@ public class OrdenRetiroDAO implements Serializable {
                 + "inner join publico.mae_puerto pto on ord.pto_codigo = pto.pto_codigo "
                 + "inner join publico.mae_localidad as loc on ord.loc_salida = loc.loc_codigo "
                 + "inner join publico.mae_localidad as loca on ord.loc_entrada = loca.loc_codigo "
+                + "left outer join publico.invsellos as invs on ord.inv_seguridad = invs.inv_seguridad "
                 + "order by ord.cod_ordenretiro desc";
         pst = con.getConnection().prepareStatement(query);
         try {
@@ -62,17 +63,18 @@ public class OrdenRetiroDAO implements Serializable {
                 ord.setTipo_carga(rs.getString(12));
                 ord.setReq_especial(rs.getString(13));
                 ord.setInv_seguridad(rs.getString(14));
-                ord.setEs_temperado(rs.getInt(15));
-                ord.setTemperatura(rs.getString(16));
-                ord.setVentilacion(rs.getString(17));
-                ord.setObservaciones(rs.getString(18));
-                ord.setLoc_salida(rs.getInt(19));
-                ord.setLoc_salidades(rs.getString(20));
-                ord.setLoc_entrada(rs.getInt(21));
-                ord.setLoc_entradades(rs.getString(22));
-                ord.setEst_orden(rs.getInt(23));
-                ord.setEstadopdf(rs.getInt(24));
-                ord.setAsignada(rs.getInt(25));
+                ord.setInv_sello(rs.getString(15));
+                ord.setEs_temperado(rs.getInt(16));
+                ord.setTemperatura(rs.getString(17));
+                ord.setVentilacion(rs.getString(18));
+                ord.setObservaciones(rs.getString(19));
+                ord.setLoc_salida(rs.getInt(20));
+                ord.setLoc_salidades(rs.getString(21));
+                ord.setLoc_entrada(rs.getInt(22));
+                ord.setLoc_entradades(rs.getString(23));
+                ord.setEst_orden(rs.getInt(24));
+                ord.setEstadopdf(rs.getInt(25));
+                ord.setAsignada(rs.getInt(26));
                 listadoOrdenes.add(ord);
             }
         } catch (Exception e) {
@@ -356,17 +358,11 @@ public class OrdenRetiroDAO implements Serializable {
 //        int SecActaEntrega = 0;
         ResultSet rs = null;
         PreparedStatement pst;
-        PreparedStatement pst2;
         PreparedStatement pst3;
         PreparedStatement pst4;
         String query = "update publico.ordenretiro "
                 + "set inv_seguridad=?, fecha_mod=current_timestamp, usu_mod=?, est_orden = 2 "
                 + "where cod_ordenretiro=?";
-        String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo, seli_fecha) "
-                + "Select inv.inv_codigo, 3, fecha_crea "
-                + "from publico.ordenretiro ord "
-                + "inner join publico.invsellos inv on ord.inv_seguridad = inv.inv_seguridad "
-                + "where ord.inv_seguridad = ?";
         String query3 = "update publico.invsellos inv "
                 + "set inv_estado = 'A' "
                 + "where inv_seguridad= ?";
@@ -374,7 +370,6 @@ public class OrdenRetiroDAO implements Serializable {
                 + "set estado = 'E' "
                 + "where sbo_numero=(select cast(inv_sello as integer) from publico.invsellos where inv_seguridad = ?) ";
         pst = con.getConnection().prepareStatement(query);
-        pst2 = con.getConnection().prepareStatement(query2);
         pst3 = con.getConnection().prepareStatement(query3);
         pst4 = con.getConnection().prepareStatement(query4);
         try {
@@ -382,12 +377,10 @@ public class OrdenRetiroDAO implements Serializable {
             pst.setString(2, u.getLogin());
             pst.setInt(3, or.getCod_ordenretiro());
 
-            pst2.setString(1, or.getInv_seguridad());
             pst3.setString(1, or.getInv_seguridad());
             pst4.setString(1, or.getInv_seguridad());
 
             pst.executeUpdate();
-            pst2.executeUpdate();
             pst3.executeUpdate();
             pst4.executeUpdate();
 
@@ -395,7 +388,6 @@ public class OrdenRetiroDAO implements Serializable {
 //            if (rs.next()) {
 //                SecActaEntrega = rs.getInt(1);
 //            }
-            
             con.getConnection().commit();
         } catch (Exception e) {
             System.out.println("DAO ASIGNAR ACTA ENTREGA: " + e.getMessage());
@@ -405,7 +397,7 @@ public class OrdenRetiroDAO implements Serializable {
         }
 //        return SecActaEntrega;
     }
-    
+
     public void deleteOrden(OrdenRetiro ord) throws SQLException {
         conexion con = new conexion();
         PreparedStatement pst;
@@ -416,6 +408,50 @@ public class OrdenRetiroDAO implements Serializable {
             pst.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO DELETE ORDEN: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+    }
+
+    public void regresionOrden(OrdenRetiro ord) throws SQLException {
+        conexion con = new conexion();
+        con.getConnection().setAutoCommit(false);
+        PreparedStatement pst;
+        PreparedStatement pst2;
+        PreparedStatement pst3;
+        PreparedStatement pst4;
+        String query = "update publico.invsellos "
+                + "set inv_estado = 'S' "
+                + "where inv_seguridad = ?";
+        String query2 = "delete from publico.selloseliminados "
+                + "where inv_codigo = (select inv_codigo from publico.invsellos where inv_seguridad = ?)";
+        String query3 = "update publico.sellobodega sbo "
+                + "set estado = 'A' "
+                + "where sbo_numero = (select cast(inv_sello as integer) from publico.invsellos where inv_seguridad = ?)";
+        String query4 = "delete from publico.ordenretiro "
+                + "where cod_ordenretiro = ?";
+        pst = con.getConnection().prepareStatement(query);
+        pst2 = con.getConnection().prepareStatement(query2);
+        pst3 = con.getConnection().prepareStatement(query3);
+        pst4 = con.getConnection().prepareStatement(query4);
+        try {
+            pst.setString(1, ord.getInv_seguridad());
+
+            pst2.setString(1, ord.getInv_seguridad());
+
+            pst3.setString(1, ord.getInv_seguridad());
+
+            pst4.setInt(1, ord.getCod_ordenretiro());
+            
+            pst.executeUpdate();
+            pst2.executeUpdate();
+            pst3.executeUpdate();
+            pst4.executeUpdate();
+            
+            con.getConnection().commit();
+        } catch (Exception e) {
+            System.out.println("DAO DELETE ORDEN: " + e.getMessage());
+            con.getConnection().rollback();
         } finally {
             con.desconectar();
         }

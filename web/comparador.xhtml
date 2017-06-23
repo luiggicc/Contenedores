@@ -7,6 +7,12 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <style>
+            .colstilo {width:100px}
+            .colstiloinput {width:200px}
+            .botones {width:200px}
+        </style>
+
         <h:outputStylesheet name="style.css" />
         <f:metadata>
             <f:event type="preRenderView" listener="#{comparadorBean.authorized()}"/>
@@ -15,23 +21,22 @@
             <div class="ContainerIndent">
                 <p:panel header="Comparador de Contendores entre PreDescarga y Descarga">
                     <h:form id="frm">
-                        <h:panelGrid columns="2" >
+                        <h:panelGrid columns="2" columnClasses="colstilo, colstiloinput">
                             <p:outputLabel value="Itinerario"/>
-                            <p:selectOneMenu id="ItinerarioMenu" value="#{comparadorBean.itinerarioDSPSelected}" style="width: 200px" filter="true" filterMatchMode="startsWith">
+                            <p:selectOneMenu id="ItinerarioMenu" value="#{comparadorBean.itinerarioDSPSelected}" filter="true" filterMatchMode="startsWith">
                                 <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
                                 <f:selectItems value="#{comparadorBean.listaItinerarios}" var="com" 
                                                itemLabel="#{com.dsp_itinerario}" itemValue="#{com.dsp_itinerario}"/>
                                 <p:ajax event="itemSelect"  listener="#{comparadorBean.CompararContenedores()}" update="@form" oncomplete="PF('comparadorTable').clearFilters();"/>
-                            </p:selectOneMenu>
+                            </p:selectOneMenu> 
                         </h:panelGrid>
-
                         <p:dataTable id="asignacionTbl" value="#{comparadorBean.listadoComparador}" var="comparador" paginator="true" widgetVar="comparadorTable" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      paginatorPosition="bottom" filteredValue="#{comparadorBean.filteredComparador}" lazy="false" 
-                                     
+
                                      rowsPerPageTemplate="10,25,50" 
                                      >                            
-                            
+
                             <f:facet name="header">
                                 <p:outputPanel style="text-align: right;">
                                     <table>
@@ -57,7 +62,7 @@
                                       styleClass="#{(comparador.sender.equals('')? 'rowbackgorundOnInactive':'')}">
                                 <p:outputLabel value="#{comparador.sender}"/>
                             </p:column>
-                            
+
                             <p:column headerText="Fecha Arribo" filterBy="#{comparador.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"
                                       styleClass="#{(comparador.sender.equals('')? 'rowbackgorundOnInactive':'')}">
                                 <p:outputLabel value="#{comparador.fecha_arribo}">

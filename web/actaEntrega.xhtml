@@ -33,8 +33,10 @@
                             </f:facet>
 
                             <p:column  style="text-align: center">
-                                <h:commandLink value="" actionListener="#{actaEntregaBean.download(ord)}">
+                                <h:commandLink id="descargar" value="" actionListener="#{actaEntregaBean.download(ord)}">
                                     <i class="icon-download" style="color: #00AEEF;"/>
+                                    <p:tooltip id="descargar-message" for="descargar" value="Descargar Acta"
+                                           showEffect="clip" hideEffect="explode" />
                                 </h:commandLink>
                             </p:column>
                             
@@ -49,6 +51,12 @@
                                 <p:tooltip id="icon-edit-orden-message" for="icon-edit-orden" value="Editar Acta"
                                            showEffect="clip" hideEffect="explode" />
                             </p:column>
+                            
+                            <p:column style="text-align: center"> 
+                                <p:commandLink id="regresion" class="icon-reply" value="" actionListener="#{actaEntregaBean.regresion(ord)}"  update=":frm:uTable" >
+                                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro? Esto devolverá al stock el sello"  icon="ui-icon-alert" /> 
+                                </p:commandLink>
+                            </p:column>
 
                             <p:column headerText="Orden N°" filterBy="#{ord.cod_ordenretiro}" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.cod_ordenretiro}"/>
@@ -60,6 +68,10 @@
                             
                             <p:column headerText="Sello de seguridad" filterBy="#{ord.inv_seguridad}" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.inv_seguridad}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Sello" filterBy="#{ord.inv_sello}" filterMatchMode="contains" style="text-align: center">
+                                <h:outputText value="#{ord.inv_sello}"/>
                             </p:column>
 
                             <p:column headerText="Itinerario" filterBy="#{ord.dsp_itinerario}" filterMatchMode="contains" style="text-align: center">
@@ -106,10 +118,6 @@
                                 <h:outputText value="#{ord.ventilacion}"/>
                             </p:column>
 
-                            <p:column headerText="Observaciones" filterBy="#{ord.observaciones}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{ord.observaciones}"/>
-                            </p:column>
-
                             <p:column headerText="Patio de Salida" filterBy="#{ord.loc_salidades}" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{ord.loc_salidades}"/>
                             </p:column>
@@ -130,7 +138,7 @@
                                     <f:selectItems value="#{actaEntregaBean.selectorSello}" var="sel" itemLabel="#{sel.inv_seguridad}" itemValue="#{sel.inv_seguridad}" />
                                 </p:selectOneMenu>
 
-                                <p:commandButton ajax="true" value="Asignar" actionListener="#{actaEntregaBean.commitAsignar()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
+                                <p:commandButton ajax="true" value="Asignar" actionListener="#{actaEntregaBean.commitAsignar()}"  oncomplete="PF('wdlgDatos').hide();" update="@all">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>
                                 <p:commandButton value="Cancelar" actionListener="#{actaEntregaBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>

@@ -24,9 +24,14 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 /**
  *
@@ -56,11 +61,40 @@ public class TeusImportBean {
 
         String dirReporte = servleContext.getRealPath("/reportes/TeusImports.jasper");
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        response.addHeader("Content-disposition", "attachment;filename=ReportLine_Imports_"+anio+ ".pdf");
+        response.addHeader("Content-disposition", "inline");
         response.setContentType("application/pdf");
 
         JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
         JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
+        context.responseComplete();
+    }
+    
+    public void exportexcel() throws JRException, IOException{
+        conexion con = new conexion();
+        Float f = Float.parseFloat(anio);
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+        parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+        parametros.put("anio", f);
+        parametros.put(JRParameter.IS_IGNORE_PAGINATION, true);
+
+        String dirReporte = servleContext.getRealPath("/reportes/TeusImports.jasper");
+        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+        response.addHeader("Content-disposition", "attachment;filename=ReportLine_Imports_"+anio+ ".xlsx");
+        response.setContentType("application/xlsx");
+
+        JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
+        JRXlsxExporter expor = new JRXlsxExporter();
+        expor.setExporterInput(new SimpleExporterInput(impres));
+        expor.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+        
+        SimpleXlsxReportConfiguration config = new SimpleXlsxReportConfiguration();
+        config.setCollapseRowSpan(Boolean.FALSE);
+        config.setWhitePageBackground(Boolean.FALSE);
+        config.setRemoveEmptySpaceBetweenRows(Boolean.TRUE);
+        expor.setConfiguration(config);
+        expor.exportReport();
         context.responseComplete();
     }
 

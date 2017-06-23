@@ -7,6 +7,11 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <style>
+            .colstilo {width:100px}
+            .colstiloinput {width:250px}
+            .botones {width:200px}
+        </style>
         <h:outputStylesheet name="style.css" />
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
@@ -45,10 +50,6 @@
 
                             </p:column>
 
-                            <p:column headerText="Código" filterBy="#{cli.cia_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.cia_codigo}"/>
-                            </p:column>
-
                             <p:column headerText="Identificación" filterBy="#{cli.tpi_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cli.tpi_nombre}"/>
                             </p:column>
@@ -65,26 +66,6 @@
                                 <h:outputText value="#{cli.pai_nombre}"/>
                             </p:column>
 
-                            <p:column headerText="Tip. Shi" filterBy="#{cli.tip_shi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.tip_shi}"/>
-                            </p:column>
-
-                            <p:column headerText="Tip. Con" filterBy="#{cli.tip_con}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.tip_con}"/>
-                            </p:column>
-
-                            <p:column headerText="Tip. Emb" filterBy="#{cli.tip_emb}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.tip_emb}"/>
-                            </p:column>
-
-                            <p:column headerText="Tip. Pro" filterBy="#{cli.tip_pro}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.tip_pro}"/>
-                            </p:column>
-
-                            <p:column headerText="Tip. Ope" filterBy="#{cli.tip_ope}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.tip_ope}"/>
-                            </p:column>
-
                             <p:column headerText="Dirección" filterBy="#{cli.cia_direccion}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cli.cia_direccion}"/>
                             </p:column>
@@ -99,10 +80,6 @@
 
                             <p:column headerText="Teléfono 2" filterBy="#{cli.telefono2}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{cli.telefono2}"/>
-                            </p:column>
-
-                            <p:column headerText="Fax" filterBy="#{cli.cia_fax}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{cli.cia_fax}"/>
                             </p:column>
 
                             <p:column headerText="Mail" filterBy="#{cli.cia_mail}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -175,9 +152,9 @@
                             </h:panelGrid>
                             <h:panelGrid columns ="2" >
                                 <p:commandButton ajax="true" style="width: 150px" value="Crear" actionListener="#{clienteBean.commitCreate()}"  oncomplete="PF('wdlgCrearCliente').hide();" update=":frm:uTable">
-                                <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
-                            </p:commandButton>
-                            <p:commandButton value="Cancelar" style="width: 150px" actionListener="#{clienteBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearCliente').hide();"/>
+                                    <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" style="width: 150px" actionListener="#{clienteBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgCrearCliente').hide();"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
@@ -187,7 +164,7 @@
                     <!--############################################################################################ -->
                     <p:dialog id="dlgDatos" header="Editar Cliente" widgetVar="wdlgDatos" modal="true" responsive="true">
                         <h:form>
-                            <h:panelGrid columns="4">
+                            <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
                                 <p:outputLabel value="Identificación: "/>
                                 <p:selectOneMenu id="identificacion" value="#{clienteBean.cli.cod_tipidentifica}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{clienteBean.selectorTipIdent}" var="tpi" itemLabel="#{tpi.tpi_nombre}" itemValue="#{tpi.tpi_codigo}" />
@@ -204,21 +181,6 @@
                                     <f:selectItems value="#{clienteBean.selectorPais}" var="pai" itemLabel="#{pai.pai_nombre}" itemValue="#{pai.pai_codigo}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Tip. Shi: "/>
-                                <p:inputText value="#{clienteBean.cli.tip_shi}"/>
-
-                                <p:outputLabel value="Tip. Con: "/>
-                                <p:inputText value="#{clienteBean.cli.tip_con}"/>
-
-                                <p:outputLabel value="Tip. Emb: "/>
-                                <p:inputText value="#{clienteBean.cli.tip_emb}"/>
-
-                                <p:outputLabel value="Tip. Pro: "/>
-                                <p:inputText value="#{clienteBean.cli.tip_pro}"/>
-
-                                <p:outputLabel value="Tip. Ope: "/>
-                                <p:inputText value="#{clienteBean.cli.tip_ope}"/>
-
                                 <p:outputLabel value="Dirección: "/>
                                 <p:inputText value="#{clienteBean.cli.cia_direccion}"/>
 
@@ -231,17 +193,11 @@
                                 <p:outputLabel value="Teléfono 2: "/>
                                 <p:inputText value="#{clienteBean.cli.telefono2}"/>
 
-                                <p:outputLabel value="Fax: "/>
-                                <p:inputText value="#{clienteBean.cli.cia_fax}"/>
-
                                 <p:outputLabel value="Mail: "/>
                                 <p:inputText value="#{clienteBean.cli.cia_mail}"/>
 
-
-                                <p:outputLabel value="Observación: "/>
-                                <p:inputText value="#{clienteBean.cli.cia_obs}"/>
-
-
+                            </h:panelGrid>
+                            <h:panelGrid columns="2">
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{clienteBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>

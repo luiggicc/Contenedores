@@ -14,9 +14,7 @@ import com.delpac.entity.Usuario;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +25,14 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 /**
  *
@@ -56,7 +59,7 @@ public class DetallePorNaveBean {
                 FacesContext.getCurrentInstance().getExternalContext().redirect(url);
             } else {
                 ItinerarioDAO daoItinerario = new ItinerarioDAO();
-                selectorItinerario = daoItinerario.findAll();
+                selectorItinerario = daoItinerario.findAllItinerarioMov();
             }
         } catch (Exception e) {
             System.out.println("Bean Constructor: " + e.getMessage());
@@ -77,11 +80,41 @@ public class DetallePorNaveBean {
 
         String dirReporte = servleContext.getRealPath("/reportes/DetallePorNave.jasper");
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-        response.addHeader("Content-disposition", "attachment;filename=DetallePorNave.pdf");
+//        response.addHeader("Content-disposition", "attachment;filename=DetallePorNave.pdf");
+        response.addHeader("Content-disposition", "inline");
         response.setContentType("application/pdf");
 
         JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
         JasperExportManager.exportReportToPdfStream(impres, response.getOutputStream());
+        context.responseComplete();
+    }
+    
+    public void exportexcel() throws JRException, IOException {
+        conexion con = new conexion();
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servleContext = (ServletContext) context.getExternalContext().getContext();
+        parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
+        parametros.put("itinerario", itinerario);
+        parametros.put(JRParameter.IS_IGNORE_PAGINATION, true);
+        
+        String dirReporte = servleContext.getRealPath("/reportes/DetallePorNave.jasper");
+        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+        response.addHeader("Content-disposition", "attachment;filename=DetallePorNave.xlsx");
+        response.setContentType("application/xlsx");
+
+        JasperPrint impres = JasperFillManager.fillReport(dirReporte, parametros, con.getConnection());
+        JRXlsxExporter expor = new JRXlsxExporter();
+        expor.setExporterInput(new SimpleExporterInput(impres));
+        expor.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+        
+        SimpleXlsxReportConfiguration config = new SimpleXlsxReportConfiguration();
+        config.setCollapseRowSpan(Boolean.FALSE);
+        config.setWhitePageBackground(Boolean.FALSE);
+        config.setRemoveEmptySpaceBetweenRows(Boolean.TRUE);
+        
+        expor.setConfiguration(config);
+        expor.exportReport();
         context.responseComplete();
     }
 
@@ -133,5 +166,4 @@ public class DetallePorNaveBean {
         this.selectorItinerario = selectorItinerario;
     }
 
-    
 }

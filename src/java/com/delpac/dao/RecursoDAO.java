@@ -30,7 +30,8 @@ public class RecursoDAO {
                 + "RE.rec_RUTA,RE.rec_ITEM_ICON,RE.rec_SUBITEM_ICON "
                 + "FROM publico.ROL R INNER JOIN publico.RECURSOROL RR ON R.rol_IDROL=RR.rerol_IDROL "
                 + "INNER JOIN publico.RECURSO RE ON RR.rerol_IDRECURSO=RE.rec_IDRECURSO "
-                + "WHERE R.rol_IDROL=? AND RR.rerol_ESTADO=1";
+                + "WHERE R.rol_IDROL=? AND RR.rerol_ESTADO=1 "
+                + "ORDER BY RE.rec_IDRECURSO";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setInt(1, u.getIdRol());

@@ -19,10 +19,18 @@
                             <p:outputLabel value="Hasta: "/>
                             <p:calendar value="#{semanalBean.hasta}" pattern="yyyy-MM-dd" navigator="true"/>
                         </h:panelGrid>
+                        <i class="icon-file-pdf" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver PDF" style="color: #00AEEF;" actionListener="#{semanalBean.exportpdf()}" target="verpdf"/>
+                        </i>
+                        <br />
+                        <i class="icon-file-excel" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver Excel" style="color: #00AEEF;" actionListener="#{semanalBean.exportexcel()}"/>
+                        </i>
                         <p:separator />
-                        <p:dataTable id="semanalTbl" value="#{semanalBean.lista}" var="sem" paginator="true" widgetVar="semaTable" rows="10"
+                        <iframe name="verpdf" width="100%" height="500px" allowfullscreen="true" style="border: 0"/>
+<!--                        <p:dataTable id="semanalTbl" value="# {semanalBean.lista}" var="sem" paginator="true" widgetVar="semaTable" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     paginatorPosition="bottom" filteredValue="#{semanalBean.filteredSemanal}" lazy="false" 
+                                     paginatorPosition="bottom" filteredValue="# {semanalBean.filteredSemanal}" lazy="false" 
                                      rowsPerPageTemplate="10,25,50"
                                      resizableColumns="true">                            
 
@@ -46,78 +54,77 @@
                                     <p:column colspan="2" headerText="Total Export" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"/>
                                 </p:row>
                                 <p:row>
-                                    <p:column headerText="Item" filterBy="#{sem.item}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"/>
-                                    <p:column headerText="Nave" filterBy="#{sem.nave}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Viaje" filterBy="#{sem.viaje}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Fecha Arribo" filterBy="#{sem.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Full" filterBy="#{sem.cont_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.teus_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Empty" filterBy="#{sem.cont_empty_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.teus_empty_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Cont" filterBy="#{sem.total_cont_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.total_teus_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Full" filterBy="#{sem.cont_full_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.teus_full_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Empty" filterBy="#{sem.cont_empty_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.teus_empty_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Cont" filterBy="#{sem.total_cont_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
-                                    <p:column headerText="Teus" filterBy="#{sem.total_teus_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Item" filterBy="# {sem.item}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center"/>
+                                    <p:column headerText="Nave" filterBy="# {sem.nave}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Viaje" filterBy="# {sem.viaje}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Arribo" filterBy="# {sem.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Full" filterBy="# {sem.cont_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.teus_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Empty" filterBy="# {sem.cont_empty_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.teus_empty_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Cont" filterBy="# {sem.total_cont_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.total_teus_import}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Full" filterBy="# {sem.cont_full_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.teus_full_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Empty" filterBy="# {sem.cont_empty_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.teus_empty_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Cont" filterBy="# {sem.total_cont_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
+                                    <p:column headerText="Teus" filterBy="# {sem.total_teus_export}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center" />
                                 </p:row>
                             </p:columnGroup>
 
                             <p:column>
-                                <p:outputLabel value="#{sem.item}"/>
+                                <p:outputLabel value="# {sem.item}"/>
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.nave}" />
+                                <p:outputLabel value="# {sem.nave}" />
                             </p:column>    
                             <p:column>
-                                <p:outputLabel value="#{sem.viaje}"/>
+                                <p:outputLabel value="# {sem.viaje}"/>
                             </p:column>    
                             <p:column>
-                                <p:outputLabel value="#{sem.fecha_arribo}">
+                                <p:outputLabel value="# {sem.fecha_arribo}">
                                     <f:convertDateTime pattern="dd/MM/YYYY"/>
                                 </p:outputLabel>
                             </p:column>    
                             <p:column>
-                                <p:outputLabel value="#{sem.cont_import}" />
+                                <p:outputLabel value="# {sem.cont_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.teus_import}" />
+                                <p:outputLabel value="# {sem.teus_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.cont_empty_import}" />
+                                <p:outputLabel value="# {sem.cont_empty_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.teus_empty_import}" />
+                                <p:outputLabel value="# {sem.teus_empty_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.total_cont_import}" />
+                                <p:outputLabel value="# {sem.total_cont_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.total_teus_import}" />
+                                <p:outputLabel value="# {sem.total_teus_import}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.cont_full_export}" />
+                                <p:outputLabel value="# {sem.cont_full_export}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.teus_full_export}" />
+                                <p:outputLabel value="# {sem.teus_full_export}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.cont_empty_export}" />
+                                <p:outputLabel value="# {sem.cont_empty_export}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.teus_empty_export}" />
+                                <p:outputLabel value="# {sem.teus_empty_export}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.total_cont_export}" />
+                                <p:outputLabel value="# {sem.total_cont_export}" />
                             </p:column>
                             <p:column>
-                                <p:outputLabel value="#{sem.total_teus_export}" />
+                                <p:outputLabel value="# {sem.total_teus_export}" />
                             </p:column>
-                        </p:dataTable>
-                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{semanalBean.ConsultarSemanal()}" />
-                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{semanalBean.exportpdf()}" />
+                        </p:dataTable>-->
+                        
                     </h:form>
                 </p:panel>
             </div>

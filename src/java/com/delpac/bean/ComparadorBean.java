@@ -5,9 +5,12 @@
  */
 package com.delpac.bean;
 
+import com.delpac.dao.VerHistorialDAO;
 import com.delpac.dao.ComparadorDAO;
 import com.delpac.dao.ItinerarioDAO;
 
+import com.delpac.entity.VerHistorial;
+import com.delpac.entity.Itinerario;
 import com.delpac.entity.Comparador;
 import com.delpac.entity.Itinerario;
 import com.delpac.entity.Usuario;
@@ -31,10 +34,13 @@ public class ComparadorBean implements Serializable {
     private ItinerarioDAO daoItinerario = new ItinerarioDAO();
     private List<Itinerario> listaItinerarios = daoItinerario.findAllItinerario();
     private String ItinerarioDSPSelected;
-
+    private Itinerario iti = new Itinerario();
+    
+    private VerHistorialDAO daoVerHistorial = new VerHistorialDAO();
     private List<Comparador> listadoComparador = new ArrayList<>();
     private List<Comparador> filteredComparador;
     private ComparadorDAO daoComparador = new ComparadorDAO();
+    private Comparador comparador = new Comparador();
     private Usuario sessionUsuario;
 
     public void authorized() {
@@ -60,6 +66,10 @@ public class ComparadorBean implements Serializable {
     
     public void CompararContenedores() {
         setListadoComparador(daoComparador.CompararContenedores(ItinerarioDSPSelected));
+    }
+    
+    public List<Itinerario> completarItinerario(String cadena) {
+        return daoVerHistorial.autocompletaritinerarios(cadena);
     }
 
     public ItinerarioDAO getDaoItinerario() {
@@ -109,6 +119,21 @@ public class ComparadorBean implements Serializable {
     public void setDaoComparador(ComparadorDAO daoComparador) {
         this.daoComparador = daoComparador;
     }
-    
-    
+
+    public Itinerario getIti() {
+        return iti;
+    }
+
+    public void setIti(Itinerario iti) {
+        this.iti = iti;
+    }
+
+    public VerHistorialDAO getDaoVerHistorial() {
+        return daoVerHistorial;
+    }
+
+    public void setDaoVerHistorial(VerHistorialDAO daoVerHistorial) {
+        this.daoVerHistorial = daoVerHistorial;
+    }
+
 }

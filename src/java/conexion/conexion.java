@@ -37,6 +37,7 @@ public final class conexion {
             loadDatabaseConfig(FacesContext.getCurrentInstance().getExternalContext().getInitParameter("environment"));
 
             con = DriverManager.getConnection("jdbc:postgresql://" + host + ":5432/" + databaseName, databaseUser, databasePassword);
+//            con = DriverManager.getConnection("jdbc:postgresql://" + host + ":5435/" + databaseName, databaseUser, databasePassword);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e);
         }

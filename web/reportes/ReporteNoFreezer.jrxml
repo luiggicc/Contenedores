@@ -10,7 +10,7 @@
 	<queryString>
 		<![CDATA[Select ord.cod_ordenretiro, cli.cia_nombre, ord.dsp_itinerario, lin.lin_nombre, ord.booking, pto.pto_nombre, ord.mov_xcuenta, ord.cant_tipocont,
        ord.tipo_carga, ord.req_especial, ord.inv_seguridad, ord.observaciones, loc.loc_des as loc_salida,
-       loca.loc_des as loc_entrada, ord.fecha_crea
+       loca.loc_des as loc_entrada, ord.fecha_crea, loc.loc_direccion
 from publico.ordenretiro ord
 inner join publico.mae_clientes cli on ord.cia_codigo = cli.cia_codigo
 inner join publico.mae_linea lin on ord.lin_codigo = lin.lin_codigo
@@ -34,6 +34,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 	<field name="loc_salida" class="java.lang.String"/>
 	<field name="loc_entrada" class="java.lang.String"/>
 	<field name="fecha_crea" class="java.sql.Timestamp"/>
+	<field name="loc_direccion" class="java.lang.String"/>
 	<filterExpression><![CDATA[new Boolean(true)]]></filterExpression>
 	<background>
 		<band splitType="Stretch"/>
@@ -259,7 +260,7 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 				<textElement>
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Salida: El (los) contenedor(es) debera(n) salir desde el patio de "                    " (KM. 21 via perimetral junto a Kubiec)]]></text>
+				<text><![CDATA[Salida: El (los) contenedor(es) debera(n) salir desde el patio de "                    " ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="15" y="395" width="532" height="14" uuid="b1b82b45-2a6b-4640-8080-58bce3c3de5a"/>
@@ -428,6 +429,10 @@ where ord.cod_ordenretiro = $P{cod_ordenretiro}]]>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dsp_itinerario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="381" width="173" height="14" uuid="ade27c2a-fefd-41de-a950-10638935735a"/>
+				<textFieldExpression><![CDATA[$F{loc_direccion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

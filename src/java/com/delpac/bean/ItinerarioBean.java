@@ -128,7 +128,7 @@ public class ItinerarioBean implements Serializable {
     }
 
     public void commitEdit() throws SQLException {
-        daoItinerario.editItinerario(iti);
+        daoItinerario.editItinerario(iti, sessionUsuario);
         listadoItinerarios = daoItinerario.findAll();
     }
 

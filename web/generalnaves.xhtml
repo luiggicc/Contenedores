@@ -8,7 +8,7 @@
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
         <h:outputStylesheet name="style.css" />
-        
+
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
                 <p:panel header="General Naves">
@@ -27,10 +27,19 @@
                             <p:outputLabel value="Hasta: "/>
                             <p:calendar value="#{generalNavesBean.hasta}" pattern="yyyy-MM-dd" navigator="true"/>
                         </h:panelGrid>
+                        <i class="icon-file-pdf" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver PDF" style="color: #00AEEF;" actionListener="#{generalNavesBean.exportpdf()}" target="verpdf" />
+                        </i>
+                        <br />
+                        <i class="icon-file-excel" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver Excel" style="color: #00AEEF;" actionListener="#{generalNavesBean.exportexcel2()}"/>
+                        </i>
                         <p:separator />
-                        <p:dataTable id="generalNavesTbl" value="#{generalNavesBean.lista}" var="gna" paginator="true" widgetVar="gnavesTable" rows="10"
+
+                        <iframe name="verpdf" width="100%" height="500px" allowfullscreen="true" style="border: 0"/>
+                        <!-- <p:dataTable id="generalNavesTbl" value="# {generalNavesBean.lista}" var="gna" paginator="true" widgetVar="gnavesTable" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     paginatorPosition="bottom" filteredValue="#{generalNavesBean.filteredGnaves}" lazy="false" 
+                                     paginatorPosition="bottom" filteredValue="# {generalNavesBean.filteredGnaves}" lazy="false" 
                                      rowsPerPageTemplate="10,25,50">                            
                             
                             <f:facet name="header">
@@ -44,27 +53,26 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Itinerario" filterBy="#{gna.itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{gna.itinerario}"/>
+                            <p:column headerText="Itinerario" filterBy="# {gna.itinerario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {gna.itinerario}"/>
                             </p:column>
 
-                            <p:column headerText="Fecha Arribo" filterBy="#{gna.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{gna.fecha_arribo}">
+                            <p:column headerText="Fecha Arribo" filterBy="# {gna.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {gna.fecha_arribo}">
                                     <f:convertDateTime pattern="dd/MM/YYYY"/>
                                 </p:outputLabel>
                             </p:column>
 
-                            <p:column headerText="Tipo Contenedor" filterBy="#{gna.tipo_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{gna.tipo_cont}"/>
+                            <p:column headerText="Tipo Contenedor" filterBy="# {gna.tipo_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {gna.tipo_cont}"/>
                             </p:column>
                             
-                            <p:column headerText="Total Contenedores" filterBy="#{gna.total_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{gna.total_cont}"/>
+                            <p:column headerText="Total Contenedores" filterBy="# {gna.total_cont}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {gna.total_cont}"/>
                             </p:column>
 
-                        </p:dataTable>
-                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{generalNavesBean.consultarGeneralNaves()}" />
-                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{generalNavesBean.exportpdf()}"/>  
+                        </p:dataTable> -->
+                        <!-- <h:commandLink styleClass="likePrimefaceCommandLink" actionListener="# {generalNavesBean.consultarGeneralNaves()}" />-->
                     </h:form>
                 </p:panel>
             </div>

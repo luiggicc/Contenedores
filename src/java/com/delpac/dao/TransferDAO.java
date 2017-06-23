@@ -37,7 +37,11 @@ public class TransferDAO implements Serializable {
             query = " Select i.inv_codigo, i.inv_sello, i.inv_seguridad, l.loc_codigo, l.loc_des "
                     + "from publico.invsellos i "
                     + "inner join publico.mae_localidad l on i.loc_codigo = l.loc_codigo "
-                    + "where i.loc_codigo !=?";
+                    + "where i.loc_codigo !=? "
+                    + "union all "
+                    + "select sbo_codigo, sbo_numero::character varying, null, 7 as loc_codigo,'Bodega' as loc_des "
+                    + "from publico.sellobodega "
+                    + "where estado = 'A'";
             pst = con.getConnection().prepareStatement(query);
             pst.setInt(1, LocCodigo);
             rs = pst.executeQuery();
@@ -48,7 +52,6 @@ public class TransferDAO implements Serializable {
                 sel.setInv_seguridad(rs.getString(3));
                 sel.setLoc_codigo(rs.getInt(4));
                 sel.setLoc_des(rs.getString(5));
-
                 lista.add(sel);
             }
         } catch (Exception e) {
@@ -71,13 +74,24 @@ public class TransferDAO implements Serializable {
         String query = "";
 
         try {
-            query = "update publico.invsellos set loc_codigo=? where inv_codigo=?";
-            pst = con.getConnection().prepareStatement(query);
+
             for (Sellos se : listadoSE) {
-                if (se.getEstado() == true) {
-                    pst.setInt(1, LocCodigo);
-                    pst.setInt(2, se.getInv_codigo());
-                    pst.executeUpdate();
+                if (se.getLoc_des().equals("Bodega")) {
+                    if (se.getEstado() == true) {
+                        query = "insert into publico.invsellos(inv_sello, loc_codigo, inv_estado, inv_fechacrec) "
+                                + "values(?, 7, 'A', current_timestamp)";
+                        pst = con.getConnection().prepareStatement(query);
+                        pst.setInt(1, se.getInv_codigo());
+                        pst.executeUpdate();
+                    }
+                } else {
+                    if (se.getEstado() == true) {
+                        query = "update publico.invsellos set loc_codigo=? where inv_codigo=?";
+                        pst = con.getConnection().prepareStatement(query);
+                        pst.setInt(1, LocCodigo);
+                        pst.setInt(2, se.getInv_codigo());
+                        pst.executeUpdate();
+                    }
                 }
 
             }

@@ -37,7 +37,8 @@ public class BuqueDAO implements Serializable {
                 + "left outer join publico.mae_puerto as pue on buq.pto_codigo = pue.pto_codigo "
                 + "left outer join publico.mae_linea as lin on buq.lin_codigo = lin.lin_codigo "
                 + "left outer join publico.mae_trafico as tra on buq.tra_codigo = tra.tra_codigo "
-                + "order by buq.buq_codigo";
+                + "order by case when pai.pai_nombre like 'E%' then 1 "
+                + "end";
         pst = con.getConnection().prepareStatement(query);
         try {
             rs = pst.executeQuery();
@@ -77,8 +78,8 @@ public class BuqueDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.mae_buque "
-                + "set tbu_codigo=?, pai_codigo=?, pto_codigo=?, lin_codigo=?, tra_codigo=?, buq_nombre=?, buq_des=?, num_trb=?, "
-                + "num_eslora=?, max_tons=?, reg_lloyd=?, buq_codigo1=?, codigo_omi=? "
+                + "set tbu_codigo=?, pai_codigo=?, pto_codigo=?, lin_codigo=?, tra_codigo=?, buq_nombre=?, num_trb=?, "
+                + "num_eslora=?, max_tons=?, reg_lloyd=? "
                 + "where buq_codigo=?";
         pst = con.getConnection().prepareStatement(query);
         try {
@@ -88,14 +89,11 @@ public class BuqueDAO implements Serializable {
             pst.setString(4, buq.getLin_codigo());
             pst.setString(5, buq.getTra_codigo());
             pst.setString(6, buq.getBuq_nombre());
-            pst.setString(7, buq.getBuq_des());
-            pst.setInt(8, buq.getNum_trb());
-            pst.setInt(9, buq.getNum_eslora());
-            pst.setInt(10, buq.getMax_tons());
-            pst.setString(11, buq.getReg_lloyd());
-            pst.setString(12, buq.getBuq_codigo1());
-            pst.setString(13, buq.getCodigo_omi());
-            pst.setString(14, buq.getBuq_codigo());
+            pst.setInt(7, buq.getNum_trb());
+            pst.setInt(8, buq.getNum_eslora());
+            pst.setInt(9, buq.getMax_tons());
+            pst.setString(10, buq.getReg_lloyd());
+            pst.setString(11, buq.getBuq_codigo());
             pst.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO EDIT BUQUE: " + e.getMessage());

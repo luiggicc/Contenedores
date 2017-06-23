@@ -89,6 +89,40 @@ public class SellosDAO implements Serializable {
         }
         return listadoSellos;
     }
+    
+    public List<Sellos> findAllStockAsignar() throws SQLException {
+        conexion con = new conexion();
+        List<Sellos> listadoSellos = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rs = null;
+        String query = " Select i.inv_codigo,i.inv_sello, i.inv_seguridad, l.loc_des, "
+                + "case i.inv_estado "
+                + "when 'S' then 'En Stock' "
+                + "when 'A' then 'Asignado' "
+                + "end as inv_estado "
+                + "from publico.invsellos i "
+                + "inner join publico.mae_localidad l on i.loc_codigo = l.loc_codigo "
+                + "left outer join publico.ordenretiro ord on i.inv_seguridad = ord.inv_seguridad "
+                + "where inv_estado = 'S'";
+        pst = con.getConnection().prepareStatement(query);
+        try {
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                Sellos sel = new Sellos();
+                sel.setInv_codigo(rs.getInt(1));
+                sel.setInv_sello(rs.getString(2));
+                sel.setInv_seguridad(rs.getString(3));
+                sel.setLoc_des(rs.getString(4));
+                sel.setInv_estado(rs.getString(5));
+                listadoSellos.add(sel);
+            }
+        } catch (Exception e) {
+            System.out.println("DAO SELLOS FINDALL: " + e.getMessage());
+        } finally {
+            con.desconectar();
+        }
+        return listadoSellos;
+    }
 
     public List<Sellos> Eliminados() throws SQLException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -100,7 +134,7 @@ public class SellosDAO implements Serializable {
                 + "from publico.selloseliminados se "
                 + "left join publico.invsellos ise on se.inv_codigo = ise.inv_codigo "
                 + "left join publico.motivosello ms on se.mot_codigo = ms.mot_codigo "
-                + "left join publico.mae_localidad lo on ise.inv_codigo = lo.loc_codigo "
+                + "left join publico.mae_localidad lo on ise.loc_codigo = lo.loc_codigo "
                 + "where ise.inv_sello is not null "
                 + "order by seli_fecha desc";
         pst = con.getConnection().prepareStatement(query);
@@ -190,13 +224,13 @@ public class SellosDAO implements Serializable {
         }
     }
 
-    public void deleteSellos(Sellos sel) throws SQLException {
+    public void deleteSellos(Sellos sel, Usuario ses) throws SQLException {
         conexion con = new conexion();
         PreparedStatement pst;
         PreparedStatement pst2;
         PreparedStatement pst3;
         String query = "update publico.invsellos set inv_estado = 'E' where inv_codigo=?";
-        String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo, seli_fecha) values (?,?, to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp)";
+        String query2 = "insert into publico.SellosEliminados(inv_codigo, mot_codigo, localidad, seli_fecha, usuario) values (?,?, to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp, ?)";
         String query3 = "update publico.sellobodega set estado = 'E' where sbo_numero=?";
         pst = con.getConnection().prepareStatement(query);
         pst2 = con.getConnection().prepareStatement(query2);
@@ -205,6 +239,7 @@ public class SellosDAO implements Serializable {
             pst.setInt(1, sel.getInv_codigo());
             pst2.setInt(1, sel.getInv_codigo());
             pst2.setInt(2, sel.getMot_codigo());
+            pst2.setString(3, ses.getLogin());
             pst3.setLong(1, Long.valueOf(sel.getInv_codigo()));
             pst.executeUpdate();
             pst2.executeUpdate();

@@ -121,47 +121,32 @@ public class LineaDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.mae_linea "
-                + "set lin_nombre=?, lin_des=?, cae_usuario=?, cae_clave=?, ope_codigo=?, com_codigo=?, lin_codigo1=?, lin_codigo2=?, lin_codigo3=?, "
-                + "val_comision_imp=?, val_comision_exp=?, cod_operadora=?, nom_operadora=?, car_contenedor=?, car_suelta=?, car_consolidada=?, "
+                + "set lin_nombre=?, lin_codigo1=?, lin_codigo2=?, lin_codigo3=?, "
+                + "nom_operadora=?, car_contenedor=?, "
                 + "imp_servicio=?, imp_emision=?, imp_europa=?, imp_thc=?, imp_garantia=?, ofi_puerto=?, ofi_propia=?, ofi_transporte=?, "
-                + "num_diasdemor1=?, num_diasdemor2=?, num_diasdemor3=?, num_diasdemor4=?, sec_personalizada=?, cae_biccode=?, ekc_operada=?::bit, "
-                + "est_operada=?::bit "
+                + "num_diasdemor1=?, num_diasdemor2=?, num_diasdemor3=?, num_diasdemor4=? "
                 + "where lin_codigo=?";
         pst = con.getConnection().prepareStatement(query);
         try {
             pst.setString(1, lin.getLin_nombre());//check
-            pst.setString(2, lin.getLin_des());//check
-            pst.setString(3, lin.getCae_usuario());//check
-            pst.setString(4, lin.getCae_clave());//check
-            pst.setString(5, lin.getOpe_codigo());//check
-            pst.setString(6, lin.getCom_codigo());//check
-            pst.setString(7, lin.getLin_codigo1());//check
-            pst.setString(8, lin.getLin_codigo2());//check
-            pst.setString(9, lin.getLin_codigo3());//check
-            pst.setDouble(10, lin.getVal_comision_imp());//check
-            pst.setDouble(11, lin.getVal_comision_exp());//check
-            pst.setString(12, lin.getCod_operadora());//check
-            pst.setString(13, lin.getNom_operadora());//check
-            pst.setString(14, lin.getCar_contenedor());//check
-            pst.setString(15, lin.getCar_suelta());//check
-            pst.setString(16, lin.getCar_consolidada());//check
-            pst.setString(17, lin.getImp_servicio());//check
-            pst.setString(18, lin.getImp_emision());//check
-            pst.setString(19, lin.getImp_europa());//check
-            pst.setString(20, lin.getImp_thc());//check
-            pst.setString(21, lin.getImp_garantia());//check
-            pst.setString(22, lin.getOfi_puerto());//check
-            pst.setString(23, lin.getOfi_propia());//check
-            pst.setString(24, lin.getOfi_transporte());//check
-            pst.setDouble(25, lin.getNum_diasdemor1());//check
-            pst.setDouble(26, lin.getNum_diasdemor2());//check
-            pst.setDouble(27, lin.getNum_diasdemor3());//check
-            pst.setDouble(28, lin.getNum_diasdemor4());//check
-            pst.setInt(29, lin.getSec_personalizada());//check
-            pst.setString(30, lin.getCae_biccode());//check
-            pst.setString(31, lin.getEkc_operada());//check
-            pst.setString(32, lin.getEst_operada());//check
-            pst.setString(33, lin.getLin_codigo());//check
+            pst.setString(2, lin.getLin_codigo1());//check
+            pst.setString(3, lin.getLin_codigo2());//check
+            pst.setString(4, lin.getLin_codigo3());//check
+            pst.setString(5, lin.getNom_operadora());//check
+            pst.setString(6, lin.getCar_contenedor());//check
+            pst.setString(7, lin.getImp_servicio());//check
+            pst.setString(8, lin.getImp_emision());//check
+            pst.setString(9, lin.getImp_europa());//check
+            pst.setString(10, lin.getImp_thc());//check
+            pst.setString(11, lin.getImp_garantia());//check
+            pst.setString(12, lin.getOfi_puerto());//check
+            pst.setString(13, lin.getOfi_propia());//check
+            pst.setString(14, lin.getOfi_transporte());//check
+            pst.setDouble(15, lin.getNum_diasdemor1());//check
+            pst.setDouble(16, lin.getNum_diasdemor2());//check
+            pst.setDouble(17, lin.getNum_diasdemor3());//check
+            pst.setDouble(18, lin.getNum_diasdemor4());//check
+            pst.setString(19, lin.getLin_codigo());//check
             
             pst.executeUpdate();
         } catch (Exception e) {

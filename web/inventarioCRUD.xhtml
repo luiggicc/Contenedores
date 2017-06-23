@@ -116,10 +116,10 @@
                                         <p:selectOneMenu id="razon" value="#{inventarioBean.sel.mot_codigo}">
                                             <f:selectItems value="#{inventarioBean.selectorMotivoSello}" var="mot" itemLabel="#{mot.mot_des}" itemValue="#{mot.mot_codigo}" />
                                         </p:selectOneMenu>
-                                        <p:commandButton ajax="true" value="Eliminar" actionListener="#{inventarioBean.eliminar()}"  oncomplete="PF('wdlgEliminarDatos').hide();" update=":tabs:frm:uTable">
+                                        <p:commandButton ajax="true" value="Eliminar" actionListener="#{inventarioBean.eliminar()}"  oncomplete="PF('wdlgEliminarDatos').hide();" update="@all">
                                             <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                         </p:commandButton>
-                                        <p:commandButton value="Cancelar" actionListener="#{inventarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgEliminarDatos').hide();"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{inventarioBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgEliminarDatos').hide();" />
                                     </h:panelGrid>
                                 </h:form>
                             </p:dialog>

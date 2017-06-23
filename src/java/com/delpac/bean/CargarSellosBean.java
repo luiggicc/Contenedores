@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -106,7 +107,6 @@ public class CargarSellosBean implements Serializable{
 
     public void clearFailedList() {
         failedSellosList.clear();
-        uploadedFilesList.clear();
         listadoSellos.clear();
         cantidadSellosRepetidos = 0;
     }
@@ -119,8 +119,6 @@ public class CargarSellosBean implements Serializable{
                 failedSellosList.add(sellos);
             }
         }
-        getListadoSellos().clear();
-        clearFailedList();
     }
 
     public void deleteRows() {

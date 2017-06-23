@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TeusExports" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5668c875-75c8-4f11-9ec3-a60a54835749">
-	<property name="ireport.zoom" value="3.452271214393105"/>
-	<property name="ireport.x" value="753"/>
-	<property name="ireport.y" value="329"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.title" value="title"/>
 	<parameter name="RutaImagen" class="java.lang.String"/>
 	<parameter name="anio" class="java.lang.Float"/>
 	<queryString>
@@ -31,6 +34,21 @@ group by anio, des.fecha_salida, des.itinerario]]>
 	<field name="cont40mty" class="java.lang.Long"/>
 	<field name="contemptyteus" class="java.lang.Long"/>
 	<field name="contfullteus" class="java.lang.Long"/>
+	<group name="Mes">
+		<groupExpression><![CDATA[$F{anio}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<rectangle>
+					<reportElement x="0" y="0" width="555" height="50" backcolor="#FFFF66" uuid="f718c9fa-6de4-497f-af6e-ef6da7d75430"/>
+				</rectangle>
+				<textField>
+					<reportElement x="1" y="0" width="553" height="50" uuid="0c311c0e-17c0-4ae7-8630-6019c9c25389"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -58,7 +76,7 @@ group by anio, des.fecha_salida, des.itinerario]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="18" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{anio}.intValue()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -96,30 +114,20 @@ group by anio, des.fecha_salida, des.itinerario]]>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<rectangle>
-				<reportElement x="1" y="0" width="68" height="20" backcolor="#FFFF66" uuid="f718c9fa-6de4-497f-af6e-ef6da7d75430"/>
+				<reportElement x="0" y="0" width="99" height="20" backcolor="#FFFF66" uuid="dc6b58da-b486-4eb9-aa83-54b18c39f4e2"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="0" width="69" height="20" uuid="cfc3f594-1557-43cc-8cb2-5cc44df49a3e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Mes]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="69" y="0" width="66" height="20" backcolor="#FFFF66" uuid="dc6b58da-b486-4eb9-aa83-54b18c39f4e2"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="69" y="0" width="66" height="20" uuid="4b20ed94-e4d7-4b85-ae6a-0d21081d0553"/>
+				<reportElement x="0" y="0" width="99" height="20" uuid="4b20ed94-e4d7-4b85-ae6a-0d21081d0553"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="135" y="0" width="100" height="20" backcolor="#FFFF66" uuid="386790d1-920e-4da6-b588-4102205adc44"/>
+				<reportElement x="99" y="0" width="136" height="20" backcolor="#FFFF66" uuid="386790d1-920e-4da6-b588-4102205adc44"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="135" y="0" width="100" height="20" uuid="ef03b338-d562-4a0c-88a2-1034e1d9b4e3"/>
+				<reportElement x="99" y="0" width="136" height="20" uuid="ef03b338-d562-4a0c-88a2-1034e1d9b4e3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -200,26 +208,18 @@ group by anio, des.fecha_salida, des.itinerario]]>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<rectangle>
-				<reportElement x="2" y="0" width="68" height="20" uuid="dde80bf4-dd53-4920-aff9-70509da7d269"/>
+				<reportElement x="0" y="0" width="99" height="20" uuid="c9236e0d-a39c-453b-9c54-140e64a1dba0"/>
 			</rectangle>
 			<textField>
-				<reportElement x="1" y="0" width="69" height="20" uuid="0c311c0e-17c0-4ae7-8630-6019c9c25389"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement x="70" y="0" width="66" height="20" uuid="c9236e0d-a39c-453b-9c54-140e64a1dba0"/>
-			</rectangle>
-			<textField>
-				<reportElement x="70" y="0" width="66" height="20" uuid="f6106758-2359-486c-93e8-051a1c5bf41b"/>
+				<reportElement x="0" y="0" width="99" height="20" uuid="f6106758-2359-486c-93e8-051a1c5bf41b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fecha_arribo}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="136" y="0" width="100" height="20" uuid="c2b91bdf-7326-414c-a0cd-3c51cf4f26a5"/>
+				<reportElement x="99" y="0" width="137" height="20" uuid="c2b91bdf-7326-414c-a0cd-3c51cf4f26a5"/>
 			</rectangle>
 			<textField>
-				<reportElement x="136" y="0" width="100" height="20" uuid="c7e67e28-f739-44a7-9527-29ab700f3e1d"/>
+				<reportElement x="99" y="0" width="137" height="20" uuid="c7e67e28-f739-44a7-9527-29ab700f3e1d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{itinerario}]]></textFieldExpression>
 			</textField>

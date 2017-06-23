@@ -47,46 +47,8 @@
                             <!--############################################################################################ -->
                             <!--############################################################################################ -->
 
-                            <p:column headerText="Código" filterBy="#{lin.lin_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.lin_codigo}"/>
-                            </p:column>
-
                             <p:column headerText="Nombre" filterBy="#{lin.lin_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{lin.lin_nombre}"/>
-                            </p:column>
-
-                            <!--
-                            <p:column headerText="Descripción" filterBy="#{lin.lin_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.lin_des}"/>
-                            </p:column>
-                            -->
-
-                            <p:column headerText="Usuario" filterBy="#{lin.cae_usuario}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.cae_usuario}"/>
-                            </p:column>
-
-                            <p:column headerText="Clave" filterBy="#{lin.cae_clave}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.cae_clave}"/>
-                            </p:column>
-
-                            <p:column headerText="Código Operador" filterBy="#{lin.ope_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.ope_codigo}"/>
-                            </p:column>
-
-                            <p:column headerText="Código Comercial" filterBy="#{lin.com_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.com_codigo}"/>
-                            </p:column>
-
-                            <p:column headerText="Valor Comisión Importación" filterBy="#{lin.val_comision_imp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.val_comision_imp}"/>
-                            </p:column>
-
-                            <p:column headerText="Valor Comisión Exportación" filterBy="#{lin.val_comision_exp}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.val_comision_exp}"/>
-                            </p:column>
-
-                            <p:column headerText="Código Operadora" filterBy="#{lin.cod_operadora}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.cod_operadora}"/>
                             </p:column>
 
                             <p:column headerText="Operadora" filterBy="#{lin.nom_operadora}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -95,14 +57,6 @@
 
                             <p:column headerText="Carga Contenedor" filterBy="#{lin.car_contenedor}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{lin.car_contenedor}"/>
-                            </p:column>
-
-                            <p:column headerText="Carga Suelta" filterBy="#{lin.car_suelta}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.car_suelta}"/>
-                            </p:column>
-
-                            <p:column headerText="Carga Consolidada" filterBy="#{lin.car_consolidada}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.car_consolidada}"/>
                             </p:column>
 
                             <p:column headerText="Impuesto Servicio" filterBy="#{lin.imp_servicio}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
@@ -153,22 +107,6 @@
                                 <h:outputText value="#{lin.num_diasdemor4}"/>
                             </p:column>
 
-                            <p:column headerText="Secuencia Personalizada" filterBy="#{lin.sec_personalizada}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.sec_personalizada}"/>
-                            </p:column>
-
-                            <p:column headerText="Biccode" filterBy="#{lin.cae_biccode}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.cae_biccode}"/>
-                            </p:column>
-
-                            <p:column headerText="EKC Operada" filterBy="#{lin.ekc_operada}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.ekc_operada}"/>
-                            </p:column>
-
-                            <p:column headerText="Estado Operada" filterBy="#{lin.est_operada}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{lin.est_operada}"/>
-                            </p:column>
-
                             <p:column headerText="Estado" filterBy="#{lin.lin_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{lin.lin_estado}"/>
                             </p:column>
@@ -184,40 +122,11 @@
                                 <p:outputLabel value="Nombre: "/>
                                 <p:inputText value="#{lineaBean.lin.lin_nombre}"/>
 
-
-
-                                <p:outputLabel value="Cae Usuario: "/>
-                                <p:inputText value="#{lineaBean.lin.cae_usuario}"/>
-
-                                <p:outputLabel value="Cae Clave: "/>
-                                <p:inputText value="#{lineaBean.lin.cae_clave}"/>
-
-                                <p:outputLabel value="Código Operador: "/>
-                                <p:inputText value="#{lineaBean.lin.ope_codigo}"/>
-
-                                <p:outputLabel value="Código Comercial "/>
-                                <p:inputText value="#{lineaBean.lin.com_codigo}"/>
-
-                                <p:outputLabel value="Valor Comisión Importación: "/>
-                                <p:inputText value="#{lineaBean.lin.val_comision_imp}"/>
-
-                                <p:outputLabel value="Valor Comisión Exportación "/>
-                                <p:inputText value="#{lineaBean.lin.val_comision_exp}"/>
-
-                                <p:outputLabel value="Código Operadora: "/>
-                                <p:inputText value="#{lineaBean.lin.cod_operadora}"/>
-
                                 <p:outputLabel value="Operadora: "/>
                                 <p:inputText value="#{lineaBean.lin.nom_operadora}"/>
 
                                 <p:outputLabel value="Carga Contenedor: "/>
                                 <p:inputText value="#{lineaBean.lin.car_contenedor}"/>
-
-                                <p:outputLabel value="Carga Suelta: "/>
-                                <p:inputText value="#{lineaBean.lin.car_suelta}"/>
-
-                                <p:outputLabel value="Carga Consolidada: "/>
-                                <p:inputText value="#{lineaBean.lin.car_consolidada}"/>
 
                                 <p:outputLabel value="Impuesto Servicio: "/>
                                 <p:inputText value="#{lineaBean.lin.imp_servicio}"/>
@@ -255,30 +164,13 @@
                                 <p:outputLabel value="Días de mora 4: "/>
                                 <p:inputText value="#{lineaBean.lin.num_diasdemor4}"/>
 
-                                <p:outputLabel value="Secuencia Personalizada: "/>
-                                <p:inputText value="#{lineaBean.lin.sec_personalizada}"/>
-
-                                <p:outputLabel value="Biccode: "/>
-                                <p:inputText value="#{lineaBean.lin.cae_biccode}"/>
-
-                                <p:outputLabel value="EKC Operada: "/>
-                                <p:inputText value="#{lineaBean.lin.ekc_operada}"/>
-
-                                <p:outputLabel value="Estado Operada: "/>
-                                <p:inputText value="#{lineaBean.lin.est_operada}"/>
-
-                                <p:outputLabel />
-                                <p:outputLabel />
-                                <p:column> </p:column>
-                                <p:column> </p:column>
-
+                            </h:panelGrid>
+                            <h:panelGrid columns="2">
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{lineaBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>
 
                                 <p:commandButton value="Cancelar" actionListener="#{lineaBean.onCancelDialog()}" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
-
-
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

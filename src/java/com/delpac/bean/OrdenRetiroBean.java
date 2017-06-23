@@ -226,7 +226,7 @@ public class OrdenRetiroBean implements Serializable {
             parametros.put("RutaImagen", servleContext.getRealPath("/reportes/"));
             parametros.put("cod_ordenretiro", ord.getCod_ordenretiro());
             //String del jasper
-            String temperatura = temperado == true ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
+            String temperatura = ord.getEs_temperado() == 1 ? "ReporteFreezer.jasper" : "ReporteNoFreezer.jasper";
 //            String jrxmlPath = temperatura.equals("ReporteFreezer.jasper") ? "ReporteFreezer.jrxml" : "ReporteNoFreezer.jrxml";//server
             //InputStream
 //            InputStream is = new FileInputStream(servleContext.getRealPath("/reportes/") + jrxmlPath);//server

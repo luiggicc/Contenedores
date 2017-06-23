@@ -11,7 +11,7 @@
         
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
-                <p:panel header="General Naves">
+                <p:panel header="Detalle por Nave">
                     <h:form id="frm">
                         <h:panelGrid columns="2" >
                             <p:outputLabel value="Itinerario: "/>
@@ -19,10 +19,19 @@
                                 <f:selectItems value="#{detallePorNaveBean.selectorItinerario}" var="iti" itemLabel="#{iti.dsp_itinerario}" itemValue="#{iti.dsp_itinerario}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
+                        <i class="icon-file-pdf" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver PDF" style="color: #00AEEF;" actionListener="#{detallePorNaveBean.exportpdf()}" target="verpdf"/>
+                        </i>
+                        <br />
+                        <i class="icon-file-excel" style="color: #00AEEF;"> 
+                            <h:commandLink value="Ver Excel" style="color: #00AEEF;" actionListener="#{detallePorNaveBean.exportexcel()}"/>
+                        </i>
+                        
                         <p:separator />
-                        <p:dataTable id="detalleNavesTbl" value="#{detallePorNaveBean.lista}" var="dxn" paginator="true" widgetVar="dxnTable" rows="10"
+                        <iframe name="verpdf" width="100%" height="500px" allowfullscreen="true" style="border: 0"/>
+<!--                        <p:dataTable id="detalleNavesTbl" value="# {detallePorNaveBean.lista}" var="dxn" paginator="true" widgetVar="dxnTable" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     paginatorPosition="bottom" filteredValue="#{detallePorNaveBean.filteredDxn}" lazy="false" 
+                                     paginatorPosition="bottom" filteredValue="# {detallePorNaveBean.filteredDxn}" lazy="false" 
                                      rowsPerPageTemplate="10,25,50">                            
                             
                             <f:facet name="header">
@@ -36,55 +45,54 @@
                                     </table>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Item" filterBy="#{dxn.item}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.item}"/>
+                            <p:column headerText="Item" filterBy="# {dxn.item}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.item}"/>
                             </p:column>
                             
-                            <p:column headerText="Line" filterBy="#{dxn.recipient}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.recipient}"/>
+                            <p:column headerText="Line" filterBy="# {dxn.recipient}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.recipient}"/>
                             </p:column>
                             
-                            <p:column headerText="Container" filterBy="#{dxn.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.equipo_identi}"/>
+                            <p:column headerText="Container" filterBy="# {dxn.equipo_identi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.equipo_identi}"/>
                             </p:column>
                             
-                            <p:column headerText="Status" filterBy="#{dxn.status}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.status}"/>
+                            <p:column headerText="Status" filterBy="# {dxn.status}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.status}"/>
                             </p:column>
                             
-                            <p:column headerText="Iso" filterBy="#{dxn.iso}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.iso}"/>
+                            <p:column headerText="Iso" filterBy="# {dxn.iso}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.iso}"/>
                             </p:column>
                             
-                            <p:column headerText="Peso Bruto" filterBy="#{dxn.peso_bruto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.peso_bruto}"/>
+                            <p:column headerText="Peso Bruto" filterBy="# {dxn.peso_bruto}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.peso_bruto}"/>
                             </p:column>
                             
-                            <p:column headerText="Sello" filterBy="#{dxn.sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.sello}"/>
+                            <p:column headerText="Sello" filterBy="# {dxn.sello}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.sello}"/>
                             </p:column>
                             
-                            <p:column headerText="Puerto Carga" filterBy="#{dxn.pto_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.pto_carga}"/>
+                            <p:column headerText="Puerto Carga" filterBy="# {dxn.pto_carga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.pto_carga}"/>
                             </p:column>
                             
-                            <p:column headerText="Puerto Descarga" filterBy="#{dxn.pto_descarga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.pto_descarga}"/>
+                            <p:column headerText="Puerto Descarga" filterBy="#  {dxn.pto_descarga}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.pto_descarga}"/>
                             </p:column>
                             
-                            <p:column headerText="Fecha Arribo" filterBy="#{dxn.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.fecha_arribo}">
+                            <p:column headerText="Fecha Arribo" filterBy="# {dxn.fecha_arribo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.fecha_arribo}">
                                     <f:convertDateTime pattern="dd/MM/YYYY"/>
                                 </p:outputLabel>
                             </p:column>
 
-                            <p:column headerText="BL" filterBy="#{dxn.bl}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <p:outputLabel value="#{dxn.bl}"/>
+                            <p:column headerText="BL" filterBy="# {dxn.bl}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
+                                <p:outputLabel value="# {dxn.bl}"/>
                             </p:column>
 
-                        </p:dataTable>
-                        <h:commandLink value="Consultar" styleClass="likePrimefaceCommandLink" actionListener="#{detallePorNaveBean.consultarDetallePorNave()}" />
-                        <h:commandLink value="Exportar" styleClass="likePrimefaceCommandLink" actionListener="#{detallePorNaveBean.exportpdf()}"/>  
+                        </p:dataTable>-->
+                        
                     </h:form>
                 </p:panel>
             </div>

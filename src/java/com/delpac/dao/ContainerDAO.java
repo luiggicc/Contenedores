@@ -58,7 +58,7 @@ public class ContainerDAO implements Serializable {
             try {
                 con.desconectar();
             } catch (SQLException ex) {
-                Logger.getLogger(TransferDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ContainerDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return listadoContainers;

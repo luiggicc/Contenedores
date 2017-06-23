@@ -58,7 +58,7 @@ public class GeneralNavesDAO implements Serializable {
             try {
                 con.desconectar();
             } catch (SQLException ex) {
-                Logger.getLogger(TransferDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GeneralNavesDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return lista;

@@ -105,8 +105,8 @@ public class ClienteDAO implements Serializable {
         conexion con = new conexion();
         PreparedStatement pst;
         String query = "update publico.mae_clientes "
-                + "set cod_tipidentifica=?, ruc_numero=?, cia_nombre=?, pai_codigo=?, tip_shi=?, tip_con=?, tip_emb=?, tip_pro=?, tip_ope=?, "
-                + "cia_direccion=?, nom_ciudad=?, telefono1=?, telefono2=?, cia_fax=?, cia_mail=?, cia_obs=? "
+                + "set cod_tipidentifica=?, ruc_numero=?, cia_nombre=?, pai_codigo=?, "
+                + "cia_direccion=?, nom_ciudad=?, telefono1=?, telefono2=?, cia_mail=? "
                 + "where cia_codigo=?";
         pst = con.getConnection().prepareStatement(query);
         try {
@@ -114,19 +114,12 @@ public class ClienteDAO implements Serializable {
             pst.setString(2, cli.getRuc_numero());
             pst.setString(3, cli.getCia_nombre());
             pst.setString(4, cli.getPai_codigo());
-            pst.setString(5, cli.getTip_shi());
-            pst.setString(6, cli.getTip_con());
-            pst.setString(7, cli.getTip_emb());
-            pst.setString(8, cli.getTip_pro());
-            pst.setString(9, cli.getTip_ope());
-            pst.setString(10, cli.getCia_direccion());
-            pst.setString(11, cli.getNom_ciudad());
-            pst.setString(12, cli.getTelefono1());
-            pst.setString(13, cli.getTelefono2());
-            pst.setString(14, cli.getCia_fax());
-            pst.setString(15, cli.getCia_mail());
-            pst.setString(16, cli.getCia_obs());
-            pst.setString(17, cli.getCia_codigo());
+            pst.setString(5, cli.getCia_direccion());
+            pst.setString(6, cli.getNom_ciudad());
+            pst.setString(7, cli.getTelefono1());
+            pst.setString(8, cli.getTelefono2());
+            pst.setString(9, cli.getCia_mail());
+            pst.setString(10, cli.getCia_codigo());
             pst.executeUpdate();
         } catch (Exception e) {
             System.out.println("DAO EDIT CLIENTE: " + e.getMessage());

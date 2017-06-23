@@ -7,6 +7,11 @@
 
     <ui:define name="content">
         <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <style>
+            .colstilo {width:100px}
+            .colstiloinput {width:250px}
+            .botones {width:200px}
+        </style>
         <h:outputStylesheet name="style.css" />
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
@@ -38,10 +43,6 @@
                                 </p:commandLink>
                             </p:column>
 
-                            <p:column headerText="Código" filterBy="#{buq.buq_codigo}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{buq.buq_codigo}"/>
-                            </p:column>
-
                             <p:column headerText="Tipo" filterBy="#{buq.tbu_nombre}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{buq.tbu_nombre}"/>
                             </p:column>
@@ -66,10 +67,6 @@
                                 <h:outputText value="#{buq.buq_nombre}"/>
                             </p:column>
 
-                            <p:column headerText="Descripción" filterBy="#{buq.buq_des}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{buq.buq_des}"/>
-                            </p:column>
-
                             <p:column headerText="TRB" filterBy="#{buq.num_trb}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{buq.num_trb}"/>
                             </p:column>
@@ -86,14 +83,6 @@
                                 <h:outputText value="#{buq.reg_lloyd}"/>
                             </p:column>
 
-                            <p:column headerText="Código 1" filterBy="#{buq.buq_codigo1}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{buq.buq_codigo1}"/>
-                            </p:column>
-
-                            <p:column headerText="Código Omi" filterBy="#{buq.codigo_omi}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
-                                <h:outputText value="#{buq.codigo_omi}"/>
-                            </p:column>
-
                             <p:column headerText="Estado" filterBy="#{buq.buq_estado}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center">
                                 <h:outputText value="#{buq.buq_estado}"/>
                             </p:column>
@@ -108,7 +97,11 @@
                     <!--############################################################################################ -->
                     <p:dialog id="dlgDatos" header="Editar Buque" widgetVar="wdlgDatos" modal="true" responsive="true">
                         <h:form>
-                            <h:panelGrid columns="4">
+                            <h:panelGrid columns="4" columnClasses="colstilo, colstiloinput, colstilo, colstiloinput">
+
+                                <p:outputLabel value="Buque: "/>
+                                <p:inputText value="#{buqueBean.buq.buq_nombre}"/>
+
                                 <p:outputLabel value="Tipo de Buque "/>
                                 <p:selectOneMenu id="tbu" value="#{buqueBean.buq.tbu_codigo}" filter="true" filterMatchMode="startsWith">
                                     <f:selectItems value="#{buqueBean.selectorTipBuque}" var="tbu" itemLabel="#{tbu.tbu_nombre}" itemValue="#{tbu.tbu_codigo}" />
@@ -134,11 +127,7 @@
                                     <f:selectItems value="#{buqueBean.selectorTrafico}" var="tra" itemLabel="#{tra.tra_nombre}" itemValue="#{tra.tra_codigo}" />
                                 </p:selectOneMenu>
 
-                                <p:outputLabel value="Buque: "/>
-                                <p:inputText value="#{buqueBean.buq.buq_nombre}"/>
 
-                                <p:outputLabel value="Descripción: "/>
-                                <p:inputText value="#{buqueBean.buq.buq_des}"/>
 
                                 <p:outputLabel value="TRB: "/>
                                 <p:inputText value="#{buqueBean.buq.num_trb}"/>
@@ -152,15 +141,11 @@
                                 <p:outputLabel value="Reg. Lloyd: "/>
                                 <p:inputText value="#{buqueBean.buq.reg_lloyd}"/>
 
-                                <p:outputLabel value="Código 1: "/>
-                                <p:inputText value="#{buqueBean.buq.buq_codigo1}"/>
-
-                                <p:outputLabel value="Código Omi: "/>
-                                <p:inputText value="#{buqueBean.buq.codigo_omi}"/>
-
                                 <p:outputLabel />
                                 <p:outputLabel />
 
+                            </h:panelGrid>
+                            <h:panelGrid columns="2">
                                 <p:commandButton ajax="true" value="Editar" actionListener="#{buqueBean.commitEdit()}"  oncomplete="PF('wdlgDatos').hide();" update=":frm:uTable">
                                     <p:confirm header="Confirmación" message="Está seguro de realizar esta acción" icon="ui-icon-alert" />
                                 </p:commandButton>

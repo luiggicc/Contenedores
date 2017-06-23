@@ -33,7 +33,7 @@ public class SemanalDAO implements Serializable {
         String query = "";
 
         try {
-            query = "select row_number() over (order by fecha_arribo) as Item, des.nave, des.viaje, des.fecha_arribo, "
+            query = "select row_number() over (order by date(fecha_arribo)) as Item, des.nave, des.viaje, date(des.fecha_arribo) as fecha_arribo, "
                     + "count(case when des.movimiento = 'Descarga' and des.status = 'Full' then 1 end) as Cont_import, "
                     + "(count(case when con.con_tamano='20' and des.movimiento = 'Descarga' and des.status = 'Full' then 1 end)  + "
                     + "(count(case when con.con_tamano='40' and des.movimiento = 'Descarga' and des.status = 'Full' then 2 end) )*2) as Teus_import, "
@@ -62,8 +62,8 @@ public class SemanalDAO implements Serializable {
                     + "inner join publico.mae_container con on des.equipo_identi = con.con_codigo "
                     + "where (des.movimiento = 'Descarga' or des.movimiento = 'Export') "
                     + "and des.fecha_arribo between ?::timestamp and ?::timestamp "
-                    + "group by des.nave, des.viaje, des.fecha_arribo "
-                    + "order by des.fecha_arribo";
+                    + "group by des.nave, des.viaje, date(des.fecha_arribo) "
+                    + "order by date(des.fecha_arribo)";
             pst = con.getConnection().prepareStatement(query);
             pst.setString(1, format.format(desde));
             pst.setString(2, format.format(hasta));

@@ -85,7 +85,7 @@ public class InventarioBean implements Serializable {
     }
 
     public void eliminar() throws SQLException {
-        daoSellos.deleteSellos(sel);
+        daoSellos.deleteSellos(sel, sessionUsuario);
         listadoSellos = daoSellos.findAll();
     }
 

@@ -24,7 +24,6 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.LegendPlacement;
 
 /**
  *
@@ -128,7 +127,7 @@ public class DashboardBean {
         }
 
         barra3.addSeries(serie3);
-        barra3.setTitle("Total contenedores que están en Puerto");
+        barra3.setTitle("Total contenedores que están en Cliente");
         barra3.setDatatipFormat("%3$d");
         barra3.setShowPointLabels(true);
         barra3.setAnimate(true);
@@ -165,7 +164,7 @@ public class DashboardBean {
 
         barra5.addSeries(serie5);
         barra5.setTitle("Stock de Sellos");        
-        barra5.setDatatipFormat("%2$d");
+        barra5.setDatatipFormat("%3$d");
         barra5.setShowPointLabels(true);
         barra5.setAnimate(true);
         
@@ -201,8 +200,7 @@ public class DashboardBean {
             }
             barra1.addSeries(serie1);
             barra1.setTitle("Total contenedores según el estado");
-            barra1.setLegendPosition("ne");
-            barra1.setDatatipFormat("%2$d");
+            barra1.setDatatipFormat("%3$d");
             barra1.setShowPointLabels(true);
             barra1.setAnimate(true);
 

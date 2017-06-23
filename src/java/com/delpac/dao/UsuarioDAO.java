@@ -40,7 +40,7 @@ public class UsuarioDAO implements Serializable {
             pst.setString(3, us.getApellidos().toUpperCase());
             pst.setString(4, us.getLogin().toLowerCase());
             pst.setString(5, us.getPassword());
-            pst.setInt(6, 1); //valor que representa la clave debe ser cambiada.
+            pst.setInt(6, 0); //valor que representa la clave debe ser cambiada.
             pst.setInt(7, 1); //valor que representa el usuario se puedo autenticar en el sistema.
             pst.executeUpdate();
 

@@ -13,24 +13,29 @@
         </f:metadata>
         <div class="Container100 ui-fluid">
             <div class="ContainerIndent">
-                <p:panel header="Historial de movimiento de contenedores">
+                <p:panel header="Movimientos por Contenedor">
                     <h:form id="frm">
-                       <div class="Separator">
+                        <div class="Separator">
                             <p:link  value="Agregar Movimiento" href="/faces/agregarmov.xhtml" style="font-size: 20px; "  styleClass="icon-plus-circled"/>
                         </div>
                         <h:panelGrid columns="2" >
-                            <p:outputLabel value="Contenedor"/>
-                            <p:selectOneMenu id="ItinerarioMenu" value="#{verHistorialBean.containerDesSelected}" style="width: 200px" filter="true" filterMatchMode="startsWith">
-                                <f:selectItem itemLabel="Seleccionar..." itemValue="0"/>
-                                <f:selectItems value="#{verHistorialBean.listaContainers}" var="cont" 
-                                               itemLabel="#{cont.con_codigo}" itemValue="#{cont.con_codigo}"/>
-                                <p:ajax event="itemSelect"  listener="#{verHistorialBean.VerHistorial}" update="@form" oncomplete="PF('verhistorialTable').clearFilters();"/>
-                            </p:selectOneMenu>
+                            <p:outputLabel value="Contenedor: "/>
+                            <p:autoComplete id="autoCon" value="#{verHistorialBean.containerDesSelected}" completeMethod="#{verHistorialBean.completarContainer}" 
+                                            minQueryLength="3" maxResults="5" var="cont" forceSelection="true"
+                                            itemValue="#{cont.con_codigo}" itemLabel="#{cont.con_codigo}" inputStyle="width: 200px">
+                                <p:ajax event="itemSelect"  listener="#{verHistorialBean.VerHistorial}" update="asignacionTbl" oncomplete="PF('verhistorialTable').clearFilters();"/>    
+                            </p:autoComplete>
+                            <h:inputHidden />
+                            <!-- ############################################################################# -->
+                            <!-- ############################################################################# -->
                             <p:outputLabel value="Ver último ciclo:" />
                             <p:selectBooleanCheckbox id="chck" value="#{verHistorialBean.ciclomaximo}" >
                                 <p:ajax listener="#{verHistorialBean.VerHistorial}" update="@form"/>
                             </p:selectBooleanCheckbox>
                         </h:panelGrid>
+
+                        <!-- ############################################################################# -->
+                        <!-- ############################################################################# -->
 
                         <p:dataTable id="asignacionTbl" value="#{verHistorialBean.listadoVerHistorial}" var="vhis" paginator="true" widgetVar="verhistorialTable" rows="12"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
@@ -45,7 +50,7 @@
                                 <p:outputPanel style="text-align: right;">
                                     <table>
                                         <tr>
-                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Historial de Contenedores" style="color: #ffffff" /></td>
+                                            <td class="FontBold Fs18 hardwhite" style="border: none; text-align: left"><h:outputText value="Movimiento de Contenedores" style="color: #ffffff" /></td>
                                             <td style="border: none; text-align: right"><h:outputText value="Buscar: " style="text-align: right; color: #ffffff"/>
                                                 <p:inputText id="globalFilter" onkeyup="PF('verhistorialTable').filter()" style="width:150px" placeholder="Enter keyword"/></td>
                                         </tr>
